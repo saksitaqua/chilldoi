@@ -1,0 +1,48 @@
+@php $activity = $activity ?? null; @endphp
+
+<div>
+    <label class="block text-sm font-medium mb-1">ชื่อกิจกรรม</label>
+    <input type="text" name="name" value="{{ old('name', $activity?->name) }}" required class="w-full border-gray-300 rounded-md">
+    <x-input-error :messages="$errors->get('name')" class="mt-1" />
+</div>
+
+<div>
+    <label class="block text-sm font-medium mb-1">คำอธิบาย</label>
+    <textarea name="description" rows="3" class="w-full border-gray-300 rounded-md">{{ old('description', $activity?->description) }}</textarea>
+    <x-input-error :messages="$errors->get('description')" class="mt-1" />
+</div>
+
+@php $isFree = old('is_free', $activity?->is_free ?? true); @endphp
+
+<div>
+    <div class="flex items-center gap-2 mb-2">
+        <input type="hidden" name="is_free" value="0">
+        <input type="checkbox" name="is_free" id="is_free" value="1" @checked($isFree)
+               onchange="document.getElementById('price-field').classList.toggle('hidden', this.checked); document.getElementById('price-input').required = ! this.checked;">
+        <label for="is_free" class="text-sm">กิจกรรมนี้ฟรี ไม่มีค่าใช้จ่าย</label>
+    </div>
+
+    <div id="price-field" class="{{ $isFree ? 'hidden' : '' }}">
+        <label class="block text-sm font-medium mb-1">ราคา (บาท) <span class="text-red-500">*</span></label>
+        <input type="number" id="price-input" step="0.01" min="0.01" name="price" value="{{ old('price', $activity?->price) }}" @required(! $isFree) class="w-full border-gray-300 rounded-md">
+        <x-input-error :messages="$errors->get('price')" class="mt-1" />
+    </div>
+</div>
+
+<div class="grid grid-cols-2 gap-4">
+    <div>
+        <label class="block text-sm font-medium mb-1">วันเริ่มเปิดให้เลือก (ถ้าไม่ระบุ เปิดทันที)</label>
+        <input type="date" name="starts_on" value="{{ old('starts_on', $activity?->starts_on?->format('Y-m-d')) }}" class="w-full border-gray-300 rounded-md">
+        <x-input-error :messages="$errors->get('starts_on')" class="mt-1" />
+    </div>
+    <div>
+        <label class="block text-sm font-medium mb-1">วันสิ้นสุด (ถ้าไม่ระบุ เปิดตลอดไป)</label>
+        <input type="date" name="ends_on" value="{{ old('ends_on', $activity?->ends_on?->format('Y-m-d')) }}" class="w-full border-gray-300 rounded-md">
+        <x-input-error :messages="$errors->get('ends_on')" class="mt-1" />
+    </div>
+</div>
+
+<div class="flex items-center gap-2">
+    <input type="checkbox" name="is_active" id="is_active" value="1" @checked(old('is_active', $activity?->is_active ?? true))>
+    <label for="is_active" class="text-sm">เปิดใช้งาน (active)</label>
+</div>
