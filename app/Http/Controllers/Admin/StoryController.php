@@ -108,7 +108,8 @@ class StoryController extends Controller
         $sortOrder = $story->images()->max('sort_order') + 1;
 
         foreach ($files as $file) {
-            $path = $file->store('stories', 'public');
+            $filename = "{$story->id}_{$sortOrder}.{$file->getClientOriginalExtension()}";
+            $path = $file->storeAs('stories', $filename, 'public');
 
             StoryImage::create([
                 'story_id' => $story->id,

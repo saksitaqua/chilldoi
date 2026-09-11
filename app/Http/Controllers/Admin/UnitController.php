@@ -110,7 +110,8 @@ class UnitController extends Controller
         $sortOrder = $unit->images()->max('sort_order') + 1;
 
         foreach ($files as $file) {
-            $path = $file->store('units', 'public');
+            $filename = "{$unit->id}_{$sortOrder}.{$file->getClientOriginalExtension()}";
+            $path = $file->storeAs('units', $filename, 'public');
 
             UnitImage::create([
                 'unit_id' => $unit->id,
