@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\Storage;
 
 class Unit extends Model
 {
@@ -18,6 +19,7 @@ class Unit extends Model
         'lat',
         'lng',
         'notes',
+        'video',
         'is_active',
     ];
 
@@ -45,6 +47,11 @@ class Unit extends Model
     public function visibleImages(): HasMany
     {
         return $this->images()->where('is_visible', true);
+    }
+
+    public function getVideoUrlAttribute(): ?string
+    {
+        return $this->video ? Storage::disk('public')->url($this->video) : null;
     }
 
     public function isAvailable(string $checkIn, string $checkOut, ?int $excludeBookingId = null): bool

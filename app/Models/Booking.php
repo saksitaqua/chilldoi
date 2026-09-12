@@ -16,6 +16,7 @@ class Booking extends Model
         'unit_id',
         'guest_name',
         'guest_phone',
+        'guest_email',
         'check_in',
         'check_out',
         'guests',

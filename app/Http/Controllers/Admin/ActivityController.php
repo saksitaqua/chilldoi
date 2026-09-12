@@ -31,6 +31,10 @@ class ActivityController extends Controller
             $this->storeImage($activity, $request->file('image'));
         }
 
+        if ($request->hasFile('video')) {
+            $this->storeVideo($activity, $request->file('video'));
+        }
+
         return redirect()->route('admin.activities.index')->with('status', 'เพิ่มกิจกรรมเรียบร้อยแล้ว');
     }
 
@@ -48,10 +52,19 @@ class ActivityController extends Controller
             $data['image'] = null;
         }
 
+        if ($request->boolean('remove_video') && $activity->video) {
+            Storage::disk('public')->delete($activity->video);
+            $data['video'] = null;
+        }
+
         $activity->update($data);
 
         if ($request->hasFile('image')) {
             $this->storeImage($activity, $request->file('image'));
+        }
+
+        if ($request->hasFile('video')) {
+            $this->storeVideo($activity, $request->file('video'));
         }
 
         return redirect()->route('admin.activities.index')->with('status', 'บันทึกการแก้ไขเรียบร้อยแล้ว');
@@ -61,6 +74,10 @@ class ActivityController extends Controller
     {
         if ($activity->image) {
             Storage::disk('public')->delete($activity->image);
+        }
+
+        if ($activity->video) {
+            Storage::disk('public')->delete($activity->video);
         }
 
         $activity->delete();
@@ -74,6 +91,7 @@ class ActivityController extends Controller
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
             'image' => 'nullable|image|max:5120',
+            'video' => 'nullable|mimes:mp4,mov,webm,avi|max:51200',
             'is_free' => 'required|boolean',
             'price' => 'required_if:is_free,0|nullable|numeric|min:0.01',
             'starts_on' => 'nullable|date',
@@ -86,7 +104,7 @@ class ActivityController extends Controller
         $data['is_free'] = $request->boolean('is_free');
         $data['price'] = $data['is_free'] ? null : $data['price'];
 
-        unset($data['image']);
+        unset($data['image'], $data['video']);
 
         return $data;
     }
@@ -101,5 +119,17 @@ class ActivityController extends Controller
         $path = $file->storeAs('activities', $filename, 'public');
 
         $activity->update(['image' => $path]);
+    }
+
+    private function storeVideo(Activity $activity, $file): void
+    {
+        if ($activity->video) {
+            Storage::disk('public')->delete($activity->video);
+        }
+
+        $filename = "{$activity->id}.{$file->getClientOriginalExtension()}";
+        $path = $file->storeAs('activities/videos', $filename, 'public');
+
+        $activity->update(['video' => $path]);
     }
 }

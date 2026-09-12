@@ -39,6 +39,12 @@
                     <x-nav-link :href="route('admin.banners.index')" :active="request()->routeIs('admin.banners.*')">
                         {{ __('แบนเนอร์') }}
                     </x-nav-link>
+                    <x-nav-link :href="route('admin.expenses.index')" :active="request()->routeIs('admin.expenses.*')">
+                        {{ __('รายจ่าย') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('admin.reports.summary')" :active="request()->routeIs('admin.reports.*')">
+                        {{ __('รายงานสรุป') }}
+                    </x-nav-link>
                 </div>
             </div>
 
@@ -117,6 +123,12 @@
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('admin.banners.index')" :active="request()->routeIs('admin.banners.*')">
                 {{ __('แบนเนอร์') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('admin.expenses.index')" :active="request()->routeIs('admin.expenses.*')">
+                {{ __('รายจ่าย') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('admin.reports.summary')" :active="request()->routeIs('admin.reports.*')">
+                {{ __('รายงานสรุป') }}
             </x-responsive-nav-link>
         </div>
 

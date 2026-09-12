@@ -5,6 +5,10 @@
     <h1 class="text-2xl font-bold mt-2 mb-2">{{ $story->title }}</h1>
     <p class="text-xs text-gray-400 mb-6">{{ $story->created_at->format('d/m/Y H:i') }}</p>
 
+    @if ($story->video)
+        <video src="{{ $story->video_url }}" controls class="w-full rounded-lg mb-6 max-h-96"></video>
+    @endif
+
     @if ($story->images->count())
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
             @foreach ($story->images as $image)

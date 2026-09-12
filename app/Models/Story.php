@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\Storage;
 
 class Story extends Model
 {
@@ -16,6 +17,7 @@ class Story extends Model
         'title',
         'category',
         'description',
+        'video',
         'is_published',
         'starts_on',
         'ends_on',
@@ -46,6 +48,11 @@ class Story extends Model
     public function images(): HasMany
     {
         return $this->hasMany(StoryImage::class)->orderBy('sort_order');
+    }
+
+    public function getVideoUrlAttribute(): ?string
+    {
+        return $this->video ? Storage::disk('public')->url($this->video) : null;
     }
 
     public function scopeVisibleNow($query)

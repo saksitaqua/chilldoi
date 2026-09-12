@@ -73,3 +73,18 @@
     <input type="file" name="images[]" multiple accept="image/*" class="w-full">
     <x-input-error :messages="$errors->get('images.*')" class="mt-1" />
 </div>
+
+<div>
+    <label class="block text-sm font-medium mb-1">วิดีโอ</label>
+    @if ($unit?->video)
+        <div class="flex items-center gap-3 mb-2">
+            <video src="{{ $unit->video_url }}" class="w-40 rounded-md border" controls></video>
+            <label class="flex items-center gap-2 text-sm text-red-600">
+                <input type="checkbox" name="remove_video" value="1"> ลบวิดีโอนี้
+            </label>
+        </div>
+    @endif
+    <input type="file" name="video" accept="video/*" class="w-full">
+    <p class="text-xs text-gray-400 mt-1">รองรับ mp4, mov, webm, avi ขนาดไม่เกิน 50MB</p>
+    <x-input-error :messages="$errors->get('video')" class="mt-1" />
+</div>

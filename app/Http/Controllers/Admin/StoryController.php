@@ -33,6 +33,7 @@ class StoryController extends Controller
             'ends_on' => 'nullable|date|after_or_equal:starts_on',
             'images' => 'nullable|array',
             'images.*' => 'image|max:5120',
+            'video' => 'nullable|mimes:mp4,mov,webm,avi|max:51200',
         ]);
 
         $story = Story::create([
@@ -46,6 +47,10 @@ class StoryController extends Controller
         ]);
 
         $this->storeImages($story, $request->file('images', []));
+
+        if ($request->hasFile('video')) {
+            $this->storeVideo($story, $request->file('video'));
+        }
 
         return redirect()->route('admin.stories.index')->with('status', 'โพสต์เรื่องราวเรียบร้อยแล้ว');
     }
@@ -67,18 +72,27 @@ class StoryController extends Controller
             'ends_on' => 'nullable|date|after_or_equal:starts_on',
             'images' => 'nullable|array',
             'images.*' => 'image|max:5120',
+            'video' => 'nullable|mimes:mp4,mov,webm,avi|max:51200',
             'remove_images' => 'nullable|array',
             'remove_images.*' => 'exists:story_images,id',
+            'remove_video' => 'nullable|boolean',
         ]);
 
-        $story->update([
+        $updateData = [
             'title' => $data['title'],
             'category' => $data['category'],
             'description' => $data['description'] ?? null,
             'is_published' => $request->boolean('is_published', true),
             'starts_on' => $data['starts_on'] ?? null,
             'ends_on' => $data['ends_on'] ?? null,
-        ]);
+        ];
+
+        if ($request->boolean('remove_video') && $story->video) {
+            Storage::disk('public')->delete($story->video);
+            $updateData['video'] = null;
+        }
+
+        $story->update($updateData);
 
         if (! empty($data['remove_images'])) {
             StoryImage::whereIn('id', $data['remove_images'])->where('story_id', $story->id)->get()->each(function (StoryImage $image) {
@@ -89,6 +103,10 @@ class StoryController extends Controller
 
         $this->storeImages($story, $request->file('images', []));
 
+        if ($request->hasFile('video')) {
+            $this->storeVideo($story, $request->file('video'));
+        }
+
         return redirect()->route('admin.stories.index')->with('status', 'บันทึกการแก้ไขเรียบร้อยแล้ว');
     }
 
@@ -96,6 +114,10 @@ class StoryController extends Controller
     {
         foreach ($story->images as $image) {
             Storage::disk('public')->delete($image->path);
+        }
+
+        if ($story->video) {
+            Storage::disk('public')->delete($story->video);
         }
 
         $story->delete();
@@ -117,5 +139,17 @@ class StoryController extends Controller
                 'sort_order' => $sortOrder++,
             ]);
         }
+    }
+
+    private function storeVideo(Story $story, $file): void
+    {
+        if ($story->video) {
+            Storage::disk('public')->delete($story->video);
+        }
+
+        $filename = "{$story->id}.{$file->getClientOriginalExtension()}";
+        $path = $file->storeAs('stories/videos', $filename, 'public');
+
+        $story->update(['video' => $path]);
     }
 }

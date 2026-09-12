@@ -27,6 +27,12 @@
     </div>
 </div>
 
+<div>
+    <label class="block text-sm font-medium mb-1">อีเมล</label>
+    <input type="email" name="guest_email" value="{{ old('guest_email', $booking?->guest_email) }}" class="w-full border-gray-300 rounded-md">
+    <x-input-error :messages="$errors->get('guest_email')" class="mt-1" />
+</div>
+
 <div class="grid grid-cols-2 gap-4">
     <div>
         <label class="block text-sm font-medium mb-1">วันเช็คอิน</label>

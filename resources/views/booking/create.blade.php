@@ -37,6 +37,13 @@
             </div>
 
             <div>
+                <label class="block text-sm font-medium mb-1">อีเมล <span class="text-red-500">*</span></label>
+                <input type="email" name="guest_email" value="{{ old('guest_email') }}" required class="w-full border-gray-300 rounded-md" placeholder="you@example.com">
+                <p class="text-xs text-gray-400 mt-1">ใช้สำหรับส่งข้อมูลยืนยันการจองและติดต่อกลับ</p>
+                <x-input-error :messages="$errors->get('guest_email')" class="mt-1" />
+            </div>
+
+            <div>
                 <label class="block text-sm font-medium mb-1">จำนวนคน</label>
                 <input type="number" name="guests" min="1" max="{{ $unit->accommodationType->max_guests }}" value="{{ old('guests', 1) }}" required class="w-full border-gray-300 rounded-md sm:w-40">
                 <x-input-error :messages="$errors->get('guests')" class="mt-1" />

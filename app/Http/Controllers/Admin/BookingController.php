@@ -93,6 +93,7 @@ class BookingController extends Controller
             'unit_id' => 'required|exists:units,id',
             'guest_name' => 'required|string|max:255',
             'guest_phone' => 'nullable|string|max:50',
+            'guest_email' => 'nullable|email|max:255',
             'check_in' => 'required|date',
             'check_out' => 'required|date|after:check_in',
             'guests' => 'required|integer|min:1',

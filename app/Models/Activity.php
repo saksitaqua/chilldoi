@@ -15,6 +15,7 @@ class Activity extends Model
         'name',
         'description',
         'image',
+        'video',
         'is_free',
         'price',
         'starts_on',
@@ -33,6 +34,11 @@ class Activity extends Model
     public function getImageUrlAttribute(): ?string
     {
         return $this->image ? Storage::disk('public')->url($this->image) : null;
+    }
+
+    public function getVideoUrlAttribute(): ?string
+    {
+        return $this->video ? Storage::disk('public')->url($this->video) : null;
     }
 
     public function getPriceLabelAttribute(): string

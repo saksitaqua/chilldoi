@@ -6,6 +6,8 @@ use App\Http\Controllers\Admin\BannerController;
 use App\Http\Controllers\Admin\BookingController;
 use App\Http\Controllers\BookingRequestController;
 use App\Http\Controllers\Admin\CalendarController;
+use App\Http\Controllers\Admin\ExpenseController;
+use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\Admin\ServiceController;
 use App\Http\Controllers\Admin\StoryController as AdminStoryController;
 use App\Http\Controllers\Admin\UnitController;
@@ -46,6 +48,8 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
     Route::resource('services', ServiceController::class);
     Route::resource('bookings', BookingController::class);
     Route::resource('stories', AdminStoryController::class);
+    Route::resource('expenses', ExpenseController::class);
+    Route::get('reports/summary', [ReportController::class, 'summary'])->name('reports.summary');
     Route::get('calendar', [CalendarController::class, 'index'])->name('calendar.index');
     Route::get('banners', [BannerController::class, 'index'])->name('banners.index');
     Route::post('banners', [BannerController::class, 'store'])->name('banners.store');

@@ -35,6 +35,13 @@
                 <x-input-error :messages="$errors->get('images.*')" class="mt-1" />
             </div>
 
+            <div>
+                <label class="block text-sm font-medium mb-1">วิดีโอ (ถ้ามี)</label>
+                <input type="file" name="video" accept="video/*" class="w-full">
+                <p class="text-xs text-gray-400 mt-1">รองรับ mp4, mov, webm, avi ขนาดไม่เกิน 50MB</p>
+                <x-input-error :messages="$errors->get('video')" class="mt-1" />
+            </div>
+
             <div class="grid grid-cols-2 gap-4">
                 <div>
                     <label class="block text-sm font-medium mb-1">วันเริ่มแสดง (ถ้าไม่ระบุ แสดงทันที)</label>

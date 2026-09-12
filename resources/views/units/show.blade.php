@@ -24,13 +24,17 @@
         </form>
     </div>
 
+    @if ($unit->video)
+        <video src="{{ $unit->video_url }}" controls class="w-full rounded-lg mb-4 max-h-96"></video>
+    @endif
+
     @if ($unit->visibleImages->count())
         <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-8">
             @foreach ($unit->visibleImages as $image)
                 <img src="{{ $image->url }}" alt="{{ $unit->name }}" class="w-full h-40 object-cover rounded-lg">
             @endforeach
         </div>
-    @else
+    @elseif (! $unit->video)
         <div class="w-full h-40 bg-gray-100 flex items-center justify-center text-gray-400 text-sm rounded-lg mb-8">ไม่มีรูปภาพ</div>
     @endif
 

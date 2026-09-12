@@ -1,6 +1,8 @@
 <x-layouts.public :title="'ตรวจสอบห้องว่าง'">
     <h1 class="text-2xl font-bold mb-6">ตรวจสอบห้องว่าง</h1>
 
+    <img src="{{ asset('images/booking-steps.svg') }}" alt="ขั้นตอนการจอง" class="w-full rounded-lg shadow-sm mb-8">
+
     <form method="GET" action="{{ route('availability.index') }}" class="bg-white p-4 rounded-lg shadow-sm mb-8 grid grid-cols-1 sm:grid-cols-4 gap-4">
         <div>
             <label class="block text-sm font-medium mb-1">วันเช็คอิน</label>

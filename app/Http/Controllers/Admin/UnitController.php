@@ -33,6 +33,10 @@ class UnitController extends Controller
 
         $this->storeImages($unit, $request->file('images', []));
 
+        if ($request->hasFile('video')) {
+            $this->storeVideo($unit, $request->file('video'));
+        }
+
         return redirect()->route('admin.units.index')->with('status', 'เพิ่มที่พัก/จุดกางเต็นท์เรียบร้อยแล้ว');
     }
 
@@ -47,6 +51,11 @@ class UnitController extends Controller
     public function update(Request $request, Unit $unit)
     {
         $data = $this->validateData($request);
+
+        if ($request->boolean('remove_video') && $unit->video) {
+            Storage::disk('public')->delete($unit->video);
+            $data['video'] = null;
+        }
 
         $unit->update($data);
 
@@ -67,6 +76,10 @@ class UnitController extends Controller
 
         $this->storeImages($unit, $request->file('images', []));
 
+        if ($request->hasFile('video')) {
+            $this->storeVideo($unit, $request->file('video'));
+        }
+
         return redirect()->route('admin.units.index')->with('status', 'บันทึกการแก้ไขเรียบร้อยแล้ว');
     }
 
@@ -74,6 +87,10 @@ class UnitController extends Controller
     {
         foreach ($unit->images as $image) {
             Storage::disk('public')->delete($image->path);
+        }
+
+        if ($unit->video) {
+            Storage::disk('public')->delete($unit->video);
         }
 
         $unit->delete();
@@ -92,6 +109,7 @@ class UnitController extends Controller
             'notes' => 'nullable|string',
             'images' => 'nullable|array',
             'images.*' => 'image|max:5120',
+            'video' => 'nullable|mimes:mp4,mov,webm,avi|max:51200',
             'remove_images' => 'nullable|array',
             'remove_images.*' => 'exists:unit_images,id',
             'visible_images' => 'nullable|array',
@@ -100,7 +118,7 @@ class UnitController extends Controller
 
         $data['is_active'] = $request->boolean('is_active');
 
-        unset($data['images'], $data['remove_images'], $data['visible_images']);
+        unset($data['images'], $data['video'], $data['remove_images'], $data['visible_images']);
 
         return $data;
     }
@@ -120,5 +138,17 @@ class UnitController extends Controller
                 'is_visible' => true,
             ]);
         }
+    }
+
+    private function storeVideo(Unit $unit, $file): void
+    {
+        if ($unit->video) {
+            Storage::disk('public')->delete($unit->video);
+        }
+
+        $filename = "{$unit->id}.{$file->getClientOriginalExtension()}";
+        $path = $file->storeAs('units/videos', $filename, 'public');
+
+        $unit->update(['video' => $path]);
     }
 }

@@ -43,6 +43,7 @@ class BookingRequestController extends Controller
         $data = $request->validate([
             'guest_name' => 'required|string|max:255',
             'guest_phone' => 'required|string|max:50',
+            'guest_email' => 'required|email|max:255',
             'check_in' => 'required|date',
             'check_out' => 'required|date|after:check_in',
             'guests' => 'required|integer|min:1',
@@ -51,6 +52,9 @@ class BookingRequestController extends Controller
             'activities.*' => 'exists:activities,id',
             'services' => 'nullable|array',
             'services.*' => 'exists:services,id',
+        ], [
+            'guest_email.required' => 'กรุณากรอกอีเมล เพื่อใช้ยืนยันตัวตนและรับข่าวสารการจอง',
+            'guest_email.email' => 'รูปแบบอีเมลไม่ถูกต้อง กรุณาตรวจสอบอีกครั้ง',
         ]);
 
         if (! $unit->isAvailable($data['check_in'], $data['check_out'])) {
@@ -63,6 +67,7 @@ class BookingRequestController extends Controller
             'unit_id' => $unit->id,
             'guest_name' => $data['guest_name'],
             'guest_phone' => $data['guest_phone'],
+            'guest_email' => $data['guest_email'],
             'check_in' => $data['check_in'],
             'check_out' => $data['check_out'],
             'guests' => $data['guests'],

@@ -15,6 +15,7 @@
             <div class="flex justify-between"><span class="text-gray-500">วันเช็คอิน</span><span class="font-medium">{{ $booking->check_in->format('d/m/Y') }}</span></div>
             <div class="flex justify-between"><span class="text-gray-500">วันเช็คเอาท์</span><span class="font-medium">{{ $booking->check_out->format('d/m/Y') }}</span></div>
             <div class="flex justify-between"><span class="text-gray-500">จำนวนคน</span><span class="font-medium">{{ $booking->guests }}</span></div>
+            <div class="flex justify-between"><span class="text-gray-500">อีเมล</span><span class="font-medium">{{ $booking->guest_email }}</span></div>
             <div class="flex justify-between"><span class="text-gray-500">สถานะ</span><span class="font-medium text-yellow-600">รอยืนยัน</span></div>
 
             @if ($booking->activities->count())
