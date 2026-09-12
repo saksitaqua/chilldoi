@@ -16,7 +16,7 @@
             <button type="submit" class="bg-emerald-700 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-emerald-800">ค้นหา</button>
             <a href="{{ route('admin.reports.summary.export', ['month_from' => $monthFrom, 'month_to' => $monthTo]) }}"
                class="bg-white border border-gray-300 text-gray-700 px-4 py-2 rounded-md text-sm font-medium hover:bg-gray-50">
-                ⬇ Export Excel (CSV)
+                ⬇ Export Excel (.xlsx)
             </a>
         </form>
 
