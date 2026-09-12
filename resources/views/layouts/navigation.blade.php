@@ -80,6 +80,11 @@
                     <x-nav-link :href="route('admin.reports.summary')" :active="request()->routeIs('admin.reports.*')">
                         {{ __('รายงานสรุป') }}
                     </x-nav-link>
+                    @if (Auth::user()->isAdmin())
+                        <x-nav-link :href="route('admin.employees.index')" :active="request()->routeIs('admin.employees.*')">
+                            {{ __('พนักงาน') }}
+                        </x-nav-link>
+                    @endif
                 </div>
             </div>
 
@@ -175,6 +180,11 @@
             <x-responsive-nav-link :href="route('admin.reports.summary')" :active="request()->routeIs('admin.reports.*')">
                 {{ __('รายงานสรุป') }}
             </x-responsive-nav-link>
+            @if (Auth::user()->isAdmin())
+                <x-responsive-nav-link :href="route('admin.employees.index')" :active="request()->routeIs('admin.employees.*')">
+                    {{ __('พนักงาน') }}
+                </x-responsive-nav-link>
+            @endif
         </div>
 
         <!-- Responsive Settings Options -->

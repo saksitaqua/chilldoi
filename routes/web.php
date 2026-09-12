@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\BannerController;
 use App\Http\Controllers\Admin\BookingController;
 use App\Http\Controllers\BookingRequestController;
 use App\Http\Controllers\Admin\CalendarController;
+use App\Http\Controllers\Admin\EmployeeController;
 use App\Http\Controllers\Admin\ExpenseController;
 use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\Admin\ServiceController;
@@ -56,6 +57,11 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
     Route::post('banners', [BannerController::class, 'store'])->name('banners.store');
     Route::put('banners', [BannerController::class, 'update'])->name('banners.update');
     Route::delete('banners/{banner}', [BannerController::class, 'destroyImage'])->name('banners.destroy');
+
+    Route::middleware('admin.only')->group(function () {
+        Route::resource('employees', EmployeeController::class)->except(['show']);
+        Route::post('employees/{employee}/reset-password', [EmployeeController::class, 'resetPassword'])->name('employees.reset-password');
+    });
 });
 
 require __DIR__.'/auth.php';
