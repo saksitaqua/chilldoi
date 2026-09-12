@@ -33,6 +33,7 @@
                         <th class="px-4 py-2 text-left">สถานะ</th>
                         <th class="px-4 py-2 text-left">ที่มา</th>
                         <th class="px-4 py-2"></th>
+                        <th class="px-4 py-2"></th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100">
@@ -57,6 +58,11 @@
                                 </span>
                             </td>
                             <td class="px-4 py-2 text-gray-500">{{ $booking->source === 'online' ? 'ออนไลน์' : 'แอดมิน' }}</td>
+                            <td class="px-4 py-2">
+                                @if ($booking->payment_slip)
+                                    <span class="text-emerald-700 text-xs">💳 แนบสลิปแล้ว</span>
+                                @endif
+                            </td>
                             <td class="px-4 py-2 text-right space-x-2">
                                 <a href="{{ route('admin.bookings.edit', $booking) }}" class="text-emerald-700 hover:underline">แก้ไข</a>
                                 <form action="{{ route('admin.bookings.destroy', $booking) }}" method="POST" class="inline" onsubmit="return confirm('ยืนยันการลบ?')">

@@ -55,6 +55,16 @@
     </div>
 </div>
 
+@if ($booking?->payment_slip)
+    <div>
+        <label class="block text-sm font-medium mb-2">สลิปการชำระเงิน</label>
+        <a href="{{ $booking->payment_slip_url }}" target="_blank" rel="noopener">
+            <img src="{{ $booking->payment_slip_url }}" class="w-40 rounded-md border hover:opacity-80">
+        </a>
+        <p class="text-xs text-gray-400 mt-1">แนบเมื่อ {{ $booking->payment_uploaded_at?->format('d/m/Y H:i') }} (คลิกรูปเพื่อดูขนาดเต็ม)</p>
+    </div>
+@endif
+
 @if ($activities->count())
     <div>
         <label class="block text-sm font-medium mb-2">กิจกรรมเสริม</label>

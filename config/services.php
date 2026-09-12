@@ -39,4 +39,11 @@ return [
         'key' => env('GOOGLE_MAPS_API_KEY'),
     ],
 
+    'bank' => [
+        'name' => env('BANK_NAME'),
+        'account_number' => env('BANK_ACCOUNT_NUMBER'),
+        'account_name' => env('BANK_ACCOUNT_NAME'),
+        'promptpay' => env('BANK_PROMPTPAY'),
+    ],
+
 ];

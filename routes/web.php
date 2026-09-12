@@ -25,6 +25,7 @@ Route::get('/units/{unit}', [UnitShowController::class, 'show'])->name('units.sh
 Route::get('/book/{unit}', [BookingRequestController::class, 'create'])->name('booking.create');
 Route::post('/book/{unit}', [BookingRequestController::class, 'store'])->name('booking.store');
 Route::get('/book/thank-you/{booking}', [BookingRequestController::class, 'thankyou'])->name('booking.thankyou');
+Route::post('/book/thank-you/{booking}/slip', [BookingRequestController::class, 'uploadSlip'])->name('booking.slip');
 
 Route::get('/map', [MapController::class, 'index'])->name('map.index');
 
