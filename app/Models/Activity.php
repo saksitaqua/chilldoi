@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Support\Facades\Storage;
 
 class Activity extends Model
 {
@@ -13,6 +14,7 @@ class Activity extends Model
     protected $fillable = [
         'name',
         'description',
+        'image',
         'is_free',
         'price',
         'starts_on',
@@ -27,6 +29,11 @@ class Activity extends Model
         'starts_on' => 'date',
         'ends_on' => 'date',
     ];
+
+    public function getImageUrlAttribute(): ?string
+    {
+        return $this->image ? Storage::disk('public')->url($this->image) : null;
+    }
 
     public function getPriceLabelAttribute(): string
     {

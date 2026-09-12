@@ -12,6 +12,20 @@
     <x-input-error :messages="$errors->get('description')" class="mt-1" />
 </div>
 
+<div>
+    <label class="block text-sm font-medium mb-1">รูปภาพ</label>
+    @if ($service?->image)
+        <div class="flex items-center gap-3 mb-2">
+            <img src="{{ $service->image_url }}" class="w-24 h-24 object-cover rounded-md border">
+            <label class="flex items-center gap-2 text-sm text-red-600">
+                <input type="checkbox" name="remove_image" value="1"> ลบรูปนี้
+            </label>
+        </div>
+    @endif
+    <input type="file" name="image" accept="image/*" class="w-full">
+    <x-input-error :messages="$errors->get('image')" class="mt-1" />
+</div>
+
 <div class="grid grid-cols-2 gap-4">
     <div>
         <label class="block text-sm font-medium mb-1">ราคา (บาท)</label>

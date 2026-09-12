@@ -62,6 +62,9 @@
             @foreach ($activities as $activity)
                 <label class="flex items-center gap-2 text-sm">
                     <input type="checkbox" name="activities[]" value="{{ $activity->id }}" @checked(in_array($activity->id, $selectedActivities))>
+                    @if ($activity->image)
+                        <img src="{{ $activity->image_url }}" class="w-6 h-6 object-cover rounded">
+                    @endif
                     {{ $activity->name }}
                     <span class="text-xs text-gray-400">({{ $activity->price_label }})</span>
                 </label>
@@ -78,6 +81,9 @@
             @foreach ($services as $service)
                 <label class="flex items-center gap-2 text-sm">
                     <input type="checkbox" name="services[]" value="{{ $service->id }}" @checked(in_array($service->id, $selectedServices))>
+                    @if ($service->image)
+                        <img src="{{ $service->image_url }}" class="w-6 h-6 object-cover rounded">
+                    @endif
                     {{ $service->name }}
                     <span class="text-xs text-gray-400">({{ $service->price_label }})</span>
                 </label>

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Service;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class ServiceController extends Controller
 {
@@ -24,7 +25,11 @@ class ServiceController extends Controller
     {
         $data = $this->validateData($request);
 
-        Service::create($data);
+        $service = Service::create($data);
+
+        if ($request->hasFile('image')) {
+            $this->storeImage($service, $request->file('image'));
+        }
 
         return redirect()->route('admin.services.index')->with('status', 'เพิ่มรายการบริการเรียบร้อยแล้ว');
     }
@@ -38,13 +43,26 @@ class ServiceController extends Controller
     {
         $data = $this->validateData($request);
 
+        if ($request->boolean('remove_image') && $service->image) {
+            Storage::disk('public')->delete($service->image);
+            $data['image'] = null;
+        }
+
         $service->update($data);
+
+        if ($request->hasFile('image')) {
+            $this->storeImage($service, $request->file('image'));
+        }
 
         return redirect()->route('admin.services.index')->with('status', 'บันทึกการแก้ไขเรียบร้อยแล้ว');
     }
 
     public function destroy(Service $service)
     {
+        if ($service->image) {
+            Storage::disk('public')->delete($service->image);
+        }
+
         $service->delete();
 
         return redirect()->route('admin.services.index')->with('status', 'ลบรายการบริการเรียบร้อยแล้ว');
@@ -55,6 +73,7 @@ class ServiceController extends Controller
         $data = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
+            'image' => 'nullable|image|max:5120',
             'price' => 'required|numeric|min:0',
             'sort_order' => 'nullable|integer|min:0',
         ]);
@@ -62,6 +81,20 @@ class ServiceController extends Controller
         $data['is_active'] = $request->boolean('is_active');
         $data['sort_order'] = $data['sort_order'] ?? 0;
 
+        unset($data['image']);
+
         return $data;
+    }
+
+    private function storeImage(Service $service, $file): void
+    {
+        if ($service->image) {
+            Storage::disk('public')->delete($service->image);
+        }
+
+        $filename = "{$service->id}.{$file->getClientOriginalExtension()}";
+        $path = $file->storeAs('services', $filename, 'public');
+
+        $service->update(['image' => $path]);
     }
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Activity;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class ActivityController extends Controller
 {
@@ -24,7 +25,11 @@ class ActivityController extends Controller
     {
         $data = $this->validateData($request);
 
-        Activity::create($data);
+        $activity = Activity::create($data);
+
+        if ($request->hasFile('image')) {
+            $this->storeImage($activity, $request->file('image'));
+        }
 
         return redirect()->route('admin.activities.index')->with('status', 'เพิ่มกิจกรรมเรียบร้อยแล้ว');
     }
@@ -38,13 +43,26 @@ class ActivityController extends Controller
     {
         $data = $this->validateData($request);
 
+        if ($request->boolean('remove_image') && $activity->image) {
+            Storage::disk('public')->delete($activity->image);
+            $data['image'] = null;
+        }
+
         $activity->update($data);
+
+        if ($request->hasFile('image')) {
+            $this->storeImage($activity, $request->file('image'));
+        }
 
         return redirect()->route('admin.activities.index')->with('status', 'บันทึกการแก้ไขเรียบร้อยแล้ว');
     }
 
     public function destroy(Activity $activity)
     {
+        if ($activity->image) {
+            Storage::disk('public')->delete($activity->image);
+        }
+
         $activity->delete();
 
         return redirect()->route('admin.activities.index')->with('status', 'ลบกิจกรรมเรียบร้อยแล้ว');
@@ -55,6 +73,7 @@ class ActivityController extends Controller
         $data = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
+            'image' => 'nullable|image|max:5120',
             'is_free' => 'required|boolean',
             'price' => 'required_if:is_free,0|nullable|numeric|min:0.01',
             'starts_on' => 'nullable|date',
@@ -67,6 +86,20 @@ class ActivityController extends Controller
         $data['is_free'] = $request->boolean('is_free');
         $data['price'] = $data['is_free'] ? null : $data['price'];
 
+        unset($data['image']);
+
         return $data;
+    }
+
+    private function storeImage(Activity $activity, $file): void
+    {
+        if ($activity->image) {
+            Storage::disk('public')->delete($activity->image);
+        }
+
+        $filename = "{$activity->id}.{$file->getClientOriginalExtension()}";
+        $path = $file->storeAs('activities', $filename, 'public');
+
+        $activity->update(['image' => $path]);
     }
 }

@@ -18,6 +18,7 @@
             <table class="min-w-full divide-y divide-gray-200 text-sm">
                 <thead class="bg-gray-50">
                     <tr>
+                        <th class="px-4 py-2"></th>
                         <th class="px-4 py-2 text-left">ชื่อกิจกรรม</th>
                         <th class="px-4 py-2 text-left">ราคา</th>
                         <th class="px-4 py-2 text-left">ช่วงเวลาเปิดให้เลือก</th>
@@ -28,6 +29,13 @@
                 <tbody class="divide-y divide-gray-100">
                     @foreach ($activities as $activity)
                         <tr>
+                            <td class="px-4 py-2">
+                                @if ($activity->image)
+                                    <img src="{{ $activity->image_url }}" class="w-10 h-10 object-cover rounded-md">
+                                @else
+                                    <div class="w-10 h-10 bg-gray-100 rounded-md"></div>
+                                @endif
+                            </td>
                             <td class="px-4 py-2 font-medium">{{ $activity->name }}</td>
                             <td class="px-4 py-2">
                                 @if ($activity->is_free)

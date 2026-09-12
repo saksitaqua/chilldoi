@@ -22,6 +22,7 @@
             <table class="min-w-full divide-y divide-gray-200 text-sm">
                 <thead class="bg-gray-50">
                     <tr>
+                        <th class="px-4 py-2"></th>
                         <th class="px-4 py-2 text-left">ชื่อบริการ</th>
                         <th class="px-4 py-2 text-left">ราคา</th>
                         <th class="px-4 py-2 text-left">ลำดับ</th>
@@ -32,6 +33,13 @@
                 <tbody class="divide-y divide-gray-100">
                     @foreach ($services as $service)
                         <tr>
+                            <td class="px-4 py-2">
+                                @if ($service->image)
+                                    <img src="{{ $service->image_url }}" class="w-10 h-10 object-cover rounded-md">
+                                @else
+                                    <div class="w-10 h-10 bg-gray-100 rounded-md"></div>
+                                @endif
+                            </td>
                             <td class="px-4 py-2 font-medium">{{ $service->name }}</td>
                             <td class="px-4 py-2">{{ number_format($service->price) }} บาท</td>
                             <td class="px-4 py-2 text-gray-500">{{ $service->sort_order }}</td>
