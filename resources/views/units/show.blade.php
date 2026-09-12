@@ -1,13 +1,27 @@
 <x-layouts.public :title="$unit->name">
     <a href="{{ route('availability.index') }}" class="text-sm text-emerald-700 hover:underline">&larr; กลับหน้าตรวจสอบห้องว่าง</a>
 
-    <div class="mt-4 mb-6">
-        <p class="text-xs text-emerald-700 font-medium">{{ $unit->accommodationType->name }}</p>
-        <h1 class="text-2xl font-bold">{{ $unit->name }}</h1>
-        <p class="text-sm text-gray-500 mt-1">
-            รองรับ {{ $unit->accommodationType->max_guests }} คน &middot;
-            เริ่มต้น {{ number_format($unit->accommodationType->base_price) }} บาท/คืน
-        </p>
+    <div class="mt-4 mb-6 flex flex-wrap items-start justify-between gap-4">
+        <div>
+            <p class="text-xs text-emerald-700 font-medium">{{ $unit->accommodationType->name }}</p>
+            <h1 class="text-2xl font-bold">{{ $unit->name }}</h1>
+            <p class="text-sm text-gray-500 mt-1">
+                รองรับ {{ $unit->accommodationType->max_guests }} คน &middot;
+                เริ่มต้น {{ number_format($unit->accommodationType->base_price) }} บาท/คืน
+            </p>
+        </div>
+
+        <form method="GET" action="{{ route('booking.create', $unit) }}" class="bg-white rounded-lg shadow-sm p-3 flex flex-wrap items-end gap-2">
+            <div>
+                <label class="block text-xs text-gray-500 mb-1">เช็คอิน</label>
+                <input type="date" name="check_in" required value="{{ request('check_in') }}" class="border-gray-300 rounded-md text-sm">
+            </div>
+            <div>
+                <label class="block text-xs text-gray-500 mb-1">เช็คเอาท์</label>
+                <input type="date" name="check_out" required value="{{ request('check_out') }}" class="border-gray-300 rounded-md text-sm">
+            </div>
+            <button type="submit" class="bg-emerald-700 text-white text-sm font-medium px-4 py-2 rounded-md hover:bg-emerald-800">จอง</button>
+        </form>
     </div>
 
     @if ($unit->visibleImages->count())
@@ -45,7 +59,8 @@
                             @if ($occupied)
                                 <span class="block rounded px-2 py-1 text-xs font-medium bg-red-100 text-red-700">ไม่ว่าง</span>
                             @else
-                                <span class="block rounded px-2 py-1 text-xs font-medium bg-emerald-50 text-emerald-700">ว่าง</span>
+                                <a href="{{ route('booking.create', ['unit' => $unit, 'check_in' => $day->toDateString(), 'check_out' => $day->copy()->addDay()->toDateString()]) }}"
+                                   class="block rounded px-2 py-1 text-xs font-medium bg-emerald-50 text-emerald-700 hover:bg-emerald-100">ว่าง</a>
                             @endif
                         </td>
                     @endforeach

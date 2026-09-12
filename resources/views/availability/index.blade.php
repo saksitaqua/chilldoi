@@ -95,7 +95,8 @@
                                 @if ($occupied)
                                     <a href="{{ route('units.show', $unit) }}" class="block rounded px-2 py-1 text-xs font-medium bg-red-100 text-red-700 hover:bg-red-200">ไม่ว่าง</a>
                                 @else
-                                    <a href="{{ route('units.show', $unit) }}" class="block rounded px-2 py-1 text-xs font-medium bg-emerald-50 text-emerald-700 hover:bg-emerald-100">ว่าง</a>
+                                    <a href="{{ route('booking.create', ['unit' => $unit, 'check_in' => $day->toDateString(), 'check_out' => $day->copy()->addDay()->toDateString()]) }}"
+                                       class="block rounded px-2 py-1 text-xs font-medium bg-emerald-50 text-emerald-700 hover:bg-emerald-100">ว่าง</a>
                                 @endif
                             </td>
                         @endforeach
