@@ -8,7 +8,8 @@
 
 <div>
     <label class="block text-sm font-medium mb-1">คำอธิบาย (ถ้ามี)</label>
-    <textarea name="description" rows="2" class="w-full border-gray-300 rounded-md">{{ old('description', $service?->description) }}</textarea>
+    <x-emoji-picker target="description" />
+    <textarea name="description" id="description" rows="2" class="w-full border-gray-300 rounded-md">{{ old('description', $service?->description) }}</textarea>
     <x-input-error :messages="$errors->get('description')" class="mt-1" />
 </div>
 

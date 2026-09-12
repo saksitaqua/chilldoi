@@ -25,7 +25,8 @@
 
             <div>
                 <label class="block text-sm font-medium mb-1">คำอธิบาย</label>
-                <textarea name="description" rows="5" class="w-full border-gray-300 rounded-md">{{ old('description') }}</textarea>
+                <x-emoji-picker target="description" />
+                <textarea name="description" id="description" rows="5" class="w-full border-gray-300 rounded-md">{{ old('description') }}</textarea>
                 <x-input-error :messages="$errors->get('description')" class="mt-1" />
             </div>
 
