@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Activity;
+use App\Models\AccommodationType;
 use App\Models\Banner;
+use App\Models\Service;
 use App\Models\Story;
 use Illuminate\Http\Request;
 
@@ -41,11 +44,28 @@ class StoryFeedController extends Controller
             ];
         })->filter(fn ($group) => $group['stories']->isNotEmpty());
 
+        $accommodationTypes = AccommodationType::where('is_active', true)
+            ->with(['units' => fn ($q) => $q->where('is_active', true)->with('visibleImages')])
+            ->get()
+            ->map(function (AccommodationType $type) {
+                $type->cover_image = $type->units
+                    ->flatMap(fn ($unit) => $unit->visibleImages)
+                    ->first()?->url;
+
+                return $type;
+            });
+
+        $activities = Activity::where('is_active', true)->orderBy('name')->limit(4)->get();
+        $services = Service::where('is_active', true)->orderBy('sort_order')->orderBy('name')->limit(4)->get();
+
         return view('stories.index', [
             'banners' => $banners,
             'groups' => $groups,
             'stories' => null,
             'filteredCategory' => null,
+            'accommodationTypes' => $accommodationTypes,
+            'activities' => $activities,
+            'services' => $services,
         ]);
     }
 

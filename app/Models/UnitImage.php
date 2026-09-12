@@ -29,6 +29,6 @@ class UnitImage extends Model
 
     public function getUrlAttribute(): string
     {
-        return asset('storage/'.$this->path);
+        return Storage::disk('public')->url($this->path);
     }
 }
