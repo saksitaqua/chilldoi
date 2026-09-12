@@ -11,7 +11,7 @@
                 </div>
 
                 <!-- Navigation Links -->
-                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex items-center">
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
@@ -21,26 +21,61 @@
                     <x-nav-link :href="route('admin.bookings.index')" :active="request()->routeIs('admin.bookings.*')">
                         {{ __('การจอง') }}
                     </x-nav-link>
-                    <x-nav-link :href="route('admin.types.index')" :active="request()->routeIs('admin.types.*')">
-                        {{ __('ประเภทที่พัก') }}
-                    </x-nav-link>
-                    <x-nav-link :href="route('admin.units.index')" :active="request()->routeIs('admin.units.*')">
-                        {{ __('บ้านพัก/จุดกางเต็นท์') }}
-                    </x-nav-link>
-                    <x-nav-link :href="route('admin.stories.index')" :active="request()->routeIs('admin.stories.*')">
-                        {{ __('โพสต์/แนะนำ') }}
-                    </x-nav-link>
-                    <x-nav-link :href="route('admin.activities.index')" :active="request()->routeIs('admin.activities.*')">
-                        {{ __('กิจกรรม') }}
-                    </x-nav-link>
-                    <x-nav-link :href="route('admin.services.index')" :active="request()->routeIs('admin.services.*')">
-                        {{ __('บริการเสริม') }}
-                    </x-nav-link>
+
+                    @php
+                        $accommodationActive = request()->routeIs(['admin.types.*', 'admin.units.*', 'admin.services.*']);
+                        $postActive = request()->routeIs(['admin.stories.*', 'admin.activities.*']);
+                        $generalActive = request()->routeIs('admin.expenses.*');
+                    @endphp
+
+                    <x-dropdown align="left" width="56">
+                        <x-slot name="trigger">
+                            <button class="inline-flex items-center gap-1 px-1 pt-1 border-b-2 {{ $accommodationActive ? 'border-indigo-400 text-gray-900' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300' }} text-sm font-medium leading-5 focus:outline-none transition duration-150 ease-in-out">
+                                {{ __('ข้อมูลที่พัก/บริการ') }}
+                                <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                </svg>
+                            </button>
+                        </x-slot>
+                        <x-slot name="content">
+                            <x-dropdown-link :href="route('admin.types.index')">{{ __('ประเภทห้อง') }}</x-dropdown-link>
+                            <x-dropdown-link :href="route('admin.units.index')">{{ __('บ้านพัก / จุดกางเต็นท์') }}</x-dropdown-link>
+                            <x-dropdown-link :href="route('admin.services.index')">{{ __('บริการเสริม') }}</x-dropdown-link>
+                        </x-slot>
+                    </x-dropdown>
+
+                    <x-dropdown align="left" width="48">
+                        <x-slot name="trigger">
+                            <button class="inline-flex items-center gap-1 px-1 pt-1 border-b-2 {{ $postActive ? 'border-indigo-400 text-gray-900' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300' }} text-sm font-medium leading-5 focus:outline-none transition duration-150 ease-in-out">
+                                {{ __('ข้อมูลโพสต์') }}
+                                <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                </svg>
+                            </button>
+                        </x-slot>
+                        <x-slot name="content">
+                            <x-dropdown-link :href="route('admin.stories.index')">{{ __('โพสต์ / แนะนำ') }}</x-dropdown-link>
+                            <x-dropdown-link :href="route('admin.activities.index')">{{ __('กิจกรรม') }}</x-dropdown-link>
+                        </x-slot>
+                    </x-dropdown>
+
+                    <x-dropdown align="left" width="48">
+                        <x-slot name="trigger">
+                            <button class="inline-flex items-center gap-1 px-1 pt-1 border-b-2 {{ $generalActive ? 'border-indigo-400 text-gray-900' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300' }} text-sm font-medium leading-5 focus:outline-none transition duration-150 ease-in-out">
+                                {{ __('บันทึกทั่วไป') }}
+                                <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                </svg>
+                            </button>
+                        </x-slot>
+                        <x-slot name="content">
+                            <x-dropdown-link :href="route('admin.expenses.index', ['type' => 'income'])">{{ __('บันทึกรายรับ') }}</x-dropdown-link>
+                            <x-dropdown-link :href="route('admin.expenses.index', ['type' => 'expense'])">{{ __('บันทึกรายจ่าย') }}</x-dropdown-link>
+                        </x-slot>
+                    </x-dropdown>
+
                     <x-nav-link :href="route('admin.banners.index')" :active="request()->routeIs('admin.banners.*')">
                         {{ __('แบนเนอร์') }}
-                    </x-nav-link>
-                    <x-nav-link :href="route('admin.expenses.index')" :active="request()->routeIs('admin.expenses.*')">
-                        {{ __('รายจ่าย') }}
                     </x-nav-link>
                     <x-nav-link :href="route('admin.reports.summary')" :active="request()->routeIs('admin.reports.*')">
                         {{ __('รายงานสรุป') }}
@@ -106,26 +141,36 @@
             <x-responsive-nav-link :href="route('admin.bookings.index')" :active="request()->routeIs('admin.bookings.*')">
                 {{ __('การจอง') }}
             </x-responsive-nav-link>
+            <div class="px-4 pt-3 pb-1 text-xs font-semibold text-gray-400 uppercase">{{ __('ข้อมูลที่พัก/บริการ') }}</div>
             <x-responsive-nav-link :href="route('admin.types.index')" :active="request()->routeIs('admin.types.*')">
-                {{ __('ประเภทที่พัก') }}
+                {{ __('ประเภทห้อง') }}
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('admin.units.index')" :active="request()->routeIs('admin.units.*')">
-                {{ __('บ้านพัก/จุดกางเต็นท์') }}
-            </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('admin.stories.index')" :active="request()->routeIs('admin.stories.*')">
-                {{ __('โพสต์/แนะนำ') }}
-            </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('admin.activities.index')" :active="request()->routeIs('admin.activities.*')">
-                {{ __('กิจกรรม') }}
+                {{ __('บ้านพัก / จุดกางเต็นท์') }}
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('admin.services.index')" :active="request()->routeIs('admin.services.*')">
                 {{ __('บริการเสริม') }}
             </x-responsive-nav-link>
+
+            <div class="px-4 pt-3 pb-1 text-xs font-semibold text-gray-400 uppercase">{{ __('ข้อมูลโพสต์') }}</div>
+            <x-responsive-nav-link :href="route('admin.stories.index')" :active="request()->routeIs('admin.stories.*')">
+                {{ __('โพสต์ / แนะนำ') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('admin.activities.index')" :active="request()->routeIs('admin.activities.*')">
+                {{ __('กิจกรรม') }}
+            </x-responsive-nav-link>
+
+            <div class="px-4 pt-3 pb-1 text-xs font-semibold text-gray-400 uppercase">{{ __('บันทึกทั่วไป') }}</div>
+            <x-responsive-nav-link :href="route('admin.expenses.index', ['type' => 'income'])" :active="request()->routeIs('admin.expenses.*') && request('type') === 'income'">
+                {{ __('บันทึกรายรับ') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('admin.expenses.index', ['type' => 'expense'])" :active="request()->routeIs('admin.expenses.*') && request('type') !== 'income'">
+                {{ __('บันทึกรายจ่าย') }}
+            </x-responsive-nav-link>
+
+            <div class="px-4 pt-3 pb-1 text-xs font-semibold text-gray-400 uppercase">{{ __('อื่นๆ') }}</div>
             <x-responsive-nav-link :href="route('admin.banners.index')" :active="request()->routeIs('admin.banners.*')">
                 {{ __('แบนเนอร์') }}
-            </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('admin.expenses.index')" :active="request()->routeIs('admin.expenses.*')">
-                {{ __('รายจ่าย') }}
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('admin.reports.summary')" :active="request()->routeIs('admin.reports.*')">
                 {{ __('รายงานสรุป') }}

@@ -31,15 +31,28 @@ class ReportController extends Controller
                 return $booking;
             });
 
-        $incomeTotal = $bookings->sum('computed_amount');
+        $bookingIncomeTotal = $bookings->sum('computed_amount');
+
+        $manualIncomes = Expense::with('creator')
+            ->where('type', 'income')
+            ->whereRaw("DATE_FORMAT(expense_date, '%Y-%m') = ?", [$month])
+            ->orderBy('expense_date')
+            ->get();
+
+        $manualIncomeTotal = $manualIncomes->sum('total_amount');
+        $incomeTotal = $bookingIncomeTotal + $manualIncomeTotal;
 
         $expenses = Expense::with('creator')
+            ->where('type', 'expense')
             ->whereRaw("DATE_FORMAT(expense_date, '%Y-%m') = ?", [$month])
             ->orderBy('expense_date')
             ->get();
 
         $expenseTotal = $expenses->sum('total_amount');
 
-        return view('admin.reports.summary', compact('bookings', 'incomeTotal', 'expenses', 'expenseTotal', 'month'));
+        return view('admin.reports.summary', compact(
+            'bookings', 'bookingIncomeTotal', 'manualIncomes', 'manualIncomeTotal',
+            'incomeTotal', 'expenses', 'expenseTotal', 'month'
+        ));
     }
 }

@@ -11,7 +11,9 @@ class ExpenseController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Expense::with('creator')->orderByDesc('expense_date');
+        $type = $request->get('type', 'expense') === 'income' ? 'income' : 'expense';
+
+        $query = Expense::with('creator')->where('type', $type)->orderByDesc('expense_date');
 
         if ($request->filled('month')) {
             $query->whereRaw("DATE_FORMAT(expense_date, '%Y-%m') = ?", [$request->string('month')]);
@@ -20,12 +22,14 @@ class ExpenseController extends Controller
         $expenses = $query->paginate(20)->withQueryString();
         $total = (clone $query)->sum('total_amount');
 
-        return view('admin.expenses.index', compact('expenses', 'total'));
+        return view('admin.expenses.index', compact('expenses', 'total', 'type'));
     }
 
-    public function create()
+    public function create(Request $request)
     {
-        return view('admin.expenses.create');
+        $type = $request->get('type', 'expense') === 'income' ? 'income' : 'expense';
+
+        return view('admin.expenses.create', compact('type'));
     }
 
     public function store(Request $request)
@@ -39,7 +43,9 @@ class ExpenseController extends Controller
             $this->storeReceipt($expense, $request->file('receipt_file'));
         }
 
-        return redirect()->route('admin.expenses.index')->with('status', 'บันทึกรายจ่ายเรียบร้อยแล้ว');
+        $message = $expense->type === 'income' ? 'บันทึกรายรับเรียบร้อยแล้ว' : 'บันทึกรายจ่ายเรียบร้อยแล้ว';
+
+        return redirect()->route('admin.expenses.index', ['type' => $expense->type])->with('status', $message);
     }
 
     public function edit(Expense $expense)
@@ -62,7 +68,9 @@ class ExpenseController extends Controller
             $this->storeReceipt($expense, $request->file('receipt_file'));
         }
 
-        return redirect()->route('admin.expenses.index')->with('status', 'บันทึกการแก้ไขเรียบร้อยแล้ว');
+        $message = $expense->type === 'income' ? 'บันทึกการแก้ไขเรียบร้อยแล้ว' : 'บันทึกการแก้ไขเรียบร้อยแล้ว';
+
+        return redirect()->route('admin.expenses.index', ['type' => $expense->type])->with('status', $message);
     }
 
     public function destroy(Expense $expense)
@@ -71,14 +79,16 @@ class ExpenseController extends Controller
             Storage::disk('public')->delete($expense->receipt_file);
         }
 
+        $type = $expense->type;
         $expense->delete();
 
-        return redirect()->route('admin.expenses.index')->with('status', 'ลบรายการเรียบร้อยแล้ว');
+        return redirect()->route('admin.expenses.index', ['type' => $type])->with('status', 'ลบรายการเรียบร้อยแล้ว');
     }
 
     private function validateData(Request $request): array
     {
         $data = $request->validate([
+            'type' => 'required|in:income,expense',
             'expense_date' => 'required|date',
             'item' => 'required|string|max:255',
             'quantity' => 'required|numeric|min:0.01',

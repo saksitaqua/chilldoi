@@ -62,6 +62,32 @@
             </table>
         </div>
 
+        <h3 class="font-semibold mb-3">ส่วนรับเงิน — รายรับเพิ่มเติม (บันทึกเอง)</h3>
+        <div class="bg-white shadow-sm rounded-lg overflow-hidden mb-8">
+            <table class="min-w-full divide-y divide-gray-200 text-sm">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-4 py-2 text-left">วันที่</th>
+                        <th class="px-4 py-2 text-left">รายการ</th>
+                        <th class="px-4 py-2 text-left">ผู้บันทึก</th>
+                        <th class="px-4 py-2 text-right">จำนวนเงิน</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-100">
+                    @forelse ($manualIncomes as $income)
+                        <tr>
+                            <td class="px-4 py-2">{{ $income->expense_date->format('d/m/Y') }}</td>
+                            <td class="px-4 py-2 font-medium">{{ $income->item }}</td>
+                            <td class="px-4 py-2 text-gray-500">{{ $income->creator->name }}</td>
+                            <td class="px-4 py-2 text-right font-medium">{{ number_format($income->total_amount, 2) }}</td>
+                        </tr>
+                    @empty
+                        <tr><td colspan="4" class="px-4 py-6 text-center text-gray-400">ไม่มีรายรับเพิ่มเติมในเดือนนี้</td></tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+
         <h3 class="font-semibold mb-3">ส่วนจ่ายเงิน — รายจ่าย</h3>
         <div class="bg-white shadow-sm rounded-lg overflow-hidden">
             <table class="min-w-full divide-y divide-gray-200 text-sm">
@@ -89,7 +115,7 @@
         </div>
 
         <p class="text-xs text-gray-400 mt-4">
-            * ยอดรับเงินเป็นการประมาณการจากราคาที่พัก x จำนวนคืน บวกกิจกรรม/บริการเสริมที่เลือก ไม่ใช่ยอดที่ยืนยันการชำระจริงทั้งหมด
+            * ยอดรับเงินจากการจองเป็นการประมาณการจากราคาที่พัก x จำนวนคืน บวกกิจกรรม/บริการเสริมที่เลือก ไม่ใช่ยอดที่ยืนยันการชำระจริงทั้งหมด (รวม {{ number_format($bookingIncomeTotal, 2) }} บาท + รายรับเพิ่มเติม {{ number_format($manualIncomeTotal, 2) }} บาท)
         </p>
     </div>
 </x-app-layout>

@@ -1,4 +1,9 @@
-@php $expense = $expense ?? null; @endphp
+@php
+    $expense = $expense ?? null;
+    $type = $expense?->type ?? $type ?? 'expense';
+@endphp
+
+<input type="hidden" name="type" value="{{ $type }}">
 
 <div class="grid grid-cols-2 gap-4">
     <div>

@@ -12,6 +12,7 @@ class Expense extends Model
     use HasFactory;
 
     protected $fillable = [
+        'type',
         'expense_date',
         'item',
         'quantity',
@@ -36,5 +37,10 @@ class Expense extends Model
     public function getReceiptUrlAttribute(): ?string
     {
         return $this->receipt_file ? Storage::disk('public')->url($this->receipt_file) : null;
+    }
+
+    public function getTypeLabelAttribute(): string
+    {
+        return $this->type === 'income' ? 'รายรับ' : 'รายจ่าย';
     }
 }

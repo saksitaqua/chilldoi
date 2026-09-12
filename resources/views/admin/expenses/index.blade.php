@@ -1,6 +1,10 @@
+@php
+    $title = $type === 'income' ? 'บันทึกรายรับ' : 'บันทึกรายจ่าย';
+    $addLabel = $type === 'income' ? '+ เพิ่มรายรับ' : '+ เพิ่มรายจ่าย';
+@endphp
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">บันทึกรายจ่าย</h2>
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight">{{ $title }}</h2>
     </x-slot>
 
     <div class="py-8 max-w-5xl mx-auto sm:px-6 lg:px-8">
@@ -12,12 +16,13 @@
 
         <div class="flex justify-between items-center mb-4">
             <form method="GET" class="flex gap-2 text-sm">
+                <input type="hidden" name="type" value="{{ $type }}">
                 <input type="month" name="month" value="{{ request('month') }}" onchange="this.form.submit()" class="border-gray-300 rounded-md">
                 @if (request('month'))
-                    <a href="{{ route('admin.expenses.index') }}" class="text-emerald-700 hover:underline self-center">ล้างตัวกรอง</a>
+                    <a href="{{ route('admin.expenses.index', ['type' => $type]) }}" class="text-emerald-700 hover:underline self-center">ล้างตัวกรอง</a>
                 @endif
             </form>
-            <a href="{{ route('admin.expenses.create') }}" class="bg-emerald-700 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-emerald-800">+ เพิ่มรายจ่าย</a>
+            <a href="{{ route('admin.expenses.create', ['type' => $type]) }}" class="bg-emerald-700 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-emerald-800">{{ $addLabel }}</a>
         </div>
 
         <div class="bg-white shadow-sm rounded-lg overflow-hidden">
@@ -57,7 +62,7 @@
                             </td>
                         </tr>
                     @empty
-                        <tr><td colspan="7" class="px-4 py-6 text-center text-gray-400">ยังไม่มีรายการรายจ่าย</td></tr>
+                        <tr><td colspan="7" class="px-4 py-6 text-center text-gray-400">{{ $type === 'income' ? 'ยังไม่มีรายการรายรับ' : 'ยังไม่มีรายการรายจ่าย' }}</td></tr>
                     @endforelse
                 </tbody>
                 @if ($expenses->count())

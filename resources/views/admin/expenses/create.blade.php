@@ -1,6 +1,7 @@
+@php $title = $type === 'income' ? 'เพิ่มรายรับ' : 'เพิ่มรายจ่าย'; @endphp
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">เพิ่มรายจ่าย</h2>
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight">{{ $title }}</h2>
     </x-slot>
 
     <div class="py-8 max-w-2xl mx-auto sm:px-6 lg:px-8">
@@ -10,7 +11,7 @@
 
             <div class="pt-2">
                 <button type="submit" class="bg-emerald-700 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-emerald-800">บันทึก</button>
-                <a href="{{ route('admin.expenses.index') }}" class="ml-2 text-sm text-gray-500">ยกเลิก</a>
+                <a href="{{ route('admin.expenses.index', ['type' => $type]) }}" class="ml-2 text-sm text-gray-500">ยกเลิก</a>
             </div>
         </form>
     </div>
