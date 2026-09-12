@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\AccommodationTypeController;
 use App\Http\Controllers\Admin\ActivityController;
 use App\Http\Controllers\Admin\BannerController;
 use App\Http\Controllers\Admin\BookingController;
+use App\Http\Controllers\BookingRequestController;
 use App\Http\Controllers\Admin\CalendarController;
 use App\Http\Controllers\Admin\ServiceController;
 use App\Http\Controllers\Admin\StoryController as AdminStoryController;
@@ -20,6 +21,10 @@ Route::get('/stories/{story}', [StoryFeedController::class, 'show'])->name('stor
 
 Route::get('/availability', [AvailabilityController::class, 'index'])->name('availability.index');
 Route::get('/units/{unit}', [UnitShowController::class, 'show'])->name('units.show');
+
+Route::get('/book/{unit}', [BookingRequestController::class, 'create'])->name('booking.create');
+Route::post('/book/{unit}', [BookingRequestController::class, 'store'])->name('booking.store');
+Route::get('/book/thank-you/{booking}', [BookingRequestController::class, 'thankyou'])->name('booking.thankyou');
 
 Route::get('/map', [MapController::class, 'index'])->name('map.index');
 

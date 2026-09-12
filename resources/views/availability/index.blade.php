@@ -44,7 +44,11 @@
                         <h3 class="font-semibold text-lg">{{ $unit->name }}</h3>
                         <p class="text-sm text-gray-500 mt-1">รองรับ {{ $unit->accommodationType->max_guests }} คน</p>
                         <p class="text-sm text-gray-700 mt-1">เริ่มต้น {{ number_format($unit->accommodationType->base_price) }} บาท/คืน</p>
-                        <a href="{{ route('units.show', $unit) }}" class="inline-block mt-2 text-sm text-emerald-700 hover:underline">ดูรายละเอียด &rarr;</a>
+                        <div class="flex items-center justify-between mt-3">
+                            <a href="{{ route('units.show', $unit) }}" class="text-sm text-emerald-700 hover:underline">ดูรายละเอียด &rarr;</a>
+                            <a href="{{ route('booking.create', ['unit' => $unit->id, 'check_in' => request('check_in'), 'check_out' => request('check_out')]) }}"
+                               class="bg-emerald-700 text-white text-sm font-medium px-4 py-1.5 rounded-md hover:bg-emerald-800">จอง</a>
+                        </div>
                     </div>
                 </div>
             @empty
