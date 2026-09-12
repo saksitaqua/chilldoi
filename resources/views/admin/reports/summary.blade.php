@@ -4,9 +4,20 @@
     </x-slot>
 
     <div class="py-8 max-w-6xl mx-auto sm:px-6 lg:px-8">
-        <form method="GET" class="mb-6">
-            <label class="text-sm font-medium mr-2">เดือน</label>
-            <input type="month" name="month" value="{{ $month }}" onchange="this.form.submit()" class="border-gray-300 rounded-md text-sm">
+        <form method="GET" class="mb-6 flex flex-wrap items-end gap-3">
+            <div>
+                <label class="block text-xs font-medium text-gray-500 mb-1">ตั้งแต่เดือน</label>
+                <input type="month" name="month_from" value="{{ $monthFrom }}" class="border-gray-300 rounded-md text-sm">
+            </div>
+            <div>
+                <label class="block text-xs font-medium text-gray-500 mb-1">ถึงเดือน</label>
+                <input type="month" name="month_to" value="{{ $monthTo }}" class="border-gray-300 rounded-md text-sm">
+            </div>
+            <button type="submit" class="bg-emerald-700 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-emerald-800">ค้นหา</button>
+            <a href="{{ route('admin.reports.summary.export', ['month_from' => $monthFrom, 'month_to' => $monthTo]) }}"
+               class="bg-white border border-gray-300 text-gray-700 px-4 py-2 rounded-md text-sm font-medium hover:bg-gray-50">
+                ⬇ Export Excel (CSV)
+            </a>
         </form>
 
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
@@ -56,7 +67,7 @@
                             <td class="px-4 py-2 text-right font-medium">{{ number_format($booking->computed_amount, 2) }}</td>
                         </tr>
                     @empty
-                        <tr><td colspan="6" class="px-4 py-6 text-center text-gray-400">ไม่มีการจองในเดือนนี้</td></tr>
+                        <tr><td colspan="6" class="px-4 py-6 text-center text-gray-400">ไม่มีการจองในช่วงที่เลือก</td></tr>
                     @endforelse
                 </tbody>
             </table>
@@ -82,7 +93,7 @@
                             <td class="px-4 py-2 text-right font-medium">{{ number_format($income->total_amount, 2) }}</td>
                         </tr>
                     @empty
-                        <tr><td colspan="4" class="px-4 py-6 text-center text-gray-400">ไม่มีรายรับเพิ่มเติมในเดือนนี้</td></tr>
+                        <tr><td colspan="4" class="px-4 py-6 text-center text-gray-400">ไม่มีรายรับเพิ่มเติมในช่วงที่เลือก</td></tr>
                     @endforelse
                 </tbody>
             </table>
@@ -108,7 +119,7 @@
                             <td class="px-4 py-2 text-right font-medium">{{ number_format($expense->total_amount, 2) }}</td>
                         </tr>
                     @empty
-                        <tr><td colspan="4" class="px-4 py-6 text-center text-gray-400">ไม่มีรายจ่ายในเดือนนี้</td></tr>
+                        <tr><td colspan="4" class="px-4 py-6 text-center text-gray-400">ไม่มีรายจ่ายในช่วงที่เลือก</td></tr>
                     @endforelse
                 </tbody>
             </table>

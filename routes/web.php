@@ -50,6 +50,7 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
     Route::resource('stories', AdminStoryController::class);
     Route::resource('expenses', ExpenseController::class);
     Route::get('reports/summary', [ReportController::class, 'summary'])->name('reports.summary');
+    Route::get('reports/summary/export', [ReportController::class, 'export'])->name('reports.summary.export');
     Route::get('calendar', [CalendarController::class, 'index'])->name('calendar.index');
     Route::get('banners', [BannerController::class, 'index'])->name('banners.index');
     Route::post('banners', [BannerController::class, 'store'])->name('banners.store');

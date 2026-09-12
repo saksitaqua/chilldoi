@@ -5,17 +5,110 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Booking;
 use App\Models\Expense;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class ReportController extends Controller
 {
     public function summary(Request $request)
     {
-        $month = $request->string('month')->value() ?: now()->format('Y-m');
+        [$monthFrom, $monthTo, $rangeStart, $rangeEnd] = $this->resolveRange($request);
 
+        $data = $this->buildReportData($rangeStart, $rangeEnd);
+
+        return view('admin.reports.summary', array_merge($data, [
+            'monthFrom' => $monthFrom,
+            'monthTo' => $monthTo,
+        ]));
+    }
+
+    public function export(Request $request): StreamedResponse
+    {
+        [$monthFrom, $monthTo, $rangeStart, $rangeEnd] = $this->resolveRange($request);
+
+        $data = $this->buildReportData($rangeStart, $rangeEnd);
+
+        $filename = "rayngan-sarup_{$monthFrom}_ถึง_{$monthTo}.csv";
+
+        return response()->streamDownload(function () use ($data) {
+            $out = fopen('php://output', 'w');
+
+            fwrite($out, "\xEF\xBB\xBF");
+
+            fputcsv($out, ['ส่วนรับเงิน - การจอง']);
+            fputcsv($out, ['ผู้จอง', 'ที่พัก', 'เช็คอิน', 'คืน', 'สถานะ', 'ยอดประมาณการ']);
+            foreach ($data['bookings'] as $booking) {
+                fputcsv($out, [
+                    $booking->guest_name,
+                    $booking->unit->name,
+                    $booking->check_in->format('d/m/Y'),
+                    $booking->nights,
+                    $booking->status === 'pending' ? 'รอยืนยัน' : 'ยืนยันแล้ว',
+                    number_format($booking->computed_amount, 2, '.', ''),
+                ]);
+            }
+            fputcsv($out, ['', '', '', '', 'รวมรับจากการจอง', number_format($data['bookingIncomeTotal'], 2, '.', '')]);
+            fputcsv($out, []);
+
+            fputcsv($out, ['ส่วนรับเงิน - รายรับเพิ่มเติม (บันทึกเอง)']);
+            fputcsv($out, ['วันที่', 'รายการ', 'ผู้บันทึก', 'จำนวนเงิน']);
+            foreach ($data['manualIncomes'] as $income) {
+                fputcsv($out, [
+                    $income->expense_date->format('d/m/Y'),
+                    $income->item,
+                    $income->creator->name,
+                    number_format($income->total_amount, 2, '.', ''),
+                ]);
+            }
+            fputcsv($out, ['', '', 'รวมรายรับเพิ่มเติม', number_format($data['manualIncomeTotal'], 2, '.', '')]);
+            fputcsv($out, []);
+
+            fputcsv($out, ['ส่วนจ่ายเงิน - รายจ่าย']);
+            fputcsv($out, ['วันที่', 'รายการ', 'ผู้บันทึก', 'จำนวนเงิน']);
+            foreach ($data['expenses'] as $expense) {
+                fputcsv($out, [
+                    $expense->expense_date->format('d/m/Y'),
+                    $expense->item,
+                    $expense->creator->name,
+                    number_format($expense->total_amount, 2, '.', ''),
+                ]);
+            }
+            fputcsv($out, ['', '', 'รวมรายจ่าย', number_format($data['expenseTotal'], 2, '.', '')]);
+            fputcsv($out, []);
+
+            fputcsv($out, ['สรุป']);
+            fputcsv($out, ['รับเงินรวม', number_format($data['incomeTotal'], 2, '.', '')]);
+            fputcsv($out, ['จ่ายเงินรวม', number_format($data['expenseTotal'], 2, '.', '')]);
+            fputcsv($out, ['คงเหลือสุทธิ', number_format($data['incomeTotal'] - $data['expenseTotal'], 2, '.', '')]);
+
+            fclose($out);
+        }, $filename, [
+            'Content-Type' => 'text/csv; charset=UTF-8',
+        ]);
+    }
+
+    private function resolveRange(Request $request): array
+    {
+        $currentMonth = now()->format('Y-m');
+        $monthFrom = $request->string('month_from')->value() ?: $currentMonth;
+        $monthTo = $request->string('month_to')->value() ?: $monthFrom;
+
+        if ($monthTo < $monthFrom) {
+            [$monthFrom, $monthTo] = [$monthTo, $monthFrom];
+        }
+
+        $rangeStart = Carbon::createFromFormat('Y-m-d', "{$monthFrom}-01")->startOfMonth();
+        $rangeEnd = Carbon::createFromFormat('Y-m-d', "{$monthTo}-01")->endOfMonth();
+
+        return [$monthFrom, $monthTo, $rangeStart, $rangeEnd];
+    }
+
+    private function buildReportData(Carbon $rangeStart, Carbon $rangeEnd): array
+    {
         $bookings = Booking::with(['unit.accommodationType', 'activities', 'services'])
             ->where('status', '!=', 'cancelled')
-            ->whereRaw("DATE_FORMAT(check_in, '%Y-%m') = ?", [$month])
+            ->whereBetween('check_in', [$rangeStart->toDateString(), $rangeEnd->toDateString()])
             ->orderBy('check_in')
             ->get()
             ->map(function (Booking $booking) {
@@ -35,7 +128,7 @@ class ReportController extends Controller
 
         $manualIncomes = Expense::with('creator')
             ->where('type', 'income')
-            ->whereRaw("DATE_FORMAT(expense_date, '%Y-%m') = ?", [$month])
+            ->whereBetween('expense_date', [$rangeStart->toDateString(), $rangeEnd->toDateString()])
             ->orderBy('expense_date')
             ->get();
 
@@ -44,15 +137,15 @@ class ReportController extends Controller
 
         $expenses = Expense::with('creator')
             ->where('type', 'expense')
-            ->whereRaw("DATE_FORMAT(expense_date, '%Y-%m') = ?", [$month])
+            ->whereBetween('expense_date', [$rangeStart->toDateString(), $rangeEnd->toDateString()])
             ->orderBy('expense_date')
             ->get();
 
         $expenseTotal = $expenses->sum('total_amount');
 
-        return view('admin.reports.summary', compact(
+        return compact(
             'bookings', 'bookingIncomeTotal', 'manualIncomes', 'manualIncomeTotal',
-            'incomeTotal', 'expenses', 'expenseTotal', 'month'
-        ));
+            'incomeTotal', 'expenses', 'expenseTotal'
+        );
     }
 }
