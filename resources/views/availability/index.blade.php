@@ -1,5 +1,5 @@
-<x-layouts.public :title="'ตรวจสอบห้องว่าง'">
-    <h1 class="text-2xl font-bold mb-6">ตรวจสอบห้องว่าง</h1>
+<x-layouts.public :title="'เช็คห้องว่าง'">
+    <h1 class="text-2xl font-bold mb-6">เช็คห้องว่าง</h1>
 
     <img src="{{ asset('images/booking-steps.svg') }}" alt="ขั้นตอนการจอง" class="w-full rounded-lg shadow-sm mb-8">
 
@@ -59,7 +59,7 @@
         </div>
     @endif
 
-    <h2 class="text-lg font-semibold mb-4">ปฏิทินความว่างรายสัปดาห์</h2>
+    <h2 class="text-lg font-semibold mb-4">ปฏิทินรายสัปดาห์</h2>
 
     <div class="flex justify-between items-center mb-4">
         <a href="{{ route('availability.index', array_merge(request()->except('week'), ['week' => $weekStart->copy()->subWeek()->toDateString()])) }}"

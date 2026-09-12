@@ -1,5 +1,5 @@
 <x-layouts.public :title="$unit->name">
-    <a href="{{ route('availability.index') }}" class="text-sm text-emerald-700 hover:underline">&larr; กลับหน้าตรวจสอบห้องว่าง</a>
+    <a href="{{ route('availability.index') }}" class="text-sm text-emerald-700 hover:underline">&larr; กลับหน้าเช็คห้องว่าง</a>
 
     <div class="mt-4 mb-6 flex flex-wrap items-start justify-between gap-4">
         <div>

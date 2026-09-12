@@ -14,7 +14,7 @@
             </a>
             <div class="flex gap-6 text-sm font-medium">
                 <a href="{{ route('home') }}" class="hover:text-emerald-700">หน้าแรก</a>
-                <a href="{{ route('availability.index') }}" class="hover:text-emerald-700">ตรวจสอบห้องว่าง</a>
+                <a href="{{ route('availability.index') }}" class="hover:text-emerald-700">เช็คห้องว่าง</a>
                 <a href="{{ route('map.index') }}" class="hover:text-emerald-700">แผนที่</a>
                 @auth
                     <a href="{{ route('dashboard') }}" class="hover:text-emerald-700">แอดมิน</a>
