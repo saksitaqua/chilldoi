@@ -10,8 +10,8 @@
 </head>
 <body class="bg-gray-50 text-gray-900">
     <nav class="bg-white border-b border-gray-100">
-        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between h-16 items-center">
-            <a href="{{ route('home') }}" class="flex items-center h-14 py-1">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between h-24 items-center">
+            <a href="{{ route('home') }}" class="flex items-center h-20 py-2">
                 <img src="{{ asset('images/logo-bg.png') }}" alt="{{ config('app.name') }}" class="h-full w-auto">
             </a>
             <div class="flex gap-6 text-sm font-medium">
