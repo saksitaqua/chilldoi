@@ -60,8 +60,8 @@
                     <a href="tel:0869227117" class="text-white/85 hover:text-white">📞 086 922 7117 <span class="text-white/50">(คุณหม่อง)</span></a>
                     <a href="tel:0910670574" class="text-white/85 hover:text-white">📞 091 067 0574 <span class="text-white/50">(คุณหนุ่ย)</span></a>
                     <a href="https://www.facebook.com/profile.php?id=61576119053590" target="_blank" rel="noopener" class="text-white/85 hover:text-white">📘 Facebook</a>
-                    <span class="text-white/85">▶️ YouTube: chilldoicamping&amp;farm</span>
-                    <span class="text-white/85">🎵 TikTok: chilldoicamping&amp;farm</span>
+                    <a href="https://www.youtube.com/@Chilldoicampingandfarm" target="_blank" rel="noopener" class="text-white/85 hover:text-white">▶️ YouTube</a>
+                    <a href="https://www.tiktok.com/@chill.doi.camping" target="_blank" rel="noopener" class="text-white/85 hover:text-white">🎵 TikTok</a>
                 </div>
             </div>
         </div>
