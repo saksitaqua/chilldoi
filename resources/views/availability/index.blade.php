@@ -1,7 +1,7 @@
 <x-layouts.public :title="__('site.availability.title')">
     <h1 class="text-2xl font-bold mb-6">{{ __('site.availability.title') }}</h1>
 
-    <img src="{{ asset(app()->getLocale() === 'en' ? 'images/booking-steps-en.svg' : 'images/booking-steps.svg') }}" alt="{{ __('site.availability.title') }}" class="w-full rounded-lg shadow-sm mb-8">
+    <img src="{{ asset('images/booking-steps-guide.jpg') }}" alt="{{ __('site.availability.title') }}" class="w-full rounded-lg shadow-sm mb-8">
 
     <form method="GET" action="{{ route('availability.index') }}" class="bg-white p-4 rounded-lg shadow-sm mb-8 grid grid-cols-1 sm:grid-cols-4 gap-4">
         <div>
