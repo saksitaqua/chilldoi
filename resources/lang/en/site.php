@@ -64,9 +64,8 @@ return [
 
     'map' => [
         'title' => 'Map of All Accommodations',
+        'no_key_warning' => 'Google Maps API Key is not set yet. Please add GOOGLE_MAPS_API_KEY to the .env file.',
         'no_pins' => 'No accommodation locations have been pinned yet',
-        'attribution_prefix' => 'Map data from',
-        'attribution_suffix' => 'contributors',
     ],
 
     'unit' => [

@@ -64,9 +64,8 @@ return [
 
     'map' => [
         'title' => 'แผนที่ที่พักทั้งหมด',
+        'no_key_warning' => 'ยังไม่ได้ตั้งค่า Google Maps API Key กรุณาเพิ่ม GOOGLE_MAPS_API_KEY ในไฟล์ .env',
         'no_pins' => 'ยังไม่มีการปักหมุดตำแหน่งที่พัก',
-        'attribution_prefix' => 'แผนที่จาก',
-        'attribution_suffix' => 'ผู้ร่วมให้ข้อมูล',
     ],
 
     'unit' => [
