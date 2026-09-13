@@ -40,17 +40,17 @@
     </main>
 
     <footer class="mt-16" style="background:#173626;">
-        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 flex flex-wrap justify-between gap-8 text-white/90">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 flex flex-wrap justify-between gap-8">
             <div class="max-w-sm">
                 <img src="{{ asset('images/logo-bg.png') }}" alt="{{ config('app.name') }}" class="h-9 w-auto mb-3" style="filter:brightness(0) invert(1);opacity:.92;">
-                <p class="text-sm opacity-70 leading-relaxed">🌿 ใกล้ชิดธรรมชาติ ไกลจากความวุ่นวาย — ลานกางเต็นท์และบ้านพักบนดอย เปิดรับแขกทุกวัน</p>
+                <p class="text-sm text-white/70 leading-relaxed">🌿 ใกล้ชิดธรรมชาติ ไกลจากความวุ่นวาย — ลานกางเต็นท์และบ้านพักบนดอย เปิดรับแขกทุกวัน</p>
             </div>
             <div class="flex gap-12 text-sm">
-                <div class="flex flex-col gap-2 opacity-85">
-                    <span class="opacity-50 uppercase tracking-wider text-xs mb-1">สำรวจ</span>
-                    <a href="{{ route('home') }}" class="hover:text-white">หน้าแรก</a>
-                    <a href="{{ route('availability.index') }}" class="hover:text-white">เช็คห้องว่าง</a>
-                    <a href="{{ route('map.index') }}" class="hover:text-white">แผนที่</a>
+                <div class="flex flex-col gap-2 text-white/85">
+                    <span class="text-white/50 uppercase tracking-wider text-xs mb-1">สำรวจ</span>
+                    <a href="{{ route('home') }}" class="text-white/85 hover:text-white">หน้าแรก</a>
+                    <a href="{{ route('availability.index') }}" class="text-white/85 hover:text-white">เช็คห้องว่าง</a>
+                    <a href="{{ route('map.index') }}" class="text-white/85 hover:text-white">แผนที่</a>
                 </div>
             </div>
         </div>
