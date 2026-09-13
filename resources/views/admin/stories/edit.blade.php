@@ -15,6 +15,12 @@
             </div>
 
             <div>
+                <label class="block text-sm font-medium mb-1 text-gray-500">หัวข้อ (English)</label>
+                <input type="text" name="title_en" value="{{ old('title_en', $story->title_en) }}" class="w-full border-gray-300 rounded-md">
+                <x-input-error :messages="$errors->get('title_en')" class="mt-1" />
+            </div>
+
+            <div>
                 <label class="block text-sm font-medium mb-1">กลุ่มประเภท</label>
                 <select name="category" required class="w-full border-gray-300 rounded-md">
                     @foreach (\App\Models\Story::CATEGORIES as $value => $label)
@@ -29,6 +35,12 @@
                 <x-emoji-picker target="description" />
                 <textarea name="description" id="description" rows="5" class="w-full border-gray-300 rounded-md">{{ old('description', $story->description) }}</textarea>
                 <x-input-error :messages="$errors->get('description')" class="mt-1" />
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium mb-1 text-gray-500">คำอธิบาย (English)</label>
+                <textarea name="description_en" rows="5" class="w-full border-gray-300 rounded-md">{{ old('description_en', $story->description_en) }}</textarea>
+                <x-input-error :messages="$errors->get('description_en')" class="mt-1" />
             </div>
 
             @if ($story->images->count())

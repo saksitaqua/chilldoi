@@ -27,8 +27,10 @@ class StoryController extends Controller
     {
         $data = $request->validate([
             'title' => 'required|string|max:255',
+            'title_en' => 'nullable|string|max:255',
             'category' => ['required', Rule::in(array_keys(Story::CATEGORIES))],
             'description' => 'nullable|string',
+            'description_en' => 'nullable|string',
             'starts_on' => 'nullable|date',
             'ends_on' => 'nullable|date|after_or_equal:starts_on',
             'images' => 'nullable|array',
@@ -39,8 +41,10 @@ class StoryController extends Controller
         $story = Story::create([
             'user_id' => $request->user()->id,
             'title' => $data['title'],
+            'title_en' => $data['title_en'] ?? null,
             'category' => $data['category'],
             'description' => $data['description'] ?? null,
+            'description_en' => $data['description_en'] ?? null,
             'is_published' => $request->boolean('is_published', true),
             'starts_on' => $data['starts_on'] ?? null,
             'ends_on' => $data['ends_on'] ?? null,
@@ -66,8 +70,10 @@ class StoryController extends Controller
     {
         $data = $request->validate([
             'title' => 'required|string|max:255',
+            'title_en' => 'nullable|string|max:255',
             'category' => ['required', Rule::in(array_keys(Story::CATEGORIES))],
             'description' => 'nullable|string',
+            'description_en' => 'nullable|string',
             'starts_on' => 'nullable|date',
             'ends_on' => 'nullable|date|after_or_equal:starts_on',
             'images' => 'nullable|array',
@@ -80,8 +86,10 @@ class StoryController extends Controller
 
         $updateData = [
             'title' => $data['title'],
+            'title_en' => $data['title_en'] ?? null,
             'category' => $data['category'],
             'description' => $data['description'] ?? null,
+            'description_en' => $data['description_en'] ?? null,
             'is_published' => $request->boolean('is_published', true),
             'starts_on' => $data['starts_on'] ?? null,
             'ends_on' => $data['ends_on'] ?? null,

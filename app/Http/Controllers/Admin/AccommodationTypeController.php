@@ -57,7 +57,9 @@ class AccommodationTypeController extends Controller
     {
         $data = $request->validate([
             'name' => 'required|string|max:255',
+            'name_en' => 'nullable|string|max:255',
             'description' => 'nullable|string',
+            'description_en' => 'nullable|string',
             'max_guests' => 'required|integer|min:1',
             'base_price' => 'required|numeric|min:0',
         ]);

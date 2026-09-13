@@ -1,21 +1,22 @@
-<x-layouts.public :title="'แผนที่ที่พัก'">
-    <h1 class="text-2xl font-bold mb-6">แผนที่ที่พักทั้งหมด</h1>
+<x-layouts.public :title="__('site.map.title')">
+    <h1 class="text-2xl font-bold mb-6">{{ __('site.map.title') }}</h1>
 
     @php $apiKey = config('services.google_maps.key'); @endphp
 
     @if (! $apiKey)
         <div class="bg-yellow-50 border border-yellow-200 text-yellow-800 rounded-md p-4 text-sm">
-            ยังไม่ได้ตั้งค่า Google Maps API Key กรุณาเพิ่ม <code>GOOGLE_MAPS_API_KEY</code> ในไฟล์ .env
+            {{ __('site.map.no_key_warning') }}
         </div>
     @else
         <div id="map" class="w-full h-[500px] rounded-lg shadow-sm"></div>
 
         <script>
             const units = @json($mapPoints);
+            const noPinsText = @json(__('site.map.no_pins'));
 
             function initMap() {
                 if (units.length === 0) {
-                    document.getElementById('map').innerHTML = '<p class="p-4 text-gray-500">ยังไม่มีการปักหมุดตำแหน่งที่พัก</p>';
+                    document.getElementById('map').innerHTML = '<p class="p-4 text-gray-500">' + noPinsText + '</p>';
                     return;
                 }
 

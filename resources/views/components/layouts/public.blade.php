@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="th">
+<html lang="{{ app()->getLocale() === 'en' ? 'en' : 'th' }}">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -14,15 +14,19 @@
             <a href="{{ route('home') }}" class="flex items-center h-20 py-2">
                 <img src="{{ asset('images/logo-bg.png') }}" alt="{{ config('app.name') }}" class="h-full w-auto">
             </a>
-            <div class="flex gap-6 text-sm font-medium">
-                <a href="{{ route('home') }}" class="hover:text-emerald-700">หน้าแรก</a>
-                <a href="{{ route('availability.index') }}" class="hover:text-emerald-700">เช็คห้องว่าง</a>
-                <a href="{{ route('map.index') }}" class="hover:text-emerald-700">แผนที่</a>
+            <div class="flex items-center gap-6 text-sm font-medium">
+                <a href="{{ route('home') }}" class="hover:text-emerald-700">{{ __('site.nav.home') }}</a>
+                <a href="{{ route('availability.index') }}" class="hover:text-emerald-700">{{ __('site.nav.availability') }}</a>
+                <a href="{{ route('map.index') }}" class="hover:text-emerald-700">{{ __('site.nav.map') }}</a>
                 @auth
-                    <a href="{{ route('dashboard') }}" class="hover:text-emerald-700">แอดมิน</a>
+                    <a href="{{ route('dashboard') }}" class="hover:text-emerald-700">{{ __('site.nav.admin') }}</a>
                 @else
-                    <a href="{{ route('login') }}" class="hover:text-emerald-700">เข้าสู่ระบบ</a>
+                    <a href="{{ route('login') }}" class="hover:text-emerald-700">{{ __('site.nav.login') }}</a>
                 @endauth
+                <div class="flex items-center gap-1 border-l border-gray-200 pl-4 text-xs font-semibold">
+                    <a href="{{ route('lang.switch', 'th') }}" class="px-2 py-1 rounded {{ app()->getLocale() === 'th' ? 'bg-emerald-700 text-white' : 'text-gray-400 hover:text-emerald-700' }}">TH</a>
+                    <a href="{{ route('lang.switch', 'en') }}" class="px-2 py-1 rounded {{ app()->getLocale() === 'en' ? 'bg-emerald-700 text-white' : 'text-gray-400 hover:text-emerald-700' }}">EN</a>
+                </div>
             </div>
         </div>
     </nav>
@@ -43,19 +47,19 @@
         <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 flex flex-wrap justify-between gap-10">
             <div class="max-w-sm">
                 <img src="{{ asset('images/logo-bg.png') }}" alt="{{ config('app.name') }}" class="h-9 w-auto mb-3" style="filter:brightness(0) invert(1);opacity:.92;">
-                <p class="text-sm text-white/70 leading-relaxed">พื้นที่เล็กๆ สำหรับคนรักธรรมชาติ กาแฟท้องถิ่น ผ้าทอปกาเกอะญอ แคมป์ปิ้ง เดินป่าศึกษาธรรมชาติ = เก็บความทรงจำ</p>
+                <p class="text-sm text-white/70 leading-relaxed">{{ __('site.footer.tagline') }}</p>
             </div>
 
             <div class="flex flex-wrap gap-12 text-sm">
                 <div class="flex flex-col gap-2 text-white/85">
-                    <span class="text-white/50 uppercase tracking-wider text-xs mb-1">สำรวจ</span>
-                    <a href="{{ route('home') }}" class="text-white/85 hover:text-white">หน้าแรก</a>
-                    <a href="{{ route('availability.index') }}" class="text-white/85 hover:text-white">เช็คห้องว่าง</a>
-                    <a href="{{ route('map.index') }}" class="text-white/85 hover:text-white">แผนที่</a>
+                    <span class="text-white/50 uppercase tracking-wider text-xs mb-1">{{ __('site.footer.explore') }}</span>
+                    <a href="{{ route('home') }}" class="text-white/85 hover:text-white">{{ __('site.nav.home') }}</a>
+                    <a href="{{ route('availability.index') }}" class="text-white/85 hover:text-white">{{ __('site.nav.availability') }}</a>
+                    <a href="{{ route('map.index') }}" class="text-white/85 hover:text-white">{{ __('site.nav.map') }}</a>
                 </div>
 
                 <div class="flex flex-col gap-2 text-white/85">
-                    <span class="text-white/50 uppercase tracking-wider text-xs mb-1">ติดต่อเรา</span>
+                    <span class="text-white/50 uppercase tracking-wider text-xs mb-1">{{ __('site.footer.contact') }}</span>
                     <a href="mailto:sales@chilldoicampingandfarm.com" class="text-white/85 hover:text-white break-all">✉️ sales@chilldoicampingandfarm.com</a>
                     <a href="tel:0869227117" class="text-white/85 hover:text-white">📞 086 922 7117 <span class="text-white/50">(คุณหม่อง)</span></a>
                     <a href="tel:0910670574" class="text-white/85 hover:text-white">📞 091 067 0574 <span class="text-white/50">(คุณหนุ่ย)</span></a>

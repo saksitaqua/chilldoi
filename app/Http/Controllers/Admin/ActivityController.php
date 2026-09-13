@@ -89,7 +89,9 @@ class ActivityController extends Controller
     {
         $data = $request->validate([
             'name' => 'required|string|max:255',
+            'name_en' => 'nullable|string|max:255',
             'description' => 'nullable|string',
+            'description_en' => 'nullable|string',
             'image' => 'nullable|image|max:5120',
             'video' => 'nullable|mimes:mp4,mov,webm,avi|max:51200',
             'is_free' => 'required|boolean',

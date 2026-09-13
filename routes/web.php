@@ -13,11 +13,14 @@ use App\Http\Controllers\Admin\ServiceController;
 use App\Http\Controllers\Admin\StoryController as AdminStoryController;
 use App\Http\Controllers\Admin\UnitController;
 use App\Http\Controllers\AvailabilityController;
+use App\Http\Controllers\LocaleController;
 use App\Http\Controllers\MapController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\StoryFeedController;
 use App\Http\Controllers\UnitShowController;
 use Illuminate\Support\Facades\Route;
+
+Route::get('/lang/{locale}', [LocaleController::class, 'switch'])->name('lang.switch');
 
 Route::get('/', [StoryFeedController::class, 'index'])->name('home');
 Route::get('/stories/{story}', [StoryFeedController::class, 'show'])->name('stories.show');

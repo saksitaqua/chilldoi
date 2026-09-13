@@ -7,10 +7,22 @@
 </div>
 
 <div>
+    <label class="block text-sm font-medium mb-1 text-gray-500">ชื่อกิจกรรม (English)</label>
+    <input type="text" name="name_en" value="{{ old('name_en', $activity?->name_en) }}" class="w-full border-gray-300 rounded-md">
+    <x-input-error :messages="$errors->get('name_en')" class="mt-1" />
+</div>
+
+<div>
     <label class="block text-sm font-medium mb-1">คำอธิบาย</label>
     <x-emoji-picker target="description" />
     <textarea name="description" id="description" rows="3" class="w-full border-gray-300 rounded-md">{{ old('description', $activity?->description) }}</textarea>
     <x-input-error :messages="$errors->get('description')" class="mt-1" />
+</div>
+
+<div>
+    <label class="block text-sm font-medium mb-1 text-gray-500">คำอธิบาย (English)</label>
+    <textarea name="description_en" rows="3" class="w-full border-gray-300 rounded-md">{{ old('description_en', $activity?->description_en) }}</textarea>
+    <x-input-error :messages="$errors->get('description_en')" class="mt-1" />
 </div>
 
 <div>

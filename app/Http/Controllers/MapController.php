@@ -16,7 +16,7 @@ class MapController extends Controller
 
         $mapPoints = $units->map(fn (Unit $unit) => [
             'name' => $unit->name,
-            'type' => $unit->accommodationType->name,
+            'type' => $unit->accommodationType->display_name,
             'lat' => (float) $unit->lat,
             'lng' => (float) $unit->lng,
         ])->values();

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\HasEnglishFields;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -9,11 +10,13 @@ use Illuminate\Support\Facades\Storage;
 
 class Activity extends Model
 {
-    use HasFactory;
+    use HasFactory, HasEnglishFields;
 
     protected $fillable = [
         'name',
+        'name_en',
         'description',
+        'description_en',
         'image',
         'video',
         'is_free',
@@ -44,10 +47,22 @@ class Activity extends Model
     public function getPriceLabelAttribute(): string
     {
         if ($this->is_free) {
-            return 'ฟรี';
+            return app()->getLocale() === 'en' ? 'Free' : 'ฟรี';
         }
 
-        return number_format((float) $this->price, 0).' บาท';
+        $amount = number_format((float) $this->price, 0);
+
+        return app()->getLocale() === 'en' ? "{$amount} THB" : "{$amount} บาท";
+    }
+
+    public function getDisplayNameAttribute(): ?string
+    {
+        return $this->translate('name');
+    }
+
+    public function getDisplayDescriptionAttribute(): ?string
+    {
+        return $this->translate('description');
     }
 
     public function bookings(): BelongsToMany

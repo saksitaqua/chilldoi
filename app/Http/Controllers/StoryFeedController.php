@@ -31,7 +31,7 @@ class StoryFeedController extends Controller
             ]);
         }
 
-        $groups = collect(Story::CATEGORIES)->map(function ($label, $key) {
+        $groups = collect(Story::categoriesForLocale())->map(function ($label, $key) {
             return [
                 'label' => $label,
                 'key' => $key,

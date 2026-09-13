@@ -1,4 +1,4 @@
-<x-layouts.public :title="'เรื่องราวจากลานกางเต็นท์'">
+<x-layouts.public :title="__('site.home.page_title')">
     @if ($groups !== null)
         <x-slot name="hero">
             <style>
@@ -73,12 +73,12 @@
                 </div>
 
                 <div class="cd-hero-inner cd-hero-copy">
-                    <p class="cd-eyebrow">ลานกางเต็นท์ · บ้านพัก · แคมป์ปิ้ง</p>
-                    <h1>ใกล้ชิดธรรมชาติ<br>ไกลจากความวุ่นวาย</h1>
-                    <p>จิบกาแฟยามเช้าท่ามกลางสายหมอก นอนฟังเสียงลมบนดอย แล้วตื่นมาดูพระอาทิตย์ขึ้นเหนือสันเขา</p>
+                    <p class="cd-eyebrow">{{ __('site.home.eyebrow') }}</p>
+                    <h1>{{ __('site.home.headline_1') }}<br>{{ __('site.home.headline_2') }}</h1>
+                    <p>{{ __('site.home.subhead') }}</p>
                     <div class="cd-hero-actions">
-                        <a href="{{ route('availability.index') }}" class="cd-btn cd-btn-primary">เช็คห้องว่าง</a>
-                        <a href="#stories" class="cd-btn cd-btn-ghost">ดูเรื่องราวจากลานกางเต็นท์</a>
+                        <a href="{{ route('availability.index') }}" class="cd-btn cd-btn-primary">{{ __('site.home.cta_check') }}</a>
+                        <a href="#stories" class="cd-btn cd-btn-ghost">{{ __('site.home.cta_stories') }}</a>
                     </div>
                 </div>
             </div>
@@ -87,23 +87,23 @@
                 <form method="GET" action="{{ route('availability.index') }}" class="cd-quick-panel">
                     <div class="cd-quick-row">
                         <div class="cd-field">
-                            <label>วันเช็คอิน</label>
+                            <label>{{ __('site.home.quick_checkin') }}</label>
                             <input type="date" name="check_in" required>
                         </div>
                         <div class="cd-field">
-                            <label>วันเช็คเอาท์</label>
+                            <label>{{ __('site.home.quick_checkout') }}</label>
                             <input type="date" name="check_out" required>
                         </div>
                         <div class="cd-field">
-                            <label>ประเภทที่พัก</label>
+                            <label>{{ __('site.home.quick_type') }}</label>
                             <select name="accommodation_type_id">
-                                <option value="">ทั้งหมด</option>
+                                <option value="">{{ __('site.home.quick_type_all') }}</option>
                                 @foreach ($accommodationTypes as $type)
-                                    <option value="{{ $type->id }}">{{ $type->name }}</option>
+                                    <option value="{{ $type->id }}">{{ $type->display_name }}</option>
                                 @endforeach
                             </select>
                         </div>
-                        <button type="submit" class="cd-btn cd-btn-primary">ค้นหาห้องว่าง</button>
+                        <button type="submit" class="cd-btn cd-btn-primary">{{ __('site.home.quick_search') }}</button>
                     </div>
                 </form>
             </div>
@@ -196,27 +196,27 @@
             <div class="cd-section">
                 <div class="cd-section-head">
                     <div>
-                        <p class="cd-eyebrow" style="color:#2f6b4f;">เลือกที่พัก</p>
-                        <h2>ที่พักของเรา</h2>
+                        <p class="cd-eyebrow" style="color:#2f6b4f;">{{ __('site.home.stays_eyebrow') }}</p>
+                        <h2>{{ __('site.home.stays_heading') }}</h2>
                     </div>
-                    <a class="cd-more" href="{{ route('availability.index') }}">เช็คห้องว่าง →</a>
+                    <a class="cd-more" href="{{ route('availability.index') }}">{{ __('site.nav.availability') }} →</a>
                 </div>
                 <div class="cd-stays">
                     @foreach ($accommodationTypes as $type)
                         <div class="cd-stay-card">
                             <div class="cd-stay-media">
                                 @if ($type->cover_image)
-                                    <img src="{{ $type->cover_image }}" alt="{{ $type->name }}">
+                                    <img src="{{ $type->cover_image }}" alt="{{ $type->display_name }}">
                                 @else
-                                    <div class="cd-stay-empty">ไม่มีรูปภาพ</div>
+                                    <div class="cd-stay-empty">{{ __('site.home.no_image') }}</div>
                                 @endif
                             </div>
                             <div class="cd-stay-body">
-                                <h3>{{ $type->name }}</h3>
-                                <p class="cd-stay-meta">รองรับสูงสุด {{ $type->max_guests }} คน</p>
+                                <h3>{{ $type->display_name }}</h3>
+                                <p class="cd-stay-meta">{{ __('site.home.stays_capacity', ['count' => $type->max_guests]) }}</p>
                                 <div class="cd-stay-foot">
-                                    <div class="cd-stay-price">฿{{ number_format($type->base_price) }} <span>/ คืน</span></div>
-                                    <a class="cd-stay-link" href="{{ route('availability.index') }}">ดูรายละเอียด →</a>
+                                    <div class="cd-stay-price">฿{{ number_format($type->base_price) }} <span>{{ __('site.home.stays_per_night') }}</span></div>
+                                    <a class="cd-stay-link" href="{{ route('availability.index') }}">{{ __('site.home.stays_view') }}</a>
                                 </div>
                             </div>
                         </div>
@@ -227,28 +227,28 @@
 
         <div id="stories" class="cd-section">
             @if ($groups->isEmpty())
-                <div class="cd-section-head"><h2>เรื่องราวล่าสุด</h2></div>
-                <p style="color:#5b6357;">ยังไม่มีเรื่องราวที่โพสต์</p>
+                <div class="cd-section-head"><h2>{{ __('site.home.recent_stories') }}</h2></div>
+                <p style="color:#5b6357;">{{ __('site.home.stories_none') }}</p>
             @else
                 @foreach ($groups as $group)
                     <div class="{{ $loop->first ? '' : 'cd-section' }}">
                         <div class="cd-section-head">
                             <div>
-                                <p class="cd-eyebrow" style="color:#2f6b4f;">แนะนำ · อีเวนต์ · ประโยชน์</p>
+                                <p class="cd-eyebrow" style="color:#2f6b4f;">{{ __('site.home.stories_eyebrow') }}</p>
                                 <h2>{{ $group['label'] }}</h2>
                             </div>
-                            <a class="cd-more" href="{{ route('home', ['category' => $group['key']]) }}">ดูทั้งหมด →</a>
+                            <a class="cd-more" href="{{ route('home', ['category' => $group['key']]) }}">{{ __('site.home.view_all') }}</a>
                         </div>
                         <div class="cd-trail">
                             @foreach ($group['stories'] as $story)
                                 @php $img = $story->images->first(); @endphp
                                 <a href="{{ route('stories.show', $story) }}" class="cd-trail-card">
                                     @if ($img)
-                                        <img src="{{ $img->url }}" alt="{{ $story->title }}">
+                                        <img src="{{ $img->url }}" alt="{{ $story->display_title }}">
                                     @endif
                                     <div class="cd-trail-body">
                                         <span class="cd-trail-badge">{{ $group['label'] }}</span>
-                                        <h3>{{ $story->title }}</h3>
+                                        <h3>{{ $story->display_title }}</h3>
                                     </div>
                                 </a>
                             @endforeach
@@ -262,21 +262,21 @@
             <div class="cd-section">
                 <div class="cd-strip">
                     <div>
-                        <p class="cd-eyebrow" style="color:#2f6b4f;">เพิ่มเติมระหว่างพัก</p>
-                        <h2>กิจกรรม &amp; บริการเสริม</h2>
-                        <p class="lead">เลือกเพิ่มได้ตอนจอง ไม่บังคับ — จ่ายเฉพาะที่ใช้จริง</p>
+                        <p class="cd-eyebrow" style="color:#2f6b4f;">{{ __('site.home.extras_eyebrow') }}</p>
+                        <h2>{{ __('site.home.extras_heading') }}</h2>
+                        <p class="lead">{{ __('site.home.extras_lead') }}</p>
                     </div>
                     <div class="cd-chips">
                         @foreach ($activities as $activity)
                             <div class="cd-chip {{ $activity->is_free ? 'free' : '' }}">
-                                <span class="dot"></span><b>{{ $activity->name }}</b>
-                                <span class="price">{{ $activity->is_free ? 'ฟรี' : number_format($activity->price).' บาท' }}</span>
+                                <span class="dot"></span><b>{{ $activity->display_name }}</b>
+                                <span class="price">{{ $activity->price_label }}</span>
                             </div>
                         @endforeach
                         @foreach ($services as $service)
                             <div class="cd-chip">
-                                <span class="dot"></span><b>{{ $service->name }}</b>
-                                <span class="price">{{ number_format($service->price) }} บาท</span>
+                                <span class="dot"></span><b>{{ $service->display_name }}</b>
+                                <span class="price">{{ $service->price_label }}</span>
                             </div>
                         @endforeach
                     </div>
@@ -285,15 +285,15 @@
         @endif
     @else
         <div class="flex items-center gap-3 mb-6">
-            <a href="{{ route('home') }}" class="text-sm text-emerald-700 hover:underline">&larr; กลับหน้ารวม</a>
-            <h1 class="text-2xl font-bold">{{ \App\Models\Story::CATEGORIES[$filteredCategory] ?? $filteredCategory }}</h1>
+            <a href="{{ route('home') }}" class="text-sm text-emerald-700 hover:underline">{{ __('site.home.back_to_all') }}</a>
+            <h1 class="text-2xl font-bold">{{ \App\Models\Story::categoryLabel($filteredCategory) }}</h1>
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             @forelse ($stories as $story)
                 @include('stories._card', ['story' => $story])
             @empty
-                <p class="text-gray-500">ยังไม่มีเรื่องราวในกลุ่มนี้</p>
+                <p class="text-gray-500">{{ __('site.home.no_stories_in_group') }}</p>
             @endforelse
         </div>
 

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\HasEnglishFields;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -10,13 +11,15 @@ use Illuminate\Support\Facades\Storage;
 
 class Story extends Model
 {
-    use HasFactory;
+    use HasFactory, HasEnglishFields;
 
     protected $fillable = [
         'user_id',
         'title',
+        'title_en',
         'category',
         'description',
+        'description_en',
         'video',
         'is_published',
         'starts_on',
@@ -35,6 +38,12 @@ class Story extends Model
         'benefit' => 'ประโยชน์',
     ];
 
+    public const CATEGORIES_EN = [
+        'recommend' => 'Recommended',
+        'event' => 'Events',
+        'benefit' => 'Good to know',
+    ];
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
@@ -42,7 +51,31 @@ class Story extends Model
 
     public function getCategoryLabelAttribute(): string
     {
-        return self::CATEGORIES[$this->category] ?? $this->category;
+        return self::categoryLabel($this->category);
+    }
+
+    public static function categoryLabel(string $key): string
+    {
+        if (app()->getLocale() === 'en') {
+            return self::CATEGORIES_EN[$key] ?? $key;
+        }
+
+        return self::CATEGORIES[$key] ?? $key;
+    }
+
+    public static function categoriesForLocale(): array
+    {
+        return app()->getLocale() === 'en' ? self::CATEGORIES_EN : self::CATEGORIES;
+    }
+
+    public function getDisplayTitleAttribute(): ?string
+    {
+        return $this->translate('title');
+    }
+
+    public function getDisplayDescriptionAttribute(): ?string
+    {
+        return $this->translate('description');
     }
 
     public function images(): HasMany
