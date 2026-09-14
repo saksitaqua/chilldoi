@@ -8,11 +8,13 @@ use App\Http\Controllers\BookingRequestController;
 use App\Http\Controllers\Admin\CalendarController;
 use App\Http\Controllers\Admin\EmployeeController;
 use App\Http\Controllers\Admin\ExpenseController;
+use App\Http\Controllers\Admin\PlanController;
 use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\Admin\ServiceController;
 use App\Http\Controllers\Admin\StoryController as AdminStoryController;
 use App\Http\Controllers\Admin\UnitController;
 use App\Http\Controllers\AvailabilityController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LocaleController;
 use App\Http\Controllers\MapController;
 use App\Http\Controllers\ProfileController;
@@ -35,9 +37,7 @@ Route::post('/book/thank-you/{booking}/slip', [BookingRequestController::class, 
 
 Route::get('/map', [MapController::class, 'index'])->name('map.index');
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -53,6 +53,7 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
     Route::resource('bookings', BookingController::class);
     Route::resource('stories', AdminStoryController::class);
     Route::resource('expenses', ExpenseController::class);
+    Route::resource('plans', PlanController::class);
     Route::get('reports/summary', [ReportController::class, 'summary'])->name('reports.summary');
     Route::get('reports/summary/export', [ReportController::class, 'export'])->name('reports.summary.export');
     Route::get('calendar', [CalendarController::class, 'index'])->name('calendar.index');
