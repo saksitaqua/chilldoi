@@ -8,15 +8,22 @@
 
 <div class="grid grid-cols-2 gap-4">
     <div>
-        <label class="block text-sm font-medium mb-1">วันครบกำหนด (ถ้ามี)</label>
+        <label class="block text-sm font-medium mb-1">กำหนดเริ่มแจ้งเตือน (ถ้ามี)</label>
+        <input type="date" name="remind_from" value="{{ old('remind_from', $plan?->remind_from?->format('Y-m-d')) }}" class="w-full border-gray-300 rounded-md">
+        <p class="text-xs text-gray-400 mt-1">Dashboard จะเริ่มแจ้งเตือนแผนงานนี้ตั้งแต่วันที่นี้เป็นต้นไป</p>
+        <x-input-error :messages="$errors->get('remind_from')" class="mt-1" />
+    </div>
+    <div>
+        <label class="block text-sm font-medium mb-1">กำหนดเสร็จ (ถ้ามี)</label>
         <input type="date" name="due_date" value="{{ old('due_date', $plan?->due_date?->format('Y-m-d')) }}" class="w-full border-gray-300 rounded-md">
         <x-input-error :messages="$errors->get('due_date')" class="mt-1" />
     </div>
-    <div>
-        <label class="block text-sm font-medium mb-1">งบประมาณ (บาท)</label>
-        <input type="number" step="0.01" min="0" name="budget" value="{{ old('budget', $plan?->budget) }}" class="w-full border-gray-300 rounded-md">
-        <x-input-error :messages="$errors->get('budget')" class="mt-1" />
-    </div>
+</div>
+
+<div>
+    <label class="block text-sm font-medium mb-1">งบประมาณ (บาท)</label>
+    <input type="number" step="0.01" min="0" name="budget" value="{{ old('budget', $plan?->budget) }}" class="w-full border-gray-300 rounded-md sm:w-60">
+    <x-input-error :messages="$errors->get('budget')" class="mt-1" />
 </div>
 
 <div>

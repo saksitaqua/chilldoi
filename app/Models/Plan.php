@@ -12,6 +12,7 @@ class Plan extends Model
 
     protected $fillable = [
         'title',
+        'remind_from',
         'due_date',
         'budget',
         'notes',
@@ -20,6 +21,7 @@ class Plan extends Model
     ];
 
     protected $casts = [
+        'remind_from' => 'date',
         'due_date' => 'date',
         'budget' => 'decimal:2',
     ];
@@ -41,5 +43,18 @@ class Plan extends Model
         }
 
         return $this->due_date->between(now()->startOfDay(), now()->addDays($days)->endOfDay());
+    }
+
+    public function shouldNotify(): bool
+    {
+        if ($this->status !== 'pending') {
+            return false;
+        }
+
+        if ($this->remind_from) {
+            return ! $this->remind_from->isFuture();
+        }
+
+        return $this->isDueSoon() || $this->isOverdue();
     }
 }

@@ -26,7 +26,8 @@
                 <thead class="bg-gray-50">
                     <tr>
                         <th class="px-4 py-2 text-left">แผนงาน</th>
-                        <th class="px-4 py-2 text-left">วันครบกำหนด</th>
+                        <th class="px-4 py-2 text-left">เริ่มแจ้งเตือน</th>
+                        <th class="px-4 py-2 text-left">กำหนดเสร็จ</th>
                         <th class="px-4 py-2 text-right">งบประมาณ</th>
                         <th class="px-4 py-2 text-left">ผู้บันทึก</th>
                         <th class="px-4 py-2"></th>
@@ -40,6 +41,9 @@
                                 @if ($plan->notes)
                                     <p class="text-xs text-gray-400 mt-0.5 line-clamp-1">{{ $plan->notes }}</p>
                                 @endif
+                            </td>
+                            <td class="px-4 py-2 text-gray-500">
+                                {{ $plan->remind_from ? $plan->remind_from->format('d/m/Y') : '-' }}
                             </td>
                             <td class="px-4 py-2">
                                 @if ($plan->due_date)
@@ -64,7 +68,7 @@
                             </td>
                         </tr>
                     @empty
-                        <tr><td colspan="5" class="px-4 py-6 text-center text-gray-400">ยังไม่มีแผนงาน</td></tr>
+                        <tr><td colspan="6" class="px-4 py-6 text-center text-gray-400">ยังไม่มีแผนงาน</td></tr>
                     @endforelse
                 </tbody>
             </table>

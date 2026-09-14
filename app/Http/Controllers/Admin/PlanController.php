@@ -64,6 +64,7 @@ class PlanController extends Controller
     {
         return $request->validate([
             'title' => 'required|string|max:255',
+            'remind_from' => 'nullable|date',
             'due_date' => 'nullable|date',
             'budget' => 'nullable|numeric|min:0',
             'notes' => 'nullable|string',

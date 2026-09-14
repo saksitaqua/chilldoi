@@ -62,7 +62,7 @@
 
             <div class="bg-white shadow-sm rounded-lg">
                 <div class="flex items-center justify-between px-5 py-4 border-b border-gray-100">
-                    <h3 class="font-semibold text-gray-800">แผนงานที่ใกล้ถึงกำหนด (ภายใน 7 วัน)</h3>
+                    <h3 class="font-semibold text-gray-800">แผนงานที่ต้องติดตาม</h3>
                     <a href="{{ route('admin.plans.index') }}" class="text-sm text-emerald-700 hover:underline">ดูทั้งหมด →</a>
                 </div>
                 <div class="divide-y divide-gray-100">
@@ -74,14 +74,18 @@
                                     <p class="text-xs text-gray-500 mt-0.5">งบประมาณ {{ number_format($plan->budget, 2) }} บาท</p>
                                 @endif
                             </div>
-                            <span @class([
-                                'text-xs px-2 py-1 rounded font-medium whitespace-nowrap',
-                                'bg-red-50 text-red-700' => $plan->isOverdue(),
-                                'bg-orange-50 text-orange-700' => ! $plan->isOverdue(),
-                            ])>{{ $plan->isOverdue() ? 'เลยกำหนด' : 'ครบกำหนด' }} {{ $plan->due_date->format('d/m/Y') }}</span>
+                            @if ($plan->due_date)
+                                <span @class([
+                                    'text-xs px-2 py-1 rounded font-medium whitespace-nowrap',
+                                    'bg-red-50 text-red-700' => $plan->isOverdue(),
+                                    'bg-orange-50 text-orange-700' => ! $plan->isOverdue(),
+                                ])>{{ $plan->isOverdue() ? 'เลยกำหนด' : 'กำหนดเสร็จ' }} {{ $plan->due_date->format('d/m/Y') }}</span>
+                            @else
+                                <span class="text-xs bg-orange-50 text-orange-700 px-2 py-1 rounded font-medium whitespace-nowrap">แจ้งเตือน</span>
+                            @endif
                         </a>
                     @empty
-                        <p class="px-5 py-6 text-sm text-gray-400 text-center">ไม่มีแผนงานที่ใกล้ถึงกำหนด</p>
+                        <p class="px-5 py-6 text-sm text-gray-400 text-center">ไม่มีแผนงานที่ต้องติดตาม</p>
                     @endforelse
                 </div>
             </div>

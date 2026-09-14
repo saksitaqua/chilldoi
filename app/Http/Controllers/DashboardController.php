@@ -37,10 +37,20 @@ class DashboardController extends Controller
             ->limit(5)
             ->get();
 
+        $today = now()->toDateString();
+        $weekAhead = now()->addDays(7)->toDateString();
+
         $upcomingPlans = Plan::with('creator')
             ->where('status', 'pending')
-            ->whereNotNull('due_date')
-            ->where('due_date', '<=', now()->addDays(7)->toDateString())
+            ->where(function ($query) use ($today, $weekAhead) {
+                $query->where('remind_from', '<=', $today)
+                    ->orWhere(function ($query) use ($today, $weekAhead) {
+                        $query->whereNull('remind_from')
+                            ->whereNotNull('due_date')
+                            ->where('due_date', '<=', $weekAhead);
+                    });
+            })
+            ->orderByRaw('due_date IS NULL')
             ->orderBy('due_date')
             ->limit(8)
             ->get();
