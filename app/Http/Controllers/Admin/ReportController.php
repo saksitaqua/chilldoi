@@ -72,14 +72,15 @@ class ReportController extends Controller
 
         $row = $this->writeSectionTable(
             $sheet, $row, 'ส่วนรับเงิน — รายรับเพิ่มเติม (บันทึกเอง)',
-            ['วันที่', 'รายการ', 'ผู้บันทึก', 'จำนวนเงิน'],
+            ['วันที่', 'รายการ', 'ประเภทรายรับ', 'ผู้บันทึก', 'จำนวนเงิน'],
             $data['manualIncomes']->map(fn ($i) => [
                 $i->expense_date->format('d/m/Y'),
                 $i->item,
+                $i->income_category_label ?? '-',
                 $i->creator->name,
                 (float) $i->total_amount,
             ])->all(),
-            'รวมรายรับเพิ่มเติม', (float) $data['manualIncomeTotal'], 2
+            'รวมรายรับเพิ่มเติม', (float) $data['manualIncomeTotal'], 3
         );
 
         $row = $this->writeSectionTable(
