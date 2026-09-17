@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Expense;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rule;
 
 class ExpenseController extends Controller
 {
@@ -89,14 +90,20 @@ class ExpenseController extends Controller
     {
         $data = $request->validate([
             'type' => 'required|in:income,expense',
+            'income_category' => ['nullable', Rule::in(array_keys(Expense::INCOME_CATEGORIES))],
             'expense_date' => 'required|date',
             'item' => 'required|string|max:255',
+            'is_recurring' => 'nullable|boolean',
+            'recurrence_months' => ['nullable', Rule::in(array_keys(Expense::RECURRENCE_OPTIONS))],
             'quantity' => 'required|numeric|min:0.01',
             'unit_price' => 'required|numeric|min:0',
             'receipt_file' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:8192',
         ]);
 
         $data['total_amount'] = $data['quantity'] * $data['unit_price'];
+        $data['is_recurring'] = $request->boolean('is_recurring');
+        $data['income_category'] = $data['type'] === 'income' ? ($data['income_category'] ?? null) : null;
+        $data['recurrence_months'] = $data['is_recurring'] ? ($data['recurrence_months'] ?? null) : null;
 
         unset($data['receipt_file']);
 

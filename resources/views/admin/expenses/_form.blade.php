@@ -23,6 +23,40 @@
     <x-input-error :messages="$errors->get('item')" class="mt-1" />
 </div>
 
+@if ($type === 'income')
+    <div>
+        <label class="block text-sm font-medium mb-1">ประเภทรายรับ</label>
+        <select name="income_category" class="w-full border-gray-300 rounded-md">
+            <option value="">-- ไม่ระบุ --</option>
+            @foreach (\App\Models\Expense::INCOME_CATEGORIES as $value => $label)
+                <option value="{{ $value }}" @selected(old('income_category', $expense?->income_category) === $value)>{{ $label }}</option>
+            @endforeach
+        </select>
+        <x-input-error :messages="$errors->get('income_category')" class="mt-1" />
+    </div>
+@endif
+
+@if ($type === 'expense')
+    @php $isRecurring = old('is_recurring', $expense?->is_recurring ?? false); @endphp
+    <div>
+        <div class="flex items-center gap-2 mb-2">
+            <input type="hidden" name="is_recurring" value="0">
+            <input type="checkbox" name="is_recurring" id="is_recurring" value="1" @checked($isRecurring)
+                   onchange="document.getElementById('recurrence-field').classList.toggle('hidden', ! this.checked);">
+            <label for="is_recurring" class="text-sm">รายจ่ายนี้ต้องซื้อซ้ำเป็นประจำ (แจ้งเตือนเมื่อใกล้ถึงกำหนด)</label>
+        </div>
+        <div id="recurrence-field" class="{{ $isRecurring ? '' : 'hidden' }}">
+            <label class="block text-sm font-medium mb-1">ความถี่ในการซื้อซ้ำ</label>
+            <select name="recurrence_months" class="w-full border-gray-300 rounded-md">
+                @foreach (\App\Models\Expense::RECURRENCE_OPTIONS as $value => $label)
+                    <option value="{{ $value }}" @selected(old('recurrence_months', $expense?->recurrence_months) == $value)>{{ $label }}</option>
+                @endforeach
+            </select>
+            <x-input-error :messages="$errors->get('recurrence_months')" class="mt-1" />
+        </div>
+    </div>
+@endif
+
 <div class="grid grid-cols-2 gap-4">
     <div>
         <label class="block text-sm font-medium mb-1">จำนวน</label>

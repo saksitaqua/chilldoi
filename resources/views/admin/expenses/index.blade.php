@@ -47,6 +47,12 @@
                                 @if ($expense->receipt_file)
                                     <a href="{{ $expense->receipt_url }}" target="_blank" rel="noopener" class="text-emerald-700 text-xs ml-1">📎</a>
                                 @endif
+                                @if ($expense->income_category_label)
+                                    <span class="text-xs bg-emerald-50 text-emerald-700 px-1.5 py-0.5 rounded ml-1">{{ $expense->income_category_label }}</span>
+                                @endif
+                                @if ($expense->is_recurring)
+                                    <span class="text-xs bg-orange-50 text-orange-700 px-1.5 py-0.5 rounded ml-1">🔁 {{ \App\Models\Expense::RECURRENCE_OPTIONS[$expense->recurrence_months] ?? '' }}</span>
+                                @endif
                             </td>
                             <td class="px-4 py-2 text-right">{{ rtrim(rtrim(number_format($expense->quantity, 2), '0'), '.') }}</td>
                             <td class="px-4 py-2 text-right">{{ number_format($expense->unit_price, 2) }}</td>
