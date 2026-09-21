@@ -72,27 +72,31 @@ class ReportController extends Controller
 
         $row = $this->writeSectionTable(
             $sheet, $row, 'ส่วนรับเงิน — รายรับเพิ่มเติม (บันทึกเอง)',
-            ['วันที่', 'รายการ', 'ประเภทรายรับ', 'ผู้บันทึก', 'จำนวนเงิน'],
+            ['วันที่', 'รายการ', 'ประเภทรายรับ', 'จำนวน', 'ราคาต่อหน่วย', 'ผู้บันทึก', 'จำนวนเงิน'],
             $data['manualIncomes']->map(fn ($i) => [
                 $i->expense_date->format('d/m/Y'),
                 $i->item,
                 $i->income_category_label ?? '-',
+                (float) $i->quantity,
+                (float) $i->unit_price,
                 $i->creator->name,
                 (float) $i->total_amount,
             ])->all(),
-            'รวมรายรับเพิ่มเติม', (float) $data['manualIncomeTotal'], 3
+            'รวมรายรับเพิ่มเติม', (float) $data['manualIncomeTotal'], 5
         );
 
         $row = $this->writeSectionTable(
             $sheet, $row, 'ส่วนจ่ายเงิน — รายจ่าย',
-            ['วันที่', 'รายการ', 'ผู้บันทึก', 'จำนวนเงิน'],
+            ['วันที่', 'รายการ', 'จำนวน', 'ราคาต่อหน่วย', 'ผู้บันทึก', 'จำนวนเงิน'],
             $data['expenses']->map(fn ($e) => [
                 $e->expense_date->format('d/m/Y'),
                 $e->item,
+                (float) $e->quantity,
+                (float) $e->unit_price,
                 $e->creator->name,
                 (float) $e->total_amount,
             ])->all(),
-            'รวมรายจ่าย', (float) $data['expenseTotal'], 2
+            'รวมรายจ่าย', (float) $data['expenseTotal'], 4
         );
 
         $row++;
@@ -110,7 +114,7 @@ class ReportController extends Controller
         $sheet->getStyle("B" . ($row - 2) . ":B{$row}")->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
         $sheet->getStyle("A" . ($row - 2) . ":A{$row}")->getFont()->setBold(true);
 
-        foreach (range('A', 'F') as $col) {
+        foreach (range('A', 'G') as $col) {
             $sheet->getColumnDimension($col)->setAutoSize(true);
         }
     }
