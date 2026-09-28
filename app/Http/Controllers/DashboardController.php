@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Activity;
 use App\Models\Booking;
 use App\Models\Expense;
+use App\Models\ExpenseCategory;
 use App\Models\Plan;
 use App\Models\Story;
 
@@ -132,7 +133,7 @@ class DashboardController extends Controller
         }
 
         foreach ($expenseEntries->where('type', 'income') as $entry) {
-            $category = $entry->income_category ?: 'other';
+            $category = $entry->category_key ?: 'other';
             $incomeByCategory[$category] = ($incomeByCategory[$category] ?? 0) + (float) $entry->total_amount;
         }
 
@@ -142,8 +143,26 @@ class DashboardController extends Controller
             if ($value <= 0) {
                 continue;
             }
-            $incomeByCategoryLabels[] = Expense::INCOME_CATEGORIES[$key] ?? $key;
+            $incomeByCategoryLabels[] = $key === 'booking'
+                ? (ExpenseCategory::labelFor('income', 'booking') ?? 'จองที่พัก')
+                : (ExpenseCategory::labelFor('income', $key) ?? $key);
             $incomeByCategoryValues[] = round($value, 2);
+        }
+
+        $expenseByCategory = [];
+        foreach ($expenseEntries->where('type', 'expense') as $entry) {
+            $category = $entry->category_key ?: 'other';
+            $expenseByCategory[$category] = ($expenseByCategory[$category] ?? 0) + (float) $entry->total_amount;
+        }
+
+        $expenseByCategoryLabels = [];
+        $expenseByCategoryValues = [];
+        foreach ($expenseByCategory as $key => $value) {
+            if ($value <= 0) {
+                continue;
+            }
+            $expenseByCategoryLabels[] = ExpenseCategory::labelFor('expense', $key) ?? $key;
+            $expenseByCategoryValues[] = round($value, 2);
         }
 
         $repeatCustomers = Booking::whereNotNull('guest_phone')
@@ -163,6 +182,8 @@ class DashboardController extends Controller
             'occupancySeries' => $occupancySeries,
             'incomeByCategoryLabels' => $incomeByCategoryLabels,
             'incomeByCategoryValues' => $incomeByCategoryValues,
+            'expenseByCategoryLabels' => $expenseByCategoryLabels,
+            'expenseByCategoryValues' => $expenseByCategoryValues,
             'repeatCustomers' => $repeatCustomers,
         ];
     }

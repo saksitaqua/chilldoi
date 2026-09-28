@@ -87,16 +87,17 @@ class ReportController extends Controller
 
         $row = $this->writeSectionTable(
             $sheet, $row, 'ส่วนจ่ายเงิน — รายจ่าย',
-            ['วันที่', 'รายการ', 'จำนวน', 'ราคาต่อหน่วย', 'ผู้บันทึก', 'จำนวนเงิน'],
+            ['วันที่', 'รายการ', 'ประเภทรายจ่าย', 'จำนวน', 'ราคาต่อหน่วย', 'ผู้บันทึก', 'จำนวนเงิน'],
             $data['expenses']->map(fn ($e) => [
                 $e->expense_date->format('d/m/Y'),
                 $e->item,
+                $e->income_category_label ?? '-',
                 (float) $e->quantity,
                 (float) $e->unit_price,
                 $e->creator->name,
                 (float) $e->total_amount,
             ])->all(),
-            'รวมรายจ่าย', (float) $data['expenseTotal'], 4
+            'รวมรายจ่าย', (float) $data['expenseTotal'], 5
         );
 
         $row++;

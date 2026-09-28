@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Expense;
+use App\Models\ExpenseCategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
@@ -29,8 +30,10 @@ class ExpenseController extends Controller
     public function create(Request $request)
     {
         $type = $request->get('type', 'expense') === 'income' ? 'income' : 'expense';
+        $categoryOptions = ExpenseCategory::allOptions($type);
+        $itemSuggestions = Expense::itemSuggestions($type);
 
-        return view('admin.expenses.create', compact('type'));
+        return view('admin.expenses.create', compact('type', 'categoryOptions', 'itemSuggestions'));
     }
 
     public function store(Request $request)
@@ -51,7 +54,10 @@ class ExpenseController extends Controller
 
     public function edit(Expense $expense)
     {
-        return view('admin.expenses.edit', compact('expense'));
+        $categoryOptions = ExpenseCategory::allOptions($expense->type);
+        $itemSuggestions = Expense::itemSuggestions($expense->type);
+
+        return view('admin.expenses.edit', compact('expense', 'categoryOptions', 'itemSuggestions'));
     }
 
     public function update(Request $request, Expense $expense)
@@ -88,9 +94,11 @@ class ExpenseController extends Controller
 
     private function validateData(Request $request): array
     {
+        $type = $request->input('type') === 'income' ? 'income' : 'expense';
+
         $data = $request->validate([
             'type' => 'required|in:income,expense',
-            'income_category' => ['nullable', Rule::in(array_keys(Expense::INCOME_CATEGORIES))],
+            'category_key' => ['nullable', Rule::in(array_keys(ExpenseCategory::allOptions($type)))],
             'expense_date' => 'required|date',
             'item' => 'required|string|max:255',
             'is_recurring' => 'nullable|boolean',
@@ -102,7 +110,7 @@ class ExpenseController extends Controller
 
         $data['total_amount'] = $data['quantity'] * $data['unit_price'];
         $data['is_recurring'] = $request->boolean('is_recurring');
-        $data['income_category'] = $data['type'] === 'income' ? ($data['income_category'] ?? null) : null;
+        $data['category_key'] = $data['category_key'] ?? null;
         $data['recurrence_months'] = $data['is_recurring'] ? ($data['recurrence_months'] ?? null) : null;
 
         unset($data['receipt_file']);

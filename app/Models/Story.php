@@ -32,18 +32,6 @@ class Story extends Model
         'ends_on' => 'date',
     ];
 
-    public const CATEGORIES = [
-        'recommend' => 'แนะนำ',
-        'event' => 'อีเวนต์',
-        'benefit' => 'ประโยชน์',
-    ];
-
-    public const CATEGORIES_EN = [
-        'recommend' => 'Recommended',
-        'event' => 'Events',
-        'benefit' => 'Good to know',
-    ];
-
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
@@ -54,18 +42,17 @@ class Story extends Model
         return self::categoryLabel($this->category);
     }
 
-    public static function categoryLabel(string $key): string
+    public static function categoryLabel(?string $key): string
     {
-        if (app()->getLocale() === 'en') {
-            return self::CATEGORIES_EN[$key] ?? $key;
-        }
-
-        return self::CATEGORIES[$key] ?? $key;
+        return StoryCategory::labelFor($key) ?? (string) $key;
     }
 
+    /**
+     * @return array<string, string> category key => localized label, ordered for display
+     */
     public static function categoriesForLocale(): array
     {
-        return app()->getLocale() === 'en' ? self::CATEGORIES_EN : self::CATEGORIES;
+        return StoryCategory::options();
     }
 
     public function getDisplayTitleAttribute(): ?string

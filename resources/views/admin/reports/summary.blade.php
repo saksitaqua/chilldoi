@@ -118,6 +118,7 @@
                     <tr>
                         <th class="px-4 py-2 text-left">วันที่</th>
                         <th class="px-4 py-2 text-left">รายการ</th>
+                        <th class="px-4 py-2 text-left">ประเภทรายจ่าย</th>
                         <th class="px-4 py-2 text-right">จำนวน</th>
                         <th class="px-4 py-2 text-right">ราคาต่อหน่วย</th>
                         <th class="px-4 py-2 text-left">ผู้บันทึก</th>
@@ -129,13 +130,20 @@
                         <tr>
                             <td class="px-4 py-2">{{ $expense->expense_date->format('d/m/Y') }}</td>
                             <td class="px-4 py-2 font-medium">{{ $expense->item }}</td>
+                            <td class="px-4 py-2">
+                                @if ($expense->income_category_label)
+                                    <span class="text-xs bg-orange-50 text-orange-700 px-2 py-0.5 rounded">{{ $expense->income_category_label }}</span>
+                                @else
+                                    <span class="text-gray-400">-</span>
+                                @endif
+                            </td>
                             <td class="px-4 py-2 text-right">{{ rtrim(rtrim(number_format($expense->quantity, 2), '0'), '.') }}</td>
                             <td class="px-4 py-2 text-right">{{ number_format($expense->unit_price, 2) }}</td>
                             <td class="px-4 py-2 text-gray-500">{{ $expense->creator->name }}</td>
                             <td class="px-4 py-2 text-right font-medium">{{ number_format($expense->total_amount, 2) }}</td>
                         </tr>
                     @empty
-                        <tr><td colspan="6" class="px-4 py-6 text-center text-gray-400">ไม่มีรายจ่ายในช่วงที่เลือก</td></tr>
+                        <tr><td colspan="7" class="px-4 py-6 text-center text-gray-400">ไม่มีรายจ่ายในช่วงที่เลือก</td></tr>
                     @endforelse
                 </tbody>
             </table>

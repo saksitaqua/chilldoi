@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Story;
+use App\Models\StoryCategory;
 use App\Models\StoryImage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -28,7 +29,7 @@ class StoryController extends Controller
         $data = $request->validate([
             'title' => 'required|string|max:255',
             'title_en' => 'nullable|string|max:255',
-            'category' => ['required', Rule::in(array_keys(Story::CATEGORIES))],
+            'category' => ['required', Rule::in(array_keys(StoryCategory::allOptions()))],
             'description' => 'nullable|string',
             'description_en' => 'nullable|string',
             'starts_on' => 'nullable|date',
@@ -71,7 +72,7 @@ class StoryController extends Controller
         $data = $request->validate([
             'title' => 'required|string|max:255',
             'title_en' => 'nullable|string|max:255',
-            'category' => ['required', Rule::in(array_keys(Story::CATEGORIES))],
+            'category' => ['required', Rule::in(array_keys(StoryCategory::allOptions()))],
             'description' => 'nullable|string',
             'description_en' => 'nullable|string',
             'starts_on' => 'nullable|date',

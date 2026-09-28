@@ -24,8 +24,8 @@
 
                     @php
                         $accommodationActive = request()->routeIs(['admin.types.*', 'admin.units.*', 'admin.services.*']);
-                        $postActive = request()->routeIs(['admin.stories.*', 'admin.activities.*']);
-                        $generalActive = request()->routeIs(['admin.expenses.*', 'admin.plans.*']);
+                        $postActive = request()->routeIs(['admin.stories.*', 'admin.activities.*', 'admin.story-categories.*']);
+                        $generalActive = request()->routeIs(['admin.expenses.*', 'admin.plans.*', 'admin.expense-categories.*']);
                     @endphp
 
                     <x-dropdown align="left" width="56">
@@ -56,6 +56,7 @@
                         <x-slot name="content">
                             <x-dropdown-link :href="route('admin.stories.index')">{{ __('โพสต์ / แนะนำ') }}</x-dropdown-link>
                             <x-dropdown-link :href="route('admin.activities.index')">{{ __('กิจกรรม') }}</x-dropdown-link>
+                            <x-dropdown-link :href="route('admin.story-categories.index')">{{ __('กลุ่มโพสต์') }}</x-dropdown-link>
                         </x-slot>
                     </x-dropdown>
 
@@ -71,6 +72,7 @@
                         <x-slot name="content">
                             <x-dropdown-link :href="route('admin.expenses.index', ['type' => 'income'])">{{ __('บันทึกรายรับ') }}</x-dropdown-link>
                             <x-dropdown-link :href="route('admin.expenses.index', ['type' => 'expense'])">{{ __('บันทึกรายจ่าย') }}</x-dropdown-link>
+                            <x-dropdown-link :href="route('admin.expense-categories.index', ['type' => 'income'])">{{ __('ประเภทรายรับ/รายจ่าย') }}</x-dropdown-link>
                             <x-dropdown-link :href="route('admin.plans.index')">{{ __('แผนงาน') }}</x-dropdown-link>
                         </x-slot>
                     </x-dropdown>
@@ -165,6 +167,9 @@
             <x-responsive-nav-link :href="route('admin.activities.index')" :active="request()->routeIs('admin.activities.*')">
                 {{ __('กิจกรรม') }}
             </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('admin.story-categories.index')" :active="request()->routeIs('admin.story-categories.*')">
+                {{ __('กลุ่มโพสต์') }}
+            </x-responsive-nav-link>
 
             <div class="px-4 pt-3 pb-1 text-xs font-semibold text-gray-400 uppercase">{{ __('บันทึกทั่วไป') }}</div>
             <x-responsive-nav-link :href="route('admin.expenses.index', ['type' => 'income'])" :active="request()->routeIs('admin.expenses.*') && request('type') === 'income'">
@@ -172,6 +177,9 @@
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('admin.expenses.index', ['type' => 'expense'])" :active="request()->routeIs('admin.expenses.*') && request('type') !== 'income'">
                 {{ __('บันทึกรายจ่าย') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('admin.expense-categories.index', ['type' => 'income'])" :active="request()->routeIs('admin.expense-categories.*')">
+                {{ __('ประเภทรายรับ/รายจ่าย') }}
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('admin.plans.index')" :active="request()->routeIs('admin.plans.*')">
                 {{ __('แผนงาน') }}

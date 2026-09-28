@@ -145,9 +145,18 @@
                     </div>
 
                     <div class="bg-white shadow-sm rounded-lg p-5">
-                        <h3 class="font-semibold text-gray-800 mb-4">ความหนาแน่นการเข้าพัก (คนที่จ่ายเงินแล้ว รายเดือน)</h3>
-                        <canvas id="occupancyChart" height="220"></canvas>
+                        <h3 class="font-semibold text-gray-800 mb-4">รายจ่ายแยกตามประเภท (ย้อนหลัง 12 เดือน)</h3>
+                        @if (count($charts['expenseByCategoryLabels']))
+                            <canvas id="expenseCategoryChart" height="220"></canvas>
+                        @else
+                            <p class="text-sm text-gray-400 text-center py-10">ยังไม่มีข้อมูลรายจ่าย</p>
+                        @endif
                     </div>
+                </div>
+
+                <div class="bg-white shadow-sm rounded-lg p-5">
+                    <h3 class="font-semibold text-gray-800 mb-4">ความหนาแน่นการเข้าพัก (คนที่จ่ายเงินแล้ว รายเดือน)</h3>
+                    <canvas id="occupancyChart" height="90"></canvas>
                 </div>
 
                 <div class="bg-white shadow-sm rounded-lg">
@@ -184,8 +193,10 @@
                 const occupancySeries = @json($charts['occupancySeries']);
                 const incomeCategoryLabels = @json($charts['incomeByCategoryLabels']);
                 const incomeCategoryValues = @json($charts['incomeByCategoryValues']);
+                const expenseCategoryLabels = @json($charts['expenseByCategoryLabels']);
+                const expenseCategoryValues = @json($charts['expenseByCategoryValues']);
 
-                let financeChart, categoryChart, occupancyChart;
+                let financeChart, incomeCategoryChart, expenseCategoryChart, occupancyChart;
 
                 function renderCharts() {
                     const financeEl = document.getElementById('financeChart');
@@ -203,15 +214,30 @@
                         });
                     }
 
-                    const categoryEl = document.getElementById('incomeCategoryChart');
-                    if (categoryEl && !categoryChart && incomeCategoryLabels.length) {
-                        categoryChart = new Chart(categoryEl, {
+                    const incomeCategoryEl = document.getElementById('incomeCategoryChart');
+                    if (incomeCategoryEl && !incomeCategoryChart && incomeCategoryLabels.length) {
+                        incomeCategoryChart = new Chart(incomeCategoryEl, {
                             type: 'doughnut',
                             data: {
                                 labels: incomeCategoryLabels,
                                 datasets: [{
                                     data: incomeCategoryValues,
                                     backgroundColor: ['#2f6b4f', '#e2914a', '#5b8ab0', '#a35b8a', '#9aa393', '#c97430'],
+                                }],
+                            },
+                            options: { responsive: true },
+                        });
+                    }
+
+                    const expenseCategoryEl = document.getElementById('expenseCategoryChart');
+                    if (expenseCategoryEl && !expenseCategoryChart && expenseCategoryLabels.length) {
+                        expenseCategoryChart = new Chart(expenseCategoryEl, {
+                            type: 'doughnut',
+                            data: {
+                                labels: expenseCategoryLabels,
+                                datasets: [{
+                                    data: expenseCategoryValues,
+                                    backgroundColor: ['#c97430', '#e2914a', '#a35b8a', '#5b8ab0', '#9aa393', '#2f6b4f', '#6b4f9a'],
                                 }],
                             },
                             options: { responsive: true },

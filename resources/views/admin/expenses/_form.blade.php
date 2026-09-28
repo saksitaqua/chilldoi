@@ -17,24 +17,31 @@
     </div>
 </div>
 
+@php $itemSuggestions = $itemSuggestions ?? []; @endphp
+
 <div>
     <label class="block text-sm font-medium mb-1">รายการ</label>
-    <input type="text" name="item" value="{{ old('item', $expense?->item) }}" required class="w-full border-gray-300 rounded-md">
+    <input type="text" name="item" value="{{ old('item', $expense?->item) }}" required list="item-suggestions" autocomplete="off" class="w-full border-gray-300 rounded-md">
+    <datalist id="item-suggestions">
+        @foreach ($itemSuggestions as $suggestion)
+            <option value="{{ $suggestion }}"></option>
+        @endforeach
+    </datalist>
+    <p class="text-xs text-gray-400 mt-1">พิมพ์เพื่อเลือกจากรายการที่เคยบันทึกไว้ หรือพิมพ์รายการใหม่ได้เลย</p>
     <x-input-error :messages="$errors->get('item')" class="mt-1" />
 </div>
 
-@if ($type === 'income')
-    <div>
-        <label class="block text-sm font-medium mb-1">ประเภทรายรับ</label>
-        <select name="income_category" class="w-full border-gray-300 rounded-md">
-            <option value="">-- ไม่ระบุ --</option>
-            @foreach (\App\Models\Expense::INCOME_CATEGORIES as $value => $label)
-                <option value="{{ $value }}" @selected(old('income_category', $expense?->income_category) === $value)>{{ $label }}</option>
-            @endforeach
-        </select>
-        <x-input-error :messages="$errors->get('income_category')" class="mt-1" />
-    </div>
-@endif
+@php $categoryOptions = $categoryOptions ?? []; @endphp
+<div>
+    <label class="block text-sm font-medium mb-1">{{ $type === 'income' ? 'ประเภทรายรับ' : 'ประเภทรายจ่าย' }}</label>
+    <select name="category_key" class="w-full border-gray-300 rounded-md">
+        <option value="">-- ไม่ระบุ --</option>
+        @foreach ($categoryOptions as $value => $label)
+            <option value="{{ $value }}" @selected(old('category_key', $expense?->category_key) === $value)>{{ $label }}</option>
+        @endforeach
+    </select>
+    <x-input-error :messages="$errors->get('category_key')" class="mt-1" />
+</div>
 
 @if ($type === 'expense')
     @php $isRecurring = old('is_recurring', $expense?->is_recurring ?? false); @endphp

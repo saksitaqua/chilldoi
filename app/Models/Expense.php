@@ -11,14 +11,6 @@ class Expense extends Model
 {
     use HasFactory;
 
-    public const INCOME_CATEGORIES = [
-        'booking' => 'จองที่พัก',
-        'coffee' => 'ร้านกาแฟ',
-        'equipment' => 'เช่าอุปกรณ์',
-        'agriculture' => 'ขายพืชการเกษตร',
-        'other' => 'อื่นๆ',
-    ];
-
     public const RECURRENCE_OPTIONS = [
         3 => 'ทุก 3 เดือน',
         6 => 'ทุก 6 เดือน',
@@ -27,7 +19,7 @@ class Expense extends Model
 
     protected $fillable = [
         'type',
-        'income_category',
+        'category_key',
         'expense_date',
         'item',
         'is_recurring',
@@ -64,7 +56,7 @@ class Expense extends Model
 
     public function getIncomeCategoryLabelAttribute(): ?string
     {
-        return self::INCOME_CATEGORIES[$this->income_category] ?? null;
+        return ExpenseCategory::labelFor($this->type, $this->category_key);
     }
 
     public function nextDueDate(): ?\Carbon\Carbon
@@ -92,5 +84,22 @@ class Expense extends Model
         $next = $this->nextDueDate();
 
         return $next && $next->isPast();
+    }
+
+    /**
+     * Distinct item names previously used for this type, for an autocomplete list.
+     */
+    public static function itemSuggestions(string $type): array
+    {
+        return self::where('type', $type)
+            ->whereNotNull('item')
+            ->where('item', '!=', '')
+            ->orderByDesc('expense_date')
+            ->limit(300)
+            ->pluck('item')
+            ->unique()
+            ->values()
+            ->take(50)
+            ->all();
     }
 }

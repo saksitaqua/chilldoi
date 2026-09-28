@@ -22,7 +22,7 @@
             <div>
                 <label class="block text-sm font-medium mb-1">กลุ่มประเภท</label>
                 <select name="category" required class="w-full border-gray-300 rounded-md">
-                    @foreach (\App\Models\Story::CATEGORIES as $value => $label)
+                    @foreach (\App\Models\StoryCategory::allOptions() as $value => $label)
                         <option value="{{ $value }}" @selected(old('category') === $value)>{{ $label }}</option>
                     @endforeach
                 </select>
