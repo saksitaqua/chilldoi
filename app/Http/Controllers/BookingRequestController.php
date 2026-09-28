@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Mail\PaymentSlipUploaded;
 use App\Models\Activity;
 use App\Models\Booking;
+use App\Models\Customer;
 use App\Models\Service;
 use App\Models\Unit;
 use App\Models\User;
@@ -63,8 +64,11 @@ class BookingRequestController extends Controller
             ]);
         }
 
+        $customer = Customer::findOrCreateFromBooking($data['guest_name'], $data['guest_phone'], $data['guest_email']);
+
         $booking = Booking::create([
             'unit_id' => $unit->id,
+            'customer_id' => $customer->id,
             'guest_name' => $data['guest_name'],
             'guest_phone' => $data['guest_phone'],
             'guest_email' => $data['guest_email'],

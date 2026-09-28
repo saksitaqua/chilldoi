@@ -21,6 +21,9 @@
                     <x-nav-link :href="route('admin.bookings.index')" :active="request()->routeIs('admin.bookings.*')">
                         {{ __('การจอง') }}
                     </x-nav-link>
+                    <x-nav-link :href="route('admin.customers.index')" :active="request()->routeIs('admin.customers.*')">
+                        {{ __('ลูกค้า') }}
+                    </x-nav-link>
 
                     @php
                         $accommodationActive = request()->routeIs(['admin.types.*', 'admin.units.*', 'admin.services.*']);
@@ -148,6 +151,9 @@
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('admin.bookings.index')" :active="request()->routeIs('admin.bookings.*')">
                 {{ __('การจอง') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('admin.customers.index')" :active="request()->routeIs('admin.customers.*')">
+                {{ __('ลูกค้า') }}
             </x-responsive-nav-link>
             <div class="px-4 pt-3 pb-1 text-xs font-semibold text-gray-400 uppercase">{{ __('ข้อมูลที่พัก/บริการ') }}</div>
             <x-responsive-nav-link :href="route('admin.types.index')" :active="request()->routeIs('admin.types.*')">

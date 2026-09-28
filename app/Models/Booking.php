@@ -14,6 +14,7 @@ class Booking extends Model
 
     protected $fillable = [
         'unit_id',
+        'customer_id',
         'guest_name',
         'guest_phone',
         'guest_email',
@@ -42,6 +43,11 @@ class Booking extends Model
     public function unit(): BelongsTo
     {
         return $this->belongsTo(Unit::class);
+    }
+
+    public function customer(): BelongsTo
+    {
+        return $this->belongsTo(Customer::class);
     }
 
     public function creator(): BelongsTo

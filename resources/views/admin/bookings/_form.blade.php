@@ -1,5 +1,6 @@
 @php
     $booking = $booking ?? null;
+    $customers = $customers ?? collect();
     $selectedActivities = old('activities', $booking?->activities->pluck('id')->all() ?? []);
     $selectedServices = old('services', $booking?->services->pluck('id')->all() ?? []);
 @endphp
@@ -23,15 +24,41 @@
     </div>
     <div>
         <label class="block text-sm font-medium mb-1">เบอร์โทร</label>
-        <input type="text" name="guest_phone" value="{{ old('guest_phone', $booking?->guest_phone) }}" class="w-full border-gray-300 rounded-md">
+        <input type="text" name="guest_phone" id="guest_phone" list="customer-phones" autocomplete="off"
+               value="{{ old('guest_phone', $booking?->guest_phone) }}" class="w-full border-gray-300 rounded-md">
+        <datalist id="customer-phones">
+            @foreach ($customers as $customer)
+                @if ($customer->phone)
+                    <option value="{{ $customer->phone }}">{{ $customer->name }}</option>
+                @endif
+            @endforeach
+        </datalist>
+        <p class="text-xs text-gray-400 mt-1">พิมพ์เบอร์โทรลูกค้าเก่าเพื่อดึงชื่อ/อีเมลอัตโนมัติ</p>
     </div>
 </div>
 
 <div>
     <label class="block text-sm font-medium mb-1">อีเมล</label>
-    <input type="email" name="guest_email" value="{{ old('guest_email', $booking?->guest_email) }}" class="w-full border-gray-300 rounded-md">
+    <input type="email" name="guest_email" id="guest_email" value="{{ old('guest_email', $booking?->guest_email) }}" class="w-full border-gray-300 rounded-md">
     <x-input-error :messages="$errors->get('guest_email')" class="mt-1" />
 </div>
+
+<script>
+    (function () {
+        const customers = @json($customers->map(fn ($c) => ['phone' => $c->phone, 'name' => $c->name, 'email' => $c->email])->filter(fn ($c) => $c['phone'])->values());
+        const phoneInput = document.getElementById('guest_phone');
+        const nameInput = document.querySelector('input[name="guest_name"]');
+        const emailInput = document.getElementById('guest_email');
+
+        phoneInput?.addEventListener('input', function () {
+            const match = customers.find((c) => c.phone === phoneInput.value);
+            if (match) {
+                if (nameInput && !nameInput.value) nameInput.value = match.name;
+                if (emailInput && !emailInput.value && match.email) emailInput.value = match.email;
+            }
+        });
+    })();
+</script>
 
 <div class="grid grid-cols-2 gap-4">
     <div>

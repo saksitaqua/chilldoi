@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Activity;
 use App\Models\Booking;
+use App\Models\Customer;
 use App\Models\Service;
 use App\Models\Unit;
 use Illuminate\Http\Request;
@@ -29,8 +30,9 @@ class BookingController extends Controller
         $units = Unit::with('accommodationType')->where('is_active', true)->orderBy('name')->get();
         $activities = Activity::where('is_active', true)->orderBy('name')->get();
         $services = Service::where('is_active', true)->orderBy('sort_order')->orderBy('name')->get();
+        $customers = Customer::orderByDesc('id')->limit(300)->get(['id', 'name', 'phone', 'email']);
 
-        return view('admin.bookings.create', compact('units', 'activities', 'services'));
+        return view('admin.bookings.create', compact('units', 'activities', 'services', 'customers'));
     }
 
     public function store(Request $request)
@@ -40,6 +42,7 @@ class BookingController extends Controller
 
         $data['source'] = 'admin';
         $data['created_by'] = $request->user()->id;
+        $data['customer_id'] = Customer::findOrCreateFromBooking($data['guest_name'], $data['guest_phone'] ?? null, $data['guest_email'] ?? null)->id;
         $activityIds = $data['activities'] ?? [];
         $serviceIds = $data['services'] ?? [];
         unset($data['activities'], $data['services']);
@@ -56,9 +59,10 @@ class BookingController extends Controller
         $units = Unit::with('accommodationType')->where('is_active', true)->orderBy('name')->get();
         $activities = Activity::where('is_active', true)->orderBy('name')->get();
         $services = Service::where('is_active', true)->orderBy('sort_order')->orderBy('name')->get();
+        $customers = Customer::orderByDesc('id')->limit(300)->get(['id', 'name', 'phone', 'email']);
         $booking->load('activities', 'services');
 
-        return view('admin.bookings.edit', compact('booking', 'units', 'activities', 'services'));
+        return view('admin.bookings.edit', compact('booking', 'units', 'activities', 'services', 'customers'));
     }
 
     public function update(Request $request, Booking $booking)
@@ -69,6 +73,7 @@ class BookingController extends Controller
             $this->assertAvailable($data['unit_id'], $data['check_in'], $data['check_out'], $booking->id);
         }
 
+        $data['customer_id'] = Customer::findOrCreateFromBooking($data['guest_name'], $data['guest_phone'] ?? null, $data['guest_email'] ?? null)->id;
         $activityIds = $data['activities'] ?? [];
         $serviceIds = $data['services'] ?? [];
         unset($data['activities'], $data['services']);

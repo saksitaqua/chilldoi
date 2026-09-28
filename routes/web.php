@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\BannerController;
 use App\Http\Controllers\Admin\BookingController;
 use App\Http\Controllers\BookingRequestController;
 use App\Http\Controllers\Admin\CalendarController;
+use App\Http\Controllers\Admin\CustomerController;
 use App\Http\Controllers\Admin\EmployeeController;
 use App\Http\Controllers\Admin\ExpenseCategoryController;
 use App\Http\Controllers\Admin\ExpenseController;
@@ -53,6 +54,7 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
     Route::resource('activities', ActivityController::class);
     Route::resource('services', ServiceController::class);
     Route::resource('bookings', BookingController::class);
+    Route::resource('customers', CustomerController::class)->only(['index', 'show']);
     Route::resource('stories', AdminStoryController::class);
     Route::resource('expenses', ExpenseController::class);
     Route::resource('expense-categories', ExpenseCategoryController::class)->except(['show']);
