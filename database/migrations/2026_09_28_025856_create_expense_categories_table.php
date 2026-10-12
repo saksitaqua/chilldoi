@@ -53,10 +53,6 @@ return new class extends Migration
                     DB::table('expenses')->where('id', $row->id)->update(['category_key' => $row->income_category]);
                 }
             });
-
-            Schema::table('expenses', function (Blueprint $table) {
-                $table->dropColumn('income_category');
-            });
         }
     }
 
@@ -66,9 +62,11 @@ return new class extends Migration
     public function down(): void
     {
         if (Schema::hasColumn('expenses', 'category_key')) {
-            Schema::table('expenses', function (Blueprint $table) {
-                $table->string('income_category')->nullable()->after('type');
-            });
+            if (! Schema::hasColumn('expenses', 'income_category')) {
+                Schema::table('expenses', function (Blueprint $table) {
+                    $table->string('income_category')->nullable()->after('type');
+                });
+            }
 
             DB::table('expenses')->whereNotNull('category_key')->orderBy('id')->chunkById(100, function ($rows) {
                 foreach ($rows as $row) {
