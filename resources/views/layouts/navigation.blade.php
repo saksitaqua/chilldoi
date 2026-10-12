@@ -22,7 +22,7 @@
                         $bookingActive = request()->routeIs(['admin.bookings.*', 'admin.customers.*']);
                         $accommodationActive = request()->routeIs(['admin.types.*', 'admin.units.*', 'admin.services.*']);
                         $postActive = request()->routeIs(['admin.stories.*', 'admin.activities.*', 'admin.story-categories.*']);
-                        $generalActive = request()->routeIs(['admin.expenses.*', 'admin.plans.*', 'admin.expense-categories.*']);
+                        $generalActive = request()->routeIs(['admin.expenses.*', 'admin.plans.*', 'admin.expense-categories.*', 'admin.measure-units.*']);
                     @endphp
 
                     <x-dropdown align="left" width="48">
@@ -85,6 +85,7 @@
                             <x-dropdown-link :href="route('admin.expenses.index', ['type' => 'income'])">{{ __('บันทึกรายรับ') }}</x-dropdown-link>
                             <x-dropdown-link :href="route('admin.expenses.index', ['type' => 'expense'])">{{ __('บันทึกรายจ่าย') }}</x-dropdown-link>
                             <x-dropdown-link :href="route('admin.expense-categories.index', ['type' => 'income'])">{{ __('ประเภทรายรับ/รายจ่าย') }}</x-dropdown-link>
+                            <x-dropdown-link :href="route('admin.measure-units.index')">{{ __('หน่วยนับ') }}</x-dropdown-link>
                             <x-dropdown-link :href="route('admin.plans.index')">{{ __('แผนงาน') }}</x-dropdown-link>
                         </x-slot>
                     </x-dropdown>
@@ -197,6 +198,9 @@
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('admin.expense-categories.index', ['type' => 'income'])" :active="request()->routeIs('admin.expense-categories.*')">
                 {{ __('ประเภทรายรับ/รายจ่าย') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('admin.measure-units.index')" :active="request()->routeIs('admin.measure-units.*')">
+                {{ __('หน่วยนับ') }}
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('admin.plans.index')" :active="request()->routeIs('admin.plans.*')">
                 {{ __('แผนงาน') }}

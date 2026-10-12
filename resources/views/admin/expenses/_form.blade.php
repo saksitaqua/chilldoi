@@ -64,11 +64,23 @@
     </div>
 @endif
 
-<div class="grid grid-cols-2 gap-4">
+@php $unitSuggestions = $unitSuggestions ?? []; @endphp
+
+<div class="grid grid-cols-3 gap-4">
     <div>
         <label class="block text-sm font-medium mb-1">จำนวน</label>
         <input type="number" step="0.01" min="0.01" name="quantity" id="quantity" value="{{ old('quantity', $expense?->quantity ?? 1) }}" required class="w-full border-gray-300 rounded-md">
         <x-input-error :messages="$errors->get('quantity')" class="mt-1" />
+    </div>
+    <div>
+        <label class="block text-sm font-medium mb-1">หน่วยนับ</label>
+        <input type="text" name="unit" value="{{ old('unit', $expense?->unit) }}" list="unit-suggestions" autocomplete="off" maxlength="50" placeholder="เช่น ชิ้น, กก." class="w-full border-gray-300 rounded-md">
+        <datalist id="unit-suggestions">
+            @foreach ($unitSuggestions as $suggestion)
+                <option value="{{ $suggestion }}"></option>
+            @endforeach
+        </datalist>
+        <x-input-error :messages="$errors->get('unit')" class="mt-1" />
     </div>
     <div>
         <label class="block text-sm font-medium mb-1">ราคาต่อหน่วย (บาท)</label>

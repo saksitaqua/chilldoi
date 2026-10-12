@@ -72,12 +72,13 @@ class ReportController extends Controller
 
         $row = $this->writeSectionTable(
             $sheet, $row, 'ส่วนรับเงิน — รายรับเพิ่มเติม (บันทึกเอง)',
-            ['วันที่', 'รายการ', 'ประเภทรายรับ', 'จำนวน', 'ราคาต่อหน่วย', 'ผู้บันทึก', 'จำนวนเงิน'],
+            ['วันที่', 'รายการ', 'ประเภทรายรับ', 'จำนวน', 'หน่วยนับ', 'ราคาต่อหน่วย', 'ผู้บันทึก', 'จำนวนเงิน'],
             $data['manualIncomes']->map(fn ($i) => [
                 $i->expense_date->format('d/m/Y'),
                 $i->item,
                 $i->income_category_label ?? '-',
                 (float) $i->quantity,
+                $i->unit ?? '-',
                 (float) $i->unit_price,
                 $i->creator->name,
                 (float) $i->total_amount,
@@ -87,12 +88,13 @@ class ReportController extends Controller
 
         $row = $this->writeSectionTable(
             $sheet, $row, 'ส่วนจ่ายเงิน — รายจ่าย',
-            ['วันที่', 'รายการ', 'ประเภทรายจ่าย', 'จำนวน', 'ราคาต่อหน่วย', 'ผู้บันทึก', 'จำนวนเงิน'],
+            ['วันที่', 'รายการ', 'ประเภทรายจ่าย', 'จำนวน', 'หน่วยนับ', 'ราคาต่อหน่วย', 'ผู้บันทึก', 'จำนวนเงิน'],
             $data['expenses']->map(fn ($e) => [
                 $e->expense_date->format('d/m/Y'),
                 $e->item,
                 $e->income_category_label ?? '-',
                 (float) $e->quantity,
+                $e->unit ?? '-',
                 (float) $e->unit_price,
                 $e->creator->name,
                 (float) $e->total_amount,
@@ -115,7 +117,7 @@ class ReportController extends Controller
         $sheet->getStyle("B" . ($row - 2) . ":B{$row}")->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
         $sheet->getStyle("A" . ($row - 2) . ":A{$row}")->getFont()->setBold(true);
 
-        foreach (range('A', 'G') as $col) {
+        foreach (range('A', 'H') as $col) {
             $sheet->getColumnDimension($col)->setAutoSize(true);
         }
     }
@@ -171,10 +173,10 @@ class ReportController extends Controller
     {
         $sheet->setTitle('ข้อมูลดิบ (Pivot)');
 
-        $headers = ['วันที่', 'ประเภท', 'รายการ', 'จำนวน', 'ราคาต่อหน่วย', 'จำนวนเงิน', 'ผู้บันทึก/ผู้จอง'];
+        $headers = ['วันที่', 'ประเภท', 'รายการ', 'จำนวน', 'หน่วยนับ', 'ราคาต่อหน่วย', 'จำนวนเงิน', 'ผู้บันทึก/ผู้จอง'];
         $sheet->fromArray($headers, null, 'A1');
-        $sheet->getStyle('A1:G1')->getFont()->setBold(true);
-        $sheet->getStyle('A1:G1')->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setRGB('F3F4F6');
+        $sheet->getStyle('A1:H1')->getFont()->setBold(true);
+        $sheet->getStyle('A1:H1')->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setRGB('F3F4F6');
 
         $row = 2;
 
@@ -185,6 +187,7 @@ class ReportController extends Controller
                 'รายรับ - การจอง',
                 $booking->unit->name . ' (' . $booking->guest_name . ')',
                 $booking->nights,
+                'คืน',
                 $unitPrice,
                 (float) $booking->computed_amount,
                 $booking->guest_name,
@@ -198,6 +201,7 @@ class ReportController extends Controller
                 'รายรับ - บันทึกเอง',
                 $income->item,
                 (float) $income->quantity,
+                $income->unit ?? '-',
                 (float) $income->unit_price,
                 (float) $income->total_amount,
                 $income->creator->name,
@@ -211,6 +215,7 @@ class ReportController extends Controller
                 'รายจ่าย',
                 $expense->item,
                 (float) $expense->quantity,
+                $expense->unit ?? '-',
                 (float) $expense->unit_price,
                 (float) $expense->total_amount,
                 $expense->creator->name,
@@ -221,13 +226,13 @@ class ReportController extends Controller
         $lastRow = $row - 1;
 
         if ($lastRow >= 2) {
-            $sheet->getStyle("E2:F{$lastRow}")->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
+            $sheet->getStyle("F2:G{$lastRow}")->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
         }
 
-        $sheet->setAutoFilter('A1:G' . max($lastRow, 1));
+        $sheet->setAutoFilter('A1:H' . max($lastRow, 1));
         $sheet->freezePane('A2');
 
-        foreach (range('A', 'G') as $col) {
+        foreach (range('A', 'H') as $col) {
             $sheet->getColumnDimension($col)->setAutoSize(true);
         }
     }

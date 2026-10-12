@@ -54,7 +54,7 @@
                                     <span class="text-xs bg-orange-50 text-orange-700 px-1.5 py-0.5 rounded ml-1">🔁 {{ \App\Models\Expense::RECURRENCE_OPTIONS[$expense->recurrence_months] ?? '' }}</span>
                                 @endif
                             </td>
-                            <td class="px-4 py-2 text-right">{{ rtrim(rtrim(number_format($expense->quantity, 2), '0'), '.') }}</td>
+                            <td class="px-4 py-2 text-right">{{ $expense->quantity_label }}</td>
                             <td class="px-4 py-2 text-right">{{ number_format($expense->unit_price, 2) }}</td>
                             <td class="px-4 py-2 text-right font-medium">{{ number_format($expense->total_amount, 2) }}</td>
                             <td class="px-4 py-2 text-gray-500">{{ $expense->creator->name }}</td>

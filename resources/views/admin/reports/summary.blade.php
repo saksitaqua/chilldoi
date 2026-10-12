@@ -99,7 +99,7 @@
                                     <span class="text-gray-400">-</span>
                                 @endif
                             </td>
-                            <td class="px-4 py-2 text-right">{{ rtrim(rtrim(number_format($income->quantity, 2), '0'), '.') }}</td>
+                            <td class="px-4 py-2 text-right">{{ $income->quantity_label }}</td>
                             <td class="px-4 py-2 text-right">{{ number_format($income->unit_price, 2) }}</td>
                             <td class="px-4 py-2 text-gray-500">{{ $income->creator->name }}</td>
                             <td class="px-4 py-2 text-right font-medium">{{ number_format($income->total_amount, 2) }}</td>
@@ -137,7 +137,7 @@
                                     <span class="text-gray-400">-</span>
                                 @endif
                             </td>
-                            <td class="px-4 py-2 text-right">{{ rtrim(rtrim(number_format($expense->quantity, 2), '0'), '.') }}</td>
+                            <td class="px-4 py-2 text-right">{{ $expense->quantity_label }}</td>
                             <td class="px-4 py-2 text-right">{{ number_format($expense->unit_price, 2) }}</td>
                             <td class="px-4 py-2 text-gray-500">{{ $expense->creator->name }}</td>
                             <td class="px-4 py-2 text-right font-medium">{{ number_format($expense->total_amount, 2) }}</td>

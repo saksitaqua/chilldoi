@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Expense;
 use App\Models\ExpenseCategory;
+use App\Models\MeasureUnit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
@@ -32,8 +33,9 @@ class ExpenseController extends Controller
         $type = $request->get('type', 'expense') === 'income' ? 'income' : 'expense';
         $categoryOptions = ExpenseCategory::allOptions($type);
         $itemSuggestions = Expense::itemSuggestions($type);
+        $unitSuggestions = MeasureUnit::activeNames();
 
-        return view('admin.expenses.create', compact('type', 'categoryOptions', 'itemSuggestions'));
+        return view('admin.expenses.create', compact('type', 'categoryOptions', 'itemSuggestions', 'unitSuggestions'));
     }
 
     public function store(Request $request)
@@ -56,8 +58,9 @@ class ExpenseController extends Controller
     {
         $categoryOptions = ExpenseCategory::allOptions($expense->type);
         $itemSuggestions = Expense::itemSuggestions($expense->type);
+        $unitSuggestions = MeasureUnit::activeNames();
 
-        return view('admin.expenses.edit', compact('expense', 'categoryOptions', 'itemSuggestions'));
+        return view('admin.expenses.edit', compact('expense', 'categoryOptions', 'itemSuggestions', 'unitSuggestions'));
     }
 
     public function update(Request $request, Expense $expense)
@@ -104,6 +107,7 @@ class ExpenseController extends Controller
             'is_recurring' => 'nullable|boolean',
             'recurrence_months' => ['nullable', Rule::in(array_keys(Expense::RECURRENCE_OPTIONS))],
             'quantity' => 'required|numeric|min:0.01',
+            'unit' => 'nullable|string|max:50',
             'unit_price' => 'required|numeric|min:0',
             'receipt_file' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:8192',
         ]);
@@ -111,6 +115,7 @@ class ExpenseController extends Controller
         $data['total_amount'] = $data['quantity'] * $data['unit_price'];
         $data['is_recurring'] = $request->boolean('is_recurring');
         $data['category_key'] = $data['category_key'] ?? null;
+        $data['unit'] = isset($data['unit']) && trim($data['unit']) !== '' ? trim($data['unit']) : null;
         $data['recurrence_months'] = $data['is_recurring'] ? ($data['recurrence_months'] ?? null) : null;
 
         unset($data['receipt_file']);

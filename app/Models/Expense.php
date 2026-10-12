@@ -25,6 +25,7 @@ class Expense extends Model
         'is_recurring',
         'recurrence_months',
         'quantity',
+        'unit',
         'unit_price',
         'total_amount',
         'receipt_file',
@@ -57,6 +58,13 @@ class Expense extends Model
     public function getIncomeCategoryLabelAttribute(): ?string
     {
         return ExpenseCategory::labelFor($this->type, $this->category_key);
+    }
+
+    public function getQuantityLabelAttribute(): string
+    {
+        $qty = rtrim(rtrim(number_format((float) $this->quantity, 2), '0'), '.');
+
+        return $this->unit ? "{$qty} {$this->unit}" : $qty;
     }
 
     public function nextDueDate(): ?\Carbon\Carbon
