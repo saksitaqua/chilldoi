@@ -83,6 +83,9 @@ class StoryController extends Controller
             'remove_images' => 'nullable|array',
             'remove_images.*' => 'exists:story_images,id',
             'remove_video' => 'nullable|boolean',
+            'image_focus' => 'nullable|array',
+            'image_focus.*.x' => 'required|integer|between:0,100',
+            'image_focus.*.y' => 'required|integer|between:0,100',
         ]);
 
         $updateData = [
@@ -108,6 +111,11 @@ class StoryController extends Controller
                 Storage::disk('public')->delete($image->path);
                 $image->delete();
             });
+        }
+
+        foreach ($data['image_focus'] ?? [] as $imageId => $focus) {
+            StoryImage::where('id', $imageId)->where('story_id', $story->id)
+                ->update(['focal_x' => $focus['x'], 'focal_y' => $focus['y']]);
         }
 
         $this->storeImages($story, $request->file('images', []));

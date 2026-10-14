@@ -1,6 +1,6 @@
 <a href="{{ route('stories.show', $story) }}" class="block bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition">
     @if ($story->images->first())
-        <img src="{{ $story->images->first()->url }}" alt="{{ $story->display_title }}" class="w-full h-48 object-cover">
+        <img src="{{ $story->images->first()->url }}" alt="{{ $story->display_title }}" class="w-full h-48 object-cover" style="{{ $story->images->first()->focal_style }}">
     @else
         <div class="w-full h-48 bg-gray-100 flex items-center justify-center text-gray-400">{{ __('site.home.no_image') }}</div>
     @endif

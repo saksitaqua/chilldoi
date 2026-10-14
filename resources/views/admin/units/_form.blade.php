@@ -47,12 +47,18 @@
 
 @if ($unit && $unit->images->count())
     <div>
-        <label class="block text-sm font-medium mb-2">รูปภาพปัจจุบัน <span class="text-gray-400 font-normal">(ติ๊ก "แสดง" เพื่อให้ขึ้นหน้าเว็บสาธารณะ)</span></label>
-        <div class="grid grid-cols-3 sm:grid-cols-4 gap-3">
+        <label class="block text-sm font-medium mb-2">รูปภาพปัจจุบัน <span class="text-gray-400 font-normal">(ติ๊ก "แสดง" เพื่อให้ขึ้นหน้าเว็บสาธารณะ และคลิก/ลากบนรูปเพื่อเลือกจุดโฟกัส)</span></label>
+        <div class="space-y-4">
             @foreach ($unit->images as $image)
-                <div class="relative border rounded-md overflow-hidden">
-                    <img src="{{ $image->url }}" class="w-full h-24 object-cover">
-                    <div class="p-1 text-xs bg-gray-50 flex justify-between items-center">
+                <div class="border rounded-md overflow-hidden">
+                    <div class="p-3">
+                        <x-focal-picker :src="$image->url"
+                                        :x="$image->focal_x" :y="$image->focal_y"
+                                        name-x="image_focus[{{ $image->id }}][x]"
+                                        name-y="image_focus[{{ $image->id }}][y]"
+                                        aspect="16 / 9" />
+                    </div>
+                    <div class="p-2 text-xs bg-gray-50 flex justify-between items-center">
                         <label class="flex items-center gap-1">
                             <input type="checkbox" name="visible_images[]" value="{{ $image->id }}" @checked($image->is_visible)>
                             แสดง

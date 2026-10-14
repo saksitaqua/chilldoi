@@ -45,13 +45,17 @@
 
             @if ($story->images->count())
                 <div>
-                    <label class="block text-sm font-medium mb-2">รูปภาพปัจจุบัน</label>
-                    <div class="grid grid-cols-3 gap-3">
+                    <label class="block text-sm font-medium mb-2">รูปภาพปัจจุบัน <span class="text-gray-400 font-normal">(คลิก/ลากบนรูปเพื่อเลือกจุดโฟกัสที่อยากให้เห็นเสมอ)</span></label>
+                    <div class="space-y-4">
                         @foreach ($story->images as $image)
-                            <div class="relative">
-                                <img src="{{ $image->url }}" class="w-full h-24 object-cover rounded-md">
-                                <label class="absolute top-1 right-1 bg-white/90 rounded px-1 text-xs flex items-center gap-1">
-                                    <input type="checkbox" name="remove_images[]" value="{{ $image->id }}"> ลบ
+                            <div class="border rounded-md p-3">
+                                <x-focal-picker :src="$image->url"
+                                                :x="$image->focal_x" :y="$image->focal_y"
+                                                name-x="image_focus[{{ $image->id }}][x]"
+                                                name-y="image_focus[{{ $image->id }}][y]"
+                                                aspect="16 / 9" />
+                                <label class="mt-2 inline-flex items-center gap-1 text-xs text-red-600">
+                                    <input type="checkbox" name="remove_images[]" value="{{ $image->id }}"> ลบรูปนี้
                                 </label>
                             </div>
                         @endforeach

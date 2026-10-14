@@ -48,9 +48,12 @@ class StoryFeedController extends Controller
             ->with(['units' => fn ($q) => $q->where('is_active', true)->with('visibleImages')])
             ->get()
             ->map(function (AccommodationType $type) {
-                $type->cover_image = $type->units
+                $cover = $type->units
                     ->flatMap(fn ($unit) => $unit->visibleImages)
-                    ->first()?->url;
+                    ->first();
+
+                $type->cover_image = $cover?->url;
+                $type->cover_focal = $cover?->focal_style;
 
                 return $type;
             });

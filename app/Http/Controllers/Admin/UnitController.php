@@ -74,6 +74,11 @@ class UnitController extends Controller
             UnitImage::whereIn('id', $visibleIds)->where('unit_id', $unit->id)->update(['is_visible' => true]);
         }
 
+        foreach ($request->input('image_focus', []) as $imageId => $focus) {
+            UnitImage::where('id', $imageId)->where('unit_id', $unit->id)
+                ->update(['focal_x' => (int) $focus['x'], 'focal_y' => (int) $focus['y']]);
+        }
+
         $this->storeImages($unit, $request->file('images', []));
 
         if ($request->hasFile('video')) {
@@ -114,11 +119,14 @@ class UnitController extends Controller
             'remove_images.*' => 'exists:unit_images,id',
             'visible_images' => 'nullable|array',
             'visible_images.*' => 'exists:unit_images,id',
+            'image_focus' => 'nullable|array',
+            'image_focus.*.x' => 'required|integer|between:0,100',
+            'image_focus.*.y' => 'required|integer|between:0,100',
         ]);
 
         $data['is_active'] = $request->boolean('is_active');
 
-        unset($data['images'], $data['video'], $data['remove_images'], $data['visible_images']);
+        unset($data['images'], $data['video'], $data['remove_images'], $data['visible_images'], $data['image_focus']);
 
         return $data;
     }

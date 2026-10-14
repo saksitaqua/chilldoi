@@ -37,7 +37,7 @@
             @forelse ($units as $unit)
                 <div class="bg-white rounded-lg shadow-sm overflow-hidden">
                     @if ($unit->visibleImages->first())
-                        <img src="{{ $unit->visibleImages->first()->url }}" alt="{{ $unit->name }}" class="w-full h-40 object-cover">
+                        <img src="{{ $unit->visibleImages->first()->url }}" alt="{{ $unit->name }}" class="w-full h-40 object-cover" style="{{ $unit->visibleImages->first()->focal_style }}">
                     @else
                         <div class="w-full h-40 bg-gray-100 flex items-center justify-center text-gray-400 text-sm">{{ __('site.home.no_image') }}</div>
                     @endif

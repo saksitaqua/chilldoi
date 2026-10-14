@@ -28,11 +28,15 @@
 <div>
     <label class="block text-sm font-medium mb-1">รูปภาพ</label>
     @if ($service?->image)
-        <div class="flex items-center gap-3 mb-2">
-            <img src="{{ $service->image_url }}" class="w-24 h-24 object-cover rounded-md border">
-            <label class="flex items-center gap-2 text-sm text-red-600">
+        <div class="mb-2">
+            <x-focal-picker :src="$service->image_url"
+                            :x="$service->image_focal_x" :y="$service->image_focal_y"
+                            name-x="image_focal_x" name-y="image_focal_y"
+                            aspect="1 / 1" preview-width="w-24" />
+            <label class="mt-2 inline-flex items-center gap-2 text-sm text-red-600">
                 <input type="checkbox" name="remove_image" value="1"> ลบรูปนี้
             </label>
+            <p class="text-xs text-gray-400">ถ้าอัปโหลดรูปใหม่ จุดโฟกัสจะรีเซ็ตเป็นกึ่งกลาง แล้วตั้งใหม่ได้ตอนแก้ไขครั้งถัดไป</p>
         </div>
     @endif
     <input type="file" name="image" accept="image/*" class="w-full">

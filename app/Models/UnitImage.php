@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\HasFocalPoint;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -9,14 +10,21 @@ use Illuminate\Support\Facades\Storage;
 
 class UnitImage extends Model
 {
-    use HasFactory;
+    use HasFactory, HasFocalPoint;
 
     protected $fillable = [
         'unit_id',
         'path',
         'sort_order',
         'is_visible',
+        'focal_x',
+        'focal_y',
     ];
+
+    public function getFocalStyleAttribute(): string
+    {
+        return $this->focalStyleFrom();
+    }
 
     protected $casts = [
         'is_visible' => 'boolean',

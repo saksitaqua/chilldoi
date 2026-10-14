@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Banner;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
 
 class BannerController extends Controller
 {
@@ -89,7 +88,8 @@ class BannerController extends Controller
             'banners' => 'nullable|array',
             'banners.*.id' => 'required|exists:banners,id',
             'banners.*.sort_order' => 'required|integer|min:0',
-            'banners.*.focal_position' => ['required', Rule::in(['top', 'center', 'bottom'])],
+            'banners.*.focal_x' => 'required|integer|between:0,100',
+            'banners.*.focal_y' => 'required|integer|between:0,100',
         ]);
 
         $activeIds = collect($request->input('active', []))->map(fn ($id) => (int) $id)->all();
@@ -97,7 +97,8 @@ class BannerController extends Controller
         foreach ($data['banners'] ?? [] as $row) {
             Banner::where('id', $row['id'])->update([
                 'sort_order' => $row['sort_order'],
-                'focal_position' => $row['focal_position'],
+                'focal_x' => $row['focal_x'],
+                'focal_y' => $row['focal_y'],
                 'is_active' => in_array((int) $row['id'], $activeIds, true),
             ]);
         }

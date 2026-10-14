@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Concerns\HasEnglishFields;
+use App\Models\Concerns\HasFocalPoint;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -10,7 +11,7 @@ use Illuminate\Support\Facades\Storage;
 
 class Activity extends Model
 {
-    use HasFactory, HasEnglishFields;
+    use HasFactory, HasEnglishFields, HasFocalPoint;
 
     protected $fillable = [
         'name',
@@ -18,6 +19,8 @@ class Activity extends Model
         'description',
         'description_en',
         'image',
+        'image_focal_x',
+        'image_focal_y',
         'video',
         'is_free',
         'price',
@@ -37,6 +40,11 @@ class Activity extends Model
     public function getImageUrlAttribute(): ?string
     {
         return $this->image ? Storage::disk('public')->url($this->image) : null;
+    }
+
+    public function getImageFocalStyleAttribute(): string
+    {
+        return $this->focalStyleFrom('image_focal_x', 'image_focal_y');
     }
 
     public function getVideoUrlAttribute(): ?string

@@ -43,10 +43,10 @@
                             <div class="flex h-full transition-transform duration-700 ease-in-out" id="banner-track">
                                 @foreach ($banners as $banner)
                                     <img src="{{ $banner->url }}" alt="บรรยากาศ Chill Doi Camping & Farm" class="w-full h-full object-cover shrink-0"
-                                         style="object-position: center {{ $banner->focal_position }};">
+                                         style="{{ $banner->focal_style }}">
                                 @endforeach
                                 <img src="{{ $banners->first()->url }}" alt="บรรยากาศ Chill Doi Camping & Farm" class="w-full h-full object-cover shrink-0"
-                                     style="object-position: center {{ $banners->first()->focal_position }};">
+                                     style="{{ $banners->first()->focal_style }}">
                             </div>
                         </div>
                         <script>
@@ -115,10 +115,10 @@
                     <div class="flex h-full transition-transform duration-700 ease-in-out" id="banner-track">
                         @foreach ($banners as $banner)
                             <img src="{{ $banner->url }}" alt="banner" class="w-full h-full object-cover shrink-0"
-                                 style="object-position: center {{ $banner->focal_position }};">
+                                 style="{{ $banner->focal_style }}">
                         @endforeach
                         <img src="{{ $banners->first()->url }}" alt="banner" class="w-full h-full object-cover shrink-0"
-                             style="object-position: center {{ $banners->first()->focal_position }};">
+                             style="{{ $banners->first()->focal_style }}">
                     </div>
                 </div>
                 <script>
@@ -206,7 +206,7 @@
                         <div class="cd-stay-card">
                             <div class="cd-stay-media">
                                 @if ($type->cover_image)
-                                    <img src="{{ $type->cover_image }}" alt="{{ $type->display_name }}">
+                                    <img src="{{ $type->cover_image }}" alt="{{ $type->display_name }}" style="{{ $type->cover_focal }}">
                                 @else
                                     <div class="cd-stay-empty">{{ __('site.home.no_image') }}</div>
                                 @endif
@@ -244,7 +244,7 @@
                                 @php $img = $story->images->first(); @endphp
                                 <a href="{{ route('stories.show', $story) }}" class="cd-trail-card">
                                     @if ($img)
-                                        <img src="{{ $img->url }}" alt="{{ $story->display_title }}">
+                                        <img src="{{ $img->url }}" alt="{{ $story->display_title }}" style="{{ $img->focal_style }}">
                                     @endif
                                     <div class="cd-trail-body">
                                         <span class="cd-trail-badge">{{ $group['label'] }}</span>
