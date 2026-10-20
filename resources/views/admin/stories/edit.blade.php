@@ -50,9 +50,10 @@
                         @foreach ($story->images as $image)
                             <div class="border rounded-md p-3">
                                 <x-focal-picker :src="$image->url"
-                                                :x="$image->focal_x" :y="$image->focal_y"
+                                                :x="$image->focal_x" :y="$image->focal_y" :zoom="$image->focal_zoom"
                                                 name-x="image_focus[{{ $image->id }}][x]"
                                                 name-y="image_focus[{{ $image->id }}][y]"
+                                                name-zoom="image_focus[{{ $image->id }}][zoom]"
                                                 aspect="16 / 9" />
                                 <label class="mt-2 inline-flex items-center gap-1 text-xs text-red-600">
                                     <input type="checkbox" name="remove_images[]" value="{{ $image->id }}"> ลบรูปนี้

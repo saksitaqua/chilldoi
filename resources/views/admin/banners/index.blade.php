@@ -40,9 +40,10 @@
                         <div class="border rounded-lg overflow-hidden">
                             <div class="p-3 pb-0">
                                 <x-focal-picker :src="$banner->url"
-                                                :x="$banner->focal_x" :y="$banner->focal_y"
+                                                :x="$banner->focal_x" :y="$banner->focal_y" :zoom="$banner->focal_zoom"
                                                 name-x="banners[{{ $loop->index }}][focal_x]"
                                                 name-y="banners[{{ $loop->index }}][focal_y]"
+                                                name-zoom="banners[{{ $loop->index }}][focal_zoom]"
                                                 aspect="21 / 9" preview-width="w-64" />
                             </div>
                             <div class="p-3 flex flex-wrap items-center justify-between gap-3">

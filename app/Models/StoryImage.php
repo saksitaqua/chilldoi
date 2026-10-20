@@ -18,6 +18,7 @@ class StoryImage extends Model
         'sort_order',
         'focal_x',
         'focal_y',
+        'focal_zoom',
     ];
 
     public function getFocalStyleAttribute(): string

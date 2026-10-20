@@ -78,6 +78,7 @@ class ServiceController extends Controller
             'image' => 'nullable|image|max:5120',
             'image_focal_x' => 'nullable|integer|between:0,100',
             'image_focal_y' => 'nullable|integer|between:0,100',
+            'image_focal_zoom' => 'nullable|integer|between:100,300',
             'price' => 'required|numeric|min:0',
             'sort_order' => 'nullable|integer|min:0',
         ]);
@@ -99,6 +100,6 @@ class ServiceController extends Controller
         $filename = "{$service->id}.{$file->getClientOriginalExtension()}";
         $path = $file->storeAs('services', $filename, 'public');
 
-        $service->update(['image' => $path, 'image_focal_x' => 50, 'image_focal_y' => 50]);
+        $service->update(['image' => $path, 'image_focal_x' => 50, 'image_focal_y' => 50, 'image_focal_zoom' => 100]);
     }
 }

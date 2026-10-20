@@ -21,6 +21,7 @@ class Activity extends Model
         'image',
         'image_focal_x',
         'image_focal_y',
+        'image_focal_zoom',
         'video',
         'is_free',
         'price',
@@ -44,7 +45,7 @@ class Activity extends Model
 
     public function getImageFocalStyleAttribute(): string
     {
-        return $this->focalStyleFrom('image_focal_x', 'image_focal_y');
+        return $this->focalStyleFrom('image_focal_x', 'image_focal_y', 'image_focal_zoom');
     }
 
     public function getVideoUrlAttribute(): ?string

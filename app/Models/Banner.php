@@ -17,6 +17,7 @@ class Banner extends Model
         'focal_position',
         'focal_x',
         'focal_y',
+        'focal_zoom',
     ];
 
     public function getFocalStyleAttribute(): string

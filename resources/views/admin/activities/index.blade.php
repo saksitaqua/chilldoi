@@ -31,7 +31,7 @@
                         <tr>
                             <td class="px-4 py-2">
                                 @if ($activity->image)
-                                    <img src="{{ $activity->image_url }}" class="w-10 h-10 object-cover rounded-md" style="{{ $activity->image_focal_style }}">
+                                    <x-focal-image :src="$activity->image_url" :focal="$activity->image_focal_style" class="w-10 h-10 rounded-md" />
                                 @else
                                     <div class="w-10 h-10 bg-gray-100 rounded-md"></div>
                                 @endif

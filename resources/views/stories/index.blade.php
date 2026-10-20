@@ -42,11 +42,9 @@
                         <div class="w-full h-full overflow-hidden relative" id="banner-carousel">
                             <div class="flex h-full transition-transform duration-700 ease-in-out" id="banner-track">
                                 @foreach ($banners as $banner)
-                                    <img src="{{ $banner->url }}" alt="บรรยากาศ Chill Doi Camping & Farm" class="w-full h-full object-cover shrink-0"
-                                         style="{{ $banner->focal_style }}">
+                                    <x-focal-image :src="$banner->url" :focal="$banner->focal_style" alt="บรรยากาศ Chill Doi Camping & Farm" class="w-full h-full shrink-0" />
                                 @endforeach
-                                <img src="{{ $banners->first()->url }}" alt="บรรยากาศ Chill Doi Camping & Farm" class="w-full h-full object-cover shrink-0"
-                                     style="{{ $banners->first()->focal_style }}">
+                                <x-focal-image :src="$banners->first()->url" :focal="$banners->first()->focal_style" alt="บรรยากาศ Chill Doi Camping & Farm" class="w-full h-full shrink-0" />
                             </div>
                         </div>
                         <script>
@@ -114,11 +112,9 @@
                 <div class="w-full h-56 sm:h-72 overflow-hidden relative" id="banner-carousel">
                     <div class="flex h-full transition-transform duration-700 ease-in-out" id="banner-track">
                         @foreach ($banners as $banner)
-                            <img src="{{ $banner->url }}" alt="banner" class="w-full h-full object-cover shrink-0"
-                                 style="{{ $banner->focal_style }}">
+                            <x-focal-image :src="$banner->url" :focal="$banner->focal_style" alt="banner" class="w-full h-full shrink-0" />
                         @endforeach
-                        <img src="{{ $banners->first()->url }}" alt="banner" class="w-full h-full object-cover shrink-0"
-                             style="{{ $banners->first()->focal_style }}">
+                        <x-focal-image :src="$banners->first()->url" :focal="$banners->first()->focal_style" alt="banner" class="w-full h-full shrink-0" />
                     </div>
                 </div>
                 <script>

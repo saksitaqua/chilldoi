@@ -19,6 +19,7 @@ class UnitImage extends Model
         'is_visible',
         'focal_x',
         'focal_y',
+        'focal_zoom',
     ];
 
     public function getFocalStyleAttribute(): string

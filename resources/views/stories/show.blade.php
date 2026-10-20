@@ -12,7 +12,7 @@
     @if ($story->images->count())
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
             @foreach ($story->images as $image)
-                <img src="{{ $image->url }}" alt="{{ $story->display_title }}" class="w-full rounded-lg object-cover max-h-96" style="{{ $image->focal_style }}">
+                <x-focal-image :src="$image->url" :focal="$image->focal_style" :alt="$story->display_title" class="rounded-lg" img-class="w-full object-cover max-h-96" />
             @endforeach
         </div>
     @endif

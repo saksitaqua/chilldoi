@@ -95,6 +95,7 @@ class ActivityController extends Controller
             'image' => 'nullable|image|max:5120',
             'image_focal_x' => 'nullable|integer|between:0,100',
             'image_focal_y' => 'nullable|integer|between:0,100',
+            'image_focal_zoom' => 'nullable|integer|between:100,300',
             'video' => 'nullable|mimes:mp4,mov,webm,avi|max:51200',
             'is_free' => 'required|boolean',
             'price' => 'required_if:is_free,0|nullable|numeric|min:0.01',
@@ -122,7 +123,7 @@ class ActivityController extends Controller
         $filename = "{$activity->id}.{$file->getClientOriginalExtension()}";
         $path = $file->storeAs('activities', $filename, 'public');
 
-        $activity->update(['image' => $path, 'image_focal_x' => 50, 'image_focal_y' => 50]);
+        $activity->update(['image' => $path, 'image_focal_x' => 50, 'image_focal_y' => 50, 'image_focal_zoom' => 100]);
     }
 
     private function storeVideo(Activity $activity, $file): void

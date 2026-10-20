@@ -76,7 +76,7 @@ class UnitController extends Controller
 
         foreach ($request->input('image_focus', []) as $imageId => $focus) {
             UnitImage::where('id', $imageId)->where('unit_id', $unit->id)
-                ->update(['focal_x' => (int) $focus['x'], 'focal_y' => (int) $focus['y']]);
+                ->update(['focal_x' => (int) $focus['x'], 'focal_y' => (int) $focus['y'], 'focal_zoom' => (int) $focus['zoom']]);
         }
 
         $this->storeImages($unit, $request->file('images', []));
@@ -122,6 +122,7 @@ class UnitController extends Controller
             'image_focus' => 'nullable|array',
             'image_focus.*.x' => 'required|integer|between:0,100',
             'image_focus.*.y' => 'required|integer|between:0,100',
+            'image_focus.*.zoom' => 'required|integer|between:100,300',
         ]);
 
         $data['is_active'] = $request->boolean('is_active');

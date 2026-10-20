@@ -21,6 +21,7 @@ class Service extends Model
         'image',
         'image_focal_x',
         'image_focal_y',
+        'image_focal_zoom',
         'price',
         'is_active',
         'sort_order',
@@ -44,7 +45,7 @@ class Service extends Model
 
     public function getImageFocalStyleAttribute(): string
     {
-        return $this->focalStyleFrom('image_focal_x', 'image_focal_y');
+        return $this->focalStyleFrom('image_focal_x', 'image_focal_y', 'image_focal_zoom');
     }
 
     public function getPriceLabelAttribute(): string

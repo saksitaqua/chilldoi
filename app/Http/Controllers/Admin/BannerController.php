@@ -90,6 +90,7 @@ class BannerController extends Controller
             'banners.*.sort_order' => 'required|integer|min:0',
             'banners.*.focal_x' => 'required|integer|between:0,100',
             'banners.*.focal_y' => 'required|integer|between:0,100',
+            'banners.*.focal_zoom' => 'required|integer|between:100,300',
         ]);
 
         $activeIds = collect($request->input('active', []))->map(fn ($id) => (int) $id)->all();
@@ -99,6 +100,7 @@ class BannerController extends Controller
                 'sort_order' => $row['sort_order'],
                 'focal_x' => $row['focal_x'],
                 'focal_y' => $row['focal_y'],
+                'focal_zoom' => $row['focal_zoom'],
                 'is_active' => in_array((int) $row['id'], $activeIds, true),
             ]);
         }

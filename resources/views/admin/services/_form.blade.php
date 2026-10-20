@@ -30,8 +30,8 @@
     @if ($service?->image)
         <div class="mb-2">
             <x-focal-picker :src="$service->image_url"
-                            :x="$service->image_focal_x" :y="$service->image_focal_y"
-                            name-x="image_focal_x" name-y="image_focal_y"
+                            :x="$service->image_focal_x" :y="$service->image_focal_y" :zoom="$service->image_focal_zoom"
+                            name-x="image_focal_x" name-y="image_focal_y" name-zoom="image_focal_zoom"
                             aspect="1 / 1" preview-width="w-24" />
             <label class="mt-2 inline-flex items-center gap-2 text-sm text-red-600">
                 <input type="checkbox" name="remove_image" value="1"> ลบรูปนี้

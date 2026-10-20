@@ -53,9 +53,10 @@
                 <div class="border rounded-md overflow-hidden">
                     <div class="p-3">
                         <x-focal-picker :src="$image->url"
-                                        :x="$image->focal_x" :y="$image->focal_y"
+                                        :x="$image->focal_x" :y="$image->focal_y" :zoom="$image->focal_zoom"
                                         name-x="image_focus[{{ $image->id }}][x]"
                                         name-y="image_focus[{{ $image->id }}][y]"
+                                        name-zoom="image_focus[{{ $image->id }}][zoom]"
                                         aspect="16 / 9" />
                     </div>
                     <div class="p-2 text-xs bg-gray-50 flex justify-between items-center">

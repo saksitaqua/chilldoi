@@ -30,7 +30,7 @@
     @if ($unit->visibleImages->count())
         <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-8">
             @foreach ($unit->visibleImages as $image)
-                <img src="{{ $image->url }}" alt="{{ $unit->name }}" class="w-full h-40 object-cover rounded-lg" style="{{ $image->focal_style }}">
+                <x-focal-image :src="$image->url" :focal="$image->focal_style" :alt="$unit->name" class="rounded-lg" img-class="w-full h-40 object-cover" />
             @endforeach
         </div>
     @elseif (! $unit->video)

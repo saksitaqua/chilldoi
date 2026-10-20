@@ -3,7 +3,7 @@
 
     <div class="mt-4 mb-6 bg-white rounded-lg shadow-sm p-4 flex gap-4 items-center">
         @if ($unit->visibleImages->first())
-            <img src="{{ $unit->visibleImages->first()->url }}" class="w-24 h-24 object-cover rounded-md" style="{{ $unit->visibleImages->first()->focal_style }}">
+            <x-focal-image :src="$unit->visibleImages->first()->url" :focal="$unit->visibleImages->first()->focal_style" class="w-24 h-24 rounded-md shrink-0" />
         @endif
         <div>
             <p class="text-xs text-emerald-700 font-medium">{{ $unit->accommodationType->display_name }}</p>
@@ -57,7 +57,7 @@
                             <label class="flex items-center gap-2 text-sm bg-gray-50 rounded-md px-3 py-2">
                                 <input type="checkbox" name="activities[]" value="{{ $activity->id }}" @checked(in_array($activity->id, old('activities', [])))>
                                 @if ($activity->image)
-                                    <img src="{{ $activity->image_url }}" class="w-6 h-6 object-cover rounded" style="{{ $activity->image_focal_style }}">
+                                    <x-focal-image :src="$activity->image_url" :focal="$activity->image_focal_style" class="w-6 h-6 rounded shrink-0" />
                                 @endif
                                 {{ $activity->display_name }}
                                 <span class="text-xs text-gray-400">({{ $activity->price_label }})</span>
@@ -75,7 +75,7 @@
                             <label class="flex items-center gap-2 text-sm bg-gray-50 rounded-md px-3 py-2">
                                 <input type="checkbox" name="services[]" value="{{ $service->id }}" @checked(in_array($service->id, old('services', [])))>
                                 @if ($service->image)
-                                    <img src="{{ $service->image_url }}" class="w-6 h-6 object-cover rounded" style="{{ $service->image_focal_style }}">
+                                    <x-focal-image :src="$service->image_url" :focal="$service->image_focal_style" class="w-6 h-6 rounded shrink-0" />
                                 @endif
                                 {{ $service->display_name }}
                                 <span class="text-xs text-gray-400">({{ $service->price_label }})</span>
