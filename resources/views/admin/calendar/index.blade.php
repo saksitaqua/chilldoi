@@ -29,8 +29,15 @@
                     @foreach ($units as $unit)
                         <tr class="border-b border-gray-100">
                             <td class="px-3 py-2 font-medium sticky left-0 bg-white">
-                                {{ $unit->name }}
-                                <div class="text-xs text-gray-400">{{ $unit->accommodationType->name }}</div>
+                                <div class="flex items-center gap-3">
+                                    <x-unit-thumb :unit="$unit"
+                                                  :type-name="$unit->accommodationType->name"
+                                                  :capacity="'รองรับ '.$unit->accommodationType->max_guests.' คน'" />
+                                    <div>
+                                        {{ $unit->name }}
+                                        <div class="text-xs text-gray-400">{{ $unit->accommodationType->name }}</div>
+                                    </div>
+                                </div>
                             </td>
                             @foreach ($days as $day)
                                 @php

@@ -45,7 +45,7 @@ class AvailabilityController extends Controller
 
         $days = collect(range(0, 6))->map(fn ($i) => $weekStart->copy()->addDays($i));
 
-        $calendarUnits = Unit::with('accommodationType')
+        $calendarUnits = Unit::with(['accommodationType', 'visibleImages'])
             ->where('is_active', true)
             ->when($request->accommodation_type_id, fn ($q) => $q->where('accommodation_type_id', $request->accommodation_type_id))
             ->orderBy('name')

@@ -86,8 +86,15 @@
                 @foreach ($calendarUnits as $unit)
                     <tr class="border-b border-gray-100">
                         <td class="px-3 py-2 font-medium sticky left-0 bg-white">
-                            <a href="{{ route('units.show', $unit) }}" class="text-emerald-700 hover:underline">{{ $unit->name }}</a>
-                            <div class="text-xs text-gray-400">{{ $unit->accommodationType->display_name }}</div>
+                            <div class="flex items-center gap-3">
+                                <x-unit-thumb :unit="$unit"
+                                              :type-name="$unit->accommodationType->display_name"
+                                              :capacity="__('site.availability.capacity', ['count' => $unit->accommodationType->max_guests])" />
+                                <div>
+                                    <a href="{{ route('units.show', $unit) }}" class="text-emerald-700 hover:underline">{{ $unit->name }}</a>
+                                    <div class="text-xs text-gray-400">{{ $unit->accommodationType->display_name }}</div>
+                                </div>
+                            </div>
                         </td>
                         @foreach ($days as $day)
                             @php
