@@ -40,9 +40,12 @@ return [
         'view_all' => 'View all →',
         'back_to_all' => '← Back to all',
         'no_stories_in_group' => 'No stories in this category yet',
-        'extras_eyebrow' => 'Add to your stay',
-        'extras_heading' => 'Activities & Add-ons',
-        'extras_lead' => 'Optional add-ons at booking — pay only for what you use',
+        'activities_eyebrow' => 'Things to do',
+        'activities_heading' => 'Activities',
+        'activities_lead' => 'Join in when you book, optional — pay only for what you use',
+        'services_eyebrow' => 'Add to your stay',
+        'services_heading' => 'Extra Services',
+        'services_lead' => 'Optional add-ons at booking — pay only for what you use',
     ],
 
     'availability' => [

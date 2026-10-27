@@ -254,13 +254,13 @@
             @endif
         </div>
 
-        @if ($activities->isNotEmpty() || $services->isNotEmpty())
+        @if ($activities->isNotEmpty())
             <div class="cd-section">
                 <div class="cd-strip">
                     <div>
-                        <p class="cd-eyebrow" style="color:#2f6b4f;">{{ __('site.home.extras_eyebrow') }}</p>
-                        <h2>{{ __('site.home.extras_heading') }}</h2>
-                        <p class="lead">{{ __('site.home.extras_lead') }}</p>
+                        <p class="cd-eyebrow" style="color:#2f6b4f;">{{ __('site.home.activities_eyebrow') }}</p>
+                        <h2>{{ __('site.home.activities_heading') }}</h2>
+                        <p class="lead">{{ __('site.home.activities_lead') }}</p>
                     </div>
                     <div class="cd-chips">
                         @foreach ($activities as $activity)
@@ -269,6 +269,20 @@
                                 <span class="price">{{ $activity->price_label }}</span>
                             </div>
                         @endforeach
+                    </div>
+                </div>
+            </div>
+        @endif
+
+        @if ($services->isNotEmpty())
+            <div class="cd-section">
+                <div class="cd-strip">
+                    <div>
+                        <p class="cd-eyebrow" style="color:#2f6b4f;">{{ __('site.home.services_eyebrow') }}</p>
+                        <h2>{{ __('site.home.services_heading') }}</h2>
+                        <p class="lead">{{ __('site.home.services_lead') }}</p>
+                    </div>
+                    <div class="cd-chips">
                         @foreach ($services as $service)
                             <div class="cd-chip">
                                 <span class="dot"></span><b>{{ $service->display_name }}</b>
