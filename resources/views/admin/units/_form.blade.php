@@ -57,7 +57,7 @@
                                         name-x="image_focus[{{ $image->id }}][x]"
                                         name-y="image_focus[{{ $image->id }}][y]"
                                         name-zoom="image_focus[{{ $image->id }}][zoom]"
-                                        aspect="16 / 9" />
+                                        aspect="16 / 10" />
                     </div>
                     <div class="p-2 text-xs bg-gray-50 flex justify-between items-center">
                         <label class="flex items-center gap-1">

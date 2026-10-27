@@ -152,11 +152,11 @@
             .cd-more{ font-family:'Kanit',sans-serif; font-weight:600; font-size:.86rem; color:#2f6b4f; white-space:nowrap; }
             .cd-more:hover{ color:#c97430; }
 
-            .cd-stays{ display:grid; grid-template-columns:repeat(auto-fit, minmax(260px,1fr)); gap:1.4rem; }
+            .cd-stays{ display:grid; grid-template-columns:repeat(auto-fill, minmax(260px,1fr)); gap:1.4rem; }
             .cd-stay-card{ background:#fff; border:1px solid #e4e3d2; border-radius:16px; overflow:hidden; display:flex; flex-direction:column; }
-            .cd-stay-media{ position:relative; height:190px; background:#f2f1e7; }
-            .cd-stay-media img{ width:100%; height:100%; object-fit:cover; display:block; }
-            .cd-stay-empty{ width:100%; height:100%; display:flex; align-items:center; justify-content:center; color:#9aa393; font-size:.85rem; font-family:'Sarabun',sans-serif; }
+            .cd-stay-media{ position:relative; aspect-ratio:16 / 10; background:#f2f1e7; overflow:hidden; }
+            .cd-stay-media img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:block; }
+            .cd-stay-empty{ position:absolute; inset:0; width:100%; height:100%; display:flex; align-items:center; justify-content:center; color:#9aa393; font-size:.85rem; font-family:'Sarabun',sans-serif; }
             .cd-stay-body{ padding:1.2rem 1.3rem 1.35rem; display:flex; flex-direction:column; gap:.5rem; flex:1; }
             .cd-stay-body h3{ font-family:'Chonburi','Sarabun',sans-serif; font-weight:400; font-size:1.2rem; }
             .cd-stay-meta{ font-family:'Kanit',sans-serif; font-size:.8rem; color:#5b6357; }

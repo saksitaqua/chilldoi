@@ -37,9 +37,9 @@
             @forelse ($units as $unit)
                 <div class="bg-white rounded-lg shadow-sm overflow-hidden">
                     @if ($unit->visibleImages->first())
-                        <img src="{{ $unit->visibleImages->first()->url }}" alt="{{ $unit->name }}" class="w-full h-40 object-cover" style="{{ $unit->visibleImages->first()->focal_style }}">
+                        <x-focal-image :src="$unit->visibleImages->first()->url" :focal="$unit->visibleImages->first()->focal_style" :alt="$unit->name" class="w-full" style="aspect-ratio: 16 / 10;" />
                     @else
-                        <div class="w-full h-40 bg-gray-100 flex items-center justify-center text-gray-400 text-sm">{{ __('site.home.no_image') }}</div>
+                        <div class="w-full bg-gray-100 flex items-center justify-center text-gray-400 text-sm" style="aspect-ratio: 16 / 10;">{{ __('site.home.no_image') }}</div>
                     @endif
                     <div class="p-4">
                         <p class="text-xs text-emerald-700 font-medium">{{ $unit->accommodationType->display_name }}</p>
