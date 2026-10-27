@@ -3,8 +3,10 @@
 namespace App\Models\Concerns;
 
 use App\Models\Closure;
+use Carbon\Carbon;
 use Carbon\CarbonInterface;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Support\Facades\DB;
 
 trait HasClosures
 {
@@ -26,36 +28,65 @@ trait HasClosures
     }
 
     /**
-     * Replace this record's closures with the submitted rows: existing rows are updated by id,
-     * new rows are created, and rows the admin removed in the form are deleted.
+     * Every closed day with its reason, expanded from the stored ranges: ['Y-m-d' => ?reason].
      */
-    public function syncClosures(array $rows): void
+    public function closedDays(): array
     {
-        $keep = [];
+        $days = [];
 
-        foreach ($rows as $row) {
-            $start = $row['start_date'] ?? null;
+        foreach ($this->closures as $closure) {
+            $cursor = $closure->start_date->copy();
 
-            if (! $start) {
-                continue;
-            }
-
-            $payload = [
-                'start_date' => $start,
-                'end_date' => ($row['end_date'] ?? null) ?: $start,
-                'reason' => ($row['reason'] ?? null) ?: null,
-            ];
-
-            $existing = ! empty($row['id']) ? $this->closures()->find($row['id']) : null;
-
-            if ($existing) {
-                $existing->update($payload);
-                $keep[] = $existing->id;
-            } else {
-                $keep[] = $this->closures()->create($payload)->id;
+            for ($i = 0; $i < 1000 && $cursor->lte($closure->end_date); $i++) {
+                $days[$cursor->toDateString()] = $closure->reason;
+                $cursor->addDay();
             }
         }
 
-        $this->closures()->whereNotIn('id', $keep)->delete();
+        ksort($days);
+
+        return $days;
+    }
+
+    /**
+     * Replace this record's closures with exactly the chosen days. Days that were already closed keep
+     * their reason; newly added days get $newReason. Consecutive days with the same reason are stored
+     * as one range.
+     */
+    public function syncClosureDays(array $days, ?string $newReason = null): void
+    {
+        $existing = $this->closedDays();
+        $newReason = $newReason !== null && trim($newReason) !== '' ? trim($newReason) : null;
+
+        $chosen = collect($days)
+            ->map(fn ($day) => Carbon::parse($day)->toDateString())
+            ->unique()
+            ->sort()
+            ->values();
+
+        $ranges = [];
+
+        foreach ($chosen as $day) {
+            $reason = array_key_exists($day, $existing) ? $existing[$day] : $newReason;
+            $last = count($ranges) - 1;
+
+            if ($last >= 0
+                && $ranges[$last]['reason'] === $reason
+                && Carbon::parse($ranges[$last]['end_date'])->addDay()->toDateString() === $day) {
+                $ranges[$last]['end_date'] = $day;
+            } else {
+                $ranges[] = ['start_date' => $day, 'end_date' => $day, 'reason' => $reason];
+            }
+        }
+
+        DB::transaction(function () use ($ranges) {
+            $this->closures()->delete();
+
+            foreach ($ranges as $range) {
+                $this->closures()->create($range);
+            }
+        });
+
+        $this->unsetRelation('closures');
     }
 }

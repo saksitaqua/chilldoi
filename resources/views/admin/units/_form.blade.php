@@ -45,7 +45,7 @@
     <label for="is_active" class="text-sm">เปิดใช้งาน</label>
 </div>
 
-<x-closure-editor :closures="$unit?->closures ?? collect()" hint="ช่วงวันที่เลือกจะถือว่าที่พัก/จุดนี้ปิดให้บริการ ลูกค้าจองไม่ได้ และในปฏิทินจะขึ้นว่า ปิด" />
+<x-closure-editor :model="$unit" hint="ช่วงวันที่เลือกจะถือว่าที่พัก/จุดนี้ปิดให้บริการ ลูกค้าจองไม่ได้ และในปฏิทินจะขึ้นว่า ปิด" />
 
 @if ($unit && $unit->images->count())
     <div>

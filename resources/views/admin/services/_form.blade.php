@@ -60,4 +60,4 @@
     <label for="is_active" class="text-sm">เปิดใช้งาน</label>
 </div>
 
-<x-closure-editor :closures="$service?->closures ?? collect()" hint="ถ้าวันเข้าพักของลูกค้าตรงกับช่วงที่เลือก จะเลือกบริการนี้ไม่ได้" />
+<x-closure-editor :model="$service" hint="ถ้าวันเข้าพักของลูกค้าตรงกับช่วงที่เลือก จะเลือกบริการนี้ไม่ได้" />

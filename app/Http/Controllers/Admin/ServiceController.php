@@ -29,7 +29,7 @@ class ServiceController extends Controller
         $service = Service::create($data);
 
         if ($request->boolean('closures_present')) {
-            $service->syncClosures($request->input('closures', []));
+            $service->syncClosureDays($request->input('closure_days', []), $request->input('closure_reason'));
         }
 
         if ($request->hasFile('image')) {
@@ -56,7 +56,7 @@ class ServiceController extends Controller
         $service->update($data);
 
         if ($request->boolean('closures_present')) {
-            $service->syncClosures($request->input('closures', []));
+            $service->syncClosureDays($request->input('closure_days', []), $request->input('closure_reason'));
         }
 
         if ($request->hasFile('image')) {
@@ -90,17 +90,15 @@ class ServiceController extends Controller
             'image_focal_zoom' => 'nullable|integer|between:100,300',
             'price' => 'required|numeric|min:0',
             'sort_order' => 'nullable|integer|min:0',
-            'closures' => 'nullable|array',
-            'closures.*.id' => 'nullable|integer',
-            'closures.*.start_date' => 'nullable|required_with:closures.*.end_date|date',
-            'closures.*.end_date' => 'nullable|date|after_or_equal:closures.*.start_date',
-            'closures.*.reason' => 'nullable|string|max:255',
+            'closure_days' => 'nullable|array|max:800',
+            'closure_days.*' => 'date_format:Y-m-d',
+            'closure_reason' => 'nullable|string|max:255',
         ], Closure::validationMessages());
 
         $data['is_active'] = $request->boolean('is_active');
         $data['sort_order'] = $data['sort_order'] ?? 0;
 
-        unset($data['image'], $data['closures']);
+        unset($data['image'], $data['closure_days'], $data['closure_reason']);
 
         return $data;
     }

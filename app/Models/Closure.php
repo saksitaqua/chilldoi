@@ -20,11 +20,9 @@ class Closure extends Model
     public static function validationMessages(): array
     {
         return [
-            'closures.*.start_date.required_with' => 'กรุณาระบุวันที่เริ่มหยุดให้บริการ',
-            'closures.*.start_date.date' => 'รูปแบบวันที่เริ่มหยุดให้บริการไม่ถูกต้อง',
-            'closures.*.end_date.date' => 'รูปแบบวันที่สิ้นสุดการหยุดให้บริการไม่ถูกต้อง',
-            'closures.*.end_date.after_or_equal' => 'วันสุดท้ายของช่วงหยุดให้บริการต้องไม่ก่อนวันเริ่ม',
-            'closures.*.reason.max' => 'เหตุผลยาวเกินไป (ไม่เกิน 255 ตัวอักษร)',
+            'closure_days.max' => 'เลือกวันหยุดได้ไม่เกิน 800 วันต่อครั้ง',
+            'closure_days.*.date_format' => 'รูปแบบวันที่หยุดให้บริการไม่ถูกต้อง',
+            'closure_reason.max' => 'เหตุผลยาวเกินไป (ไม่เกิน 255 ตัวอักษร)',
         ];
     }
 
