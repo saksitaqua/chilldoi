@@ -165,8 +165,8 @@
             .cd-stay-price span{ font-weight:400; font-size:.72rem; opacity:.7; margin-left:.15rem; }
             .cd-stay-link{ font-family:'Kanit',sans-serif; font-weight:600; font-size:.82rem; color:#c97430; }
 
-            .cd-trail{ display:grid; grid-template-columns:repeat(auto-fit, minmax(260px,1fr)); gap:1.3rem; }
-            .cd-trail-card{ position:relative; border-radius:16px; overflow:hidden; min-height:260px; display:flex; align-items:flex-end; background:#e4e3d2; }
+            .cd-trail{ display:grid; grid-template-columns:repeat(auto-fill, minmax(260px,1fr)); gap:1.3rem; }
+            .cd-trail-card{ position:relative; border-radius:16px; overflow:hidden; aspect-ratio:4 / 3; display:flex; align-items:flex-end; background:#e4e3d2; }
             .cd-trail-card img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
             .cd-trail-card::after{ content:""; position:absolute; inset:0; background:linear-gradient(0deg, rgba(10,20,13,.86) 0%, rgba(10,20,13,.2) 55%, rgba(10,20,13,0) 78%); }
             .cd-trail-body{ position:relative; z-index:2; padding:1.2rem 1.3rem; color:#f6f1e2; }

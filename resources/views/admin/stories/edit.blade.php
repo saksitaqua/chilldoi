@@ -54,7 +54,7 @@
                                                 name-x="image_focus[{{ $image->id }}][x]"
                                                 name-y="image_focus[{{ $image->id }}][y]"
                                                 name-zoom="image_focus[{{ $image->id }}][zoom]"
-                                                aspect="16 / 9" />
+                                                aspect="4 / 3" />
                                 <label class="mt-2 inline-flex items-center gap-1 text-xs text-red-600">
                                     <input type="checkbox" name="remove_images[]" value="{{ $image->id }}"> ลบรูปนี้
                                 </label>
