@@ -21,3 +21,11 @@
 Homestead.json
 Homestead.yaml
 Thumbs.db
+
+# Database dumps / backups (contain real data - never commit)
+*.sql
+*.sql.zip
+*.sql.gz
+*.sql.bz2
+*.dump
+/database/chilldoi_db_*
