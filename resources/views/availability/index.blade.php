@@ -103,6 +103,8 @@
                             <td class="px-2 py-2 text-center">
                                 @if ($occupied)
                                     <a href="{{ route('units.show', $unit) }}" class="block rounded px-2 py-1 text-xs font-medium bg-red-100 text-red-700 hover:bg-red-200">{{ __('site.availability.occupied') }}</a>
+                                @elseif ($unit->closureOn($day))
+                                    <span class="block rounded px-2 py-1 text-xs font-medium bg-gray-200 text-gray-500">{{ __('site.availability.closed') }}</span>
                                 @else
                                     <a href="{{ route('booking.create', ['unit' => $unit, 'check_in' => $day->toDateString(), 'check_out' => $day->copy()->addDay()->toDateString()]) }}"
                                        class="block rounded px-2 py-1 text-xs font-medium bg-emerald-50 text-emerald-700 hover:bg-emerald-100">{{ __('site.availability.vacant') }}</a>

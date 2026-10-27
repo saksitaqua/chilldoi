@@ -20,7 +20,7 @@ class CalendarController extends Controller
 
         $days = collect(range(0, 6))->map(fn ($i) => $weekStart->copy()->addDays($i));
 
-        $units = Unit::with(['accommodationType', 'visibleImages'])
+        $units = Unit::with(['accommodationType', 'visibleImages', 'closures'])
             ->where('is_active', true)
             ->orderBy('name')
             ->get();

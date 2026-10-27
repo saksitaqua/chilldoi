@@ -59,3 +59,5 @@
     <input type="checkbox" name="is_active" id="is_active" value="1" @checked(old('is_active', $service?->is_active ?? true))>
     <label for="is_active" class="text-sm">เปิดใช้งาน</label>
 </div>
+
+<x-closure-editor :closures="$service?->closures ?? collect()" hint="ถ้าวันเข้าพักของลูกค้าตรงกับช่วงที่เลือก จะเลือกบริการนี้ไม่ได้" />

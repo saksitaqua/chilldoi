@@ -14,7 +14,7 @@
 
     @if (! $available)
         <div class="bg-red-50 border border-red-200 text-red-700 rounded-md p-4 text-sm">
-            {{ __('site.booking.unavailable') }}
+            {{ $closed ? __('site.booking.closed_unit') : __('site.booking.unavailable') }}
             <a href="{{ route('availability.index') }}" class="underline">{{ __('site.booking.back_search') }}</a>
         </div>
     @else
@@ -22,6 +22,13 @@
             @csrf
             <input type="hidden" name="check_in" value="{{ $checkIn }}">
             <input type="hidden" name="check_out" value="{{ $checkOut }}">
+
+            @if ($errors->has('check_in') || $errors->has('check_out'))
+                <div class="bg-red-50 border border-red-200 text-red-700 rounded-md p-3 text-sm">
+                    {{ $errors->first('check_in') ?: $errors->first('check_out') }}
+                    <a href="{{ route('availability.index') }}" class="underline">{{ __('site.booking.back_search') }}</a>
+                </div>
+            @endif
 
             <div class="grid grid-cols-2 gap-4">
                 <div>
@@ -72,16 +79,24 @@
                     <label class="block text-sm font-medium mb-2">{{ __('site.booking.services_optional') }}</label>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
                         @foreach ($services as $service)
-                            <label class="flex items-center gap-2 text-sm bg-gray-50 rounded-md px-3 py-2">
-                                <input type="checkbox" name="services[]" value="{{ $service->id }}" @checked(in_array($service->id, old('services', [])))>
+                            @php $serviceClosed = in_array($service->id, $closedServiceIds, true); @endphp
+                            <label @class(['flex items-center gap-2 text-sm bg-gray-50 rounded-md px-3 py-2', 'opacity-50' => $serviceClosed])>
+                                <input type="checkbox" name="services[]" value="{{ $service->id }}"
+                                       @checked(! $serviceClosed && in_array($service->id, old('services', [])))
+                                       @disabled($serviceClosed)>
                                 @if ($service->image)
                                     <x-focal-image :src="$service->image_url" :focal="$service->image_focal_style" class="w-6 h-6 rounded shrink-0" />
                                 @endif
                                 {{ $service->display_name }}
-                                <span class="text-xs text-gray-400">({{ $service->price_label }})</span>
+                                @if ($serviceClosed)
+                                    <span class="text-xs text-red-500">({{ __('site.booking.service_closed_note') }})</span>
+                                @else
+                                    <span class="text-xs text-gray-400">({{ $service->price_label }})</span>
+                                @endif
                             </label>
                         @endforeach
                     </div>
+                    <x-input-error :messages="$errors->get('services')" class="mt-1" />
                 </div>
             @endif
 

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\HasClosures;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -10,7 +11,7 @@ use Illuminate\Support\Facades\Storage;
 
 class Unit extends Model
 {
-    use HasFactory;
+    use HasFactory, HasClosures;
 
     protected $fillable = [
         'accommodation_type_id',
@@ -56,7 +57,13 @@ class Unit extends Model
 
     public function isAvailable(string $checkIn, string $checkOut, ?int $excludeBookingId = null): bool
     {
-        return ! $this->bookings()
+        return ! $this->isClosedBetween($checkIn, $checkOut)
+            && ! $this->hasBookingConflict($checkIn, $checkOut, $excludeBookingId);
+    }
+
+    public function hasBookingConflict(string $checkIn, string $checkOut, ?int $excludeBookingId = null): bool
+    {
+        return $this->bookings()
             ->where('status', '!=', 'cancelled')
             ->when($excludeBookingId, fn ($q) => $q->where('id', '!=', $excludeBookingId))
             ->where('check_in', '<', $checkOut)

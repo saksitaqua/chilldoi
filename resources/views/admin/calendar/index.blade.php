@@ -54,6 +54,8 @@
                                            title="{{ $booking->guest_name }}">
                                             {{ Str::limit($booking->guest_name, 10) }}
                                         </a>
+                                    @elseif ($closure = $unit->closureOn($day))
+                                        <span class="block rounded px-2 py-1 text-xs font-medium bg-gray-200 text-gray-500" title="{{ $closure->reason ?: 'หยุดให้บริการ' }}">ปิด</span>
                                     @else
                                         <span class="block rounded px-2 py-1 text-xs text-gray-300 bg-gray-50">ว่าง</span>
                                     @endif
@@ -69,6 +71,7 @@
             <span><span class="inline-block w-3 h-3 bg-gray-50 border border-gray-200 rounded align-middle"></span> ว่าง</span>
             <span><span class="inline-block w-3 h-3 bg-yellow-100 rounded align-middle"></span> รอยืนยัน</span>
             <span><span class="inline-block w-3 h-3 bg-emerald-100 rounded align-middle"></span> ยืนยันแล้ว</span>
+            <span><span class="inline-block w-3 h-3 bg-gray-200 rounded align-middle"></span> ปิดให้บริการ</span>
         </div>
     </div>
 </x-app-layout>

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\HasClosures;
 use App\Models\Concerns\HasEnglishFields;
 use App\Models\Concerns\HasFocalPoint;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -11,7 +12,7 @@ use Illuminate\Support\Facades\Storage;
 
 class Service extends Model
 {
-    use HasFactory, HasEnglishFields, HasFocalPoint;
+    use HasFactory, HasEnglishFields, HasFocalPoint, HasClosures;
 
     protected $fillable = [
         'name',

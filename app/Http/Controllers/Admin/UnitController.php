@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\AccommodationType;
+use App\Models\Closure;
 use App\Models\Unit;
 use App\Models\UnitImage;
 use Illuminate\Http\Request;
@@ -30,6 +31,10 @@ class UnitController extends Controller
         $data = $this->validateData($request);
 
         $unit = Unit::create($data);
+
+        if ($request->boolean('closures_present')) {
+            $unit->syncClosures($request->input('closures', []));
+        }
 
         $this->storeImages($unit, $request->file('images', []));
 
@@ -58,6 +63,10 @@ class UnitController extends Controller
         }
 
         $unit->update($data);
+
+        if ($request->boolean('closures_present')) {
+            $unit->syncClosures($request->input('closures', []));
+        }
 
         $removeIds = $request->input('remove_images', []);
 
@@ -123,11 +132,16 @@ class UnitController extends Controller
             'image_focus.*.x' => 'required|integer|between:0,100',
             'image_focus.*.y' => 'required|integer|between:0,100',
             'image_focus.*.zoom' => 'required|integer|between:100,300',
-        ]);
+            'closures' => 'nullable|array',
+            'closures.*.id' => 'nullable|integer',
+            'closures.*.start_date' => 'nullable|required_with:closures.*.end_date|date',
+            'closures.*.end_date' => 'nullable|date|after_or_equal:closures.*.start_date',
+            'closures.*.reason' => 'nullable|string|max:255',
+        ], Closure::validationMessages());
 
         $data['is_active'] = $request->boolean('is_active');
 
-        unset($data['images'], $data['video'], $data['remove_images'], $data['visible_images'], $data['image_focus']);
+        unset($data['images'], $data['video'], $data['remove_images'], $data['visible_images'], $data['image_focus'], $data['closures']);
 
         return $data;
     }

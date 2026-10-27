@@ -32,9 +32,15 @@ class BookingRequestController extends Controller
         $activities = Activity::availableNow()->orderBy('name')->get();
         $services = Service::where('is_active', true)->orderBy('sort_order')->orderBy('name')->get();
 
-        $available = $unit->isAvailable($checkIn, $checkOut);
+        $closed = $unit->isClosedBetween($checkIn, $checkOut);
+        $available = ! $closed && $unit->isAvailable($checkIn, $checkOut);
 
-        return view('booking.create', compact('unit', 'checkIn', 'checkOut', 'activities', 'services', 'available'));
+        $closedServiceIds = $services
+            ->filter(fn (Service $service) => $service->isClosedBetween($checkIn, $checkOut))
+            ->pluck('id')
+            ->all();
+
+        return view('booking.create', compact('unit', 'checkIn', 'checkOut', 'activities', 'services', 'available', 'closed', 'closedServiceIds'));
     }
 
     public function store(Request $request, Unit $unit)
@@ -58,9 +64,24 @@ class BookingRequestController extends Controller
             'guest_email.email' => 'รูปแบบอีเมลไม่ถูกต้อง กรุณาตรวจสอบอีกครั้ง',
         ]);
 
+        if ($unit->isClosedBetween($data['check_in'], $data['check_out'])) {
+            return back()->withInput()->withErrors([
+                'check_in' => __('site.booking.closed_unit'),
+            ]);
+        }
+
         if (! $unit->isAvailable($data['check_in'], $data['check_out'])) {
             return back()->withInput()->withErrors([
                 'check_in' => 'ขออภัย ที่พัก/จุดนี้เพิ่งถูกจองในช่วงวันที่เลือกไปแล้ว กรุณาเลือกวันที่อื่น',
+            ]);
+        }
+
+        $closedServices = Service::whereIn('id', $data['services'] ?? [])->get()
+            ->filter(fn (Service $service) => $service->isClosedBetween($data['check_in'], $data['check_out']));
+
+        if ($closedServices->isNotEmpty()) {
+            return back()->withInput()->withErrors([
+                'services' => __('site.booking.service_closed', ['names' => $closedServices->map->display_name->join(', ')]),
             ]);
         }
 

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Closure;
 use App\Models\Service;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -27,6 +28,10 @@ class ServiceController extends Controller
 
         $service = Service::create($data);
 
+        if ($request->boolean('closures_present')) {
+            $service->syncClosures($request->input('closures', []));
+        }
+
         if ($request->hasFile('image')) {
             $this->storeImage($service, $request->file('image'));
         }
@@ -49,6 +54,10 @@ class ServiceController extends Controller
         }
 
         $service->update($data);
+
+        if ($request->boolean('closures_present')) {
+            $service->syncClosures($request->input('closures', []));
+        }
 
         if ($request->hasFile('image')) {
             $this->storeImage($service, $request->file('image'));
@@ -81,12 +90,17 @@ class ServiceController extends Controller
             'image_focal_zoom' => 'nullable|integer|between:100,300',
             'price' => 'required|numeric|min:0',
             'sort_order' => 'nullable|integer|min:0',
-        ]);
+            'closures' => 'nullable|array',
+            'closures.*.id' => 'nullable|integer',
+            'closures.*.start_date' => 'nullable|required_with:closures.*.end_date|date',
+            'closures.*.end_date' => 'nullable|date|after_or_equal:closures.*.start_date',
+            'closures.*.reason' => 'nullable|string|max:255',
+        ], Closure::validationMessages());
 
         $data['is_active'] = $request->boolean('is_active');
         $data['sort_order'] = $data['sort_order'] ?? 0;
 
-        unset($data['image']);
+        unset($data['image'], $data['closures']);
 
         return $data;
     }

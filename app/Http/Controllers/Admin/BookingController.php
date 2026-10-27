@@ -8,6 +8,7 @@ use App\Models\Booking;
 use App\Models\Customer;
 use App\Models\Service;
 use App\Models\Unit;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
@@ -40,6 +41,8 @@ class BookingController extends Controller
         $data = $this->validateData($request);
         $this->assertAvailable($data['unit_id'], $data['check_in'], $data['check_out']);
 
+        $this->assertServicesOpen($data['services'] ?? [], $data['check_in'], $data['check_out']);
+
         $data['source'] = 'admin';
         $data['created_by'] = $request->user()->id;
         $data['customer_id'] = Customer::findOrCreateFromBooking($data['guest_name'], $data['guest_phone'] ?? null, $data['guest_email'] ?? null)->id;
@@ -70,7 +73,14 @@ class BookingController extends Controller
         $data = $this->validateData($request);
 
         if ($data['status'] !== 'cancelled') {
-            $this->assertAvailable($data['unit_id'], $data['check_in'], $data['check_out'], $booking->id);
+            $unchanged = (int) $booking->unit_id === (int) $data['unit_id']
+                && $booking->check_in->toDateString() === Carbon::parse($data['check_in'])->toDateString()
+                && $booking->check_out->toDateString() === Carbon::parse($data['check_out'])->toDateString();
+
+            $this->assertAvailable($data['unit_id'], $data['check_in'], $data['check_out'], $booking->id, ! $unchanged);
+
+            $newServiceIds = array_diff($data['services'] ?? [], $booking->services()->pluck('services.id')->all());
+            $this->assertServicesOpen($newServiceIds, $data['check_in'], $data['check_out']);
         }
 
         $data['customer_id'] = Customer::findOrCreateFromBooking($data['guest_name'], $data['guest_phone'] ?? null, $data['guest_email'] ?? null)->id;
@@ -111,13 +121,35 @@ class BookingController extends Controller
         ]);
     }
 
-    private function assertAvailable(int $unitId, string $checkIn, string $checkOut, ?int $excludeId = null): void
+    private function assertAvailable(int $unitId, string $checkIn, string $checkOut, ?int $excludeId = null, bool $checkClosures = true): void
     {
         $unit = Unit::findOrFail($unitId);
 
-        if (! $unit->isAvailable($checkIn, $checkOut, $excludeId)) {
+        if ($checkClosures && $unit->isClosedBetween($checkIn, $checkOut)) {
+            throw ValidationException::withMessages([
+                'unit_id' => 'ที่พัก/จุดนี้หยุดให้บริการในช่วงวันที่เลือก',
+            ]);
+        }
+
+        if ($unit->hasBookingConflict($checkIn, $checkOut, $excludeId)) {
             throw ValidationException::withMessages([
                 'unit_id' => 'ที่พัก/จุดนี้ไม่ว่างในช่วงวันที่เลือก',
+            ]);
+        }
+    }
+
+    private function assertServicesOpen(array $serviceIds, string $checkIn, string $checkOut): void
+    {
+        if ($serviceIds === []) {
+            return;
+        }
+
+        $closed = Service::whereIn('id', $serviceIds)->get()
+            ->filter(fn (Service $service) => $service->isClosedBetween($checkIn, $checkOut));
+
+        if ($closed->isNotEmpty()) {
+            throw ValidationException::withMessages([
+                'services' => 'บริการเสริมหยุดให้บริการในช่วงวันที่เข้าพัก: '.$closed->pluck('name')->join(', '),
             ]);
         }
     }

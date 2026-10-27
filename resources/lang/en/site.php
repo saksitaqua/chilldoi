@@ -60,6 +60,7 @@ return [
         'unit_column' => 'Accommodation',
         'occupied' => 'Booked',
         'vacant' => 'Available',
+        'closed' => 'Closed',
     ],
 
     'map' => [
@@ -81,6 +82,9 @@ return [
     'booking' => [
         'title_prefix' => 'Book - ',
         'unavailable' => 'Sorry, this accommodation was just booked for the selected dates.',
+        'closed_unit' => 'Sorry, this accommodation is closed on the selected dates. Please choose other dates.',
+        'service_closed' => 'These extra services are not available on your stay dates: :names. Please remove them and try again.',
+        'service_closed_note' => 'Not available on the selected dates',
         'back_search' => 'Search for another stay',
         'guest_name' => 'Guest name',
         'guest_phone' => 'Phone number',

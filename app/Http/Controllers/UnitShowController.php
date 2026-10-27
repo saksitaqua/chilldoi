@@ -11,7 +11,7 @@ class UnitShowController extends Controller
     {
         abort_unless($unit->is_active, 404);
 
-        $unit->load(['accommodationType', 'visibleImages']);
+        $unit->load(['accommodationType', 'visibleImages', 'closures']);
 
         $weekStart = Carbon::now()->startOfWeek();
         $weekEnd = $weekStart->copy()->addWeeks(1)->endOfWeek();
