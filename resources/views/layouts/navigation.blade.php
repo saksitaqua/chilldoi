@@ -100,6 +100,9 @@
                         <x-nav-link :href="route('admin.employees.index')" :active="request()->routeIs('admin.employees.*')">
                             {{ __('พนักงาน') }}
                         </x-nav-link>
+                        <x-nav-link :href="route('admin.mail-test.index')" :active="request()->routeIs('admin.mail-test.*')">
+                            {{ __('ทดสอบอีเมล') }}
+                        </x-nav-link>
                     @endif
                 </div>
             </div>
@@ -216,6 +219,9 @@
             @if (Auth::user()->isAdmin())
                 <x-responsive-nav-link :href="route('admin.employees.index')" :active="request()->routeIs('admin.employees.*')">
                     {{ __('พนักงาน') }}
+                </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('admin.mail-test.index')" :active="request()->routeIs('admin.mail-test.*')">
+                    {{ __('ทดสอบอีเมล') }}
                 </x-responsive-nav-link>
             @endif
         </div>

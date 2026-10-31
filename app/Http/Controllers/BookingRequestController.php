@@ -2,16 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Mail\PaymentSlipUploaded;
 use App\Models\Activity;
 use App\Models\Booking;
 use App\Models\Customer;
 use App\Models\Service;
 use App\Models\Unit;
-use App\Models\User;
+use App\Support\BookingNotifier;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 
 class BookingRequestController extends Controller
@@ -106,6 +103,8 @@ class BookingRequestController extends Controller
         $serviceIds = $data['services'] ?? [];
         $booking->services()->sync(array_fill_keys($serviceIds, ['quantity' => 1]));
 
+        BookingNotifier::newBooking($booking);
+
         return redirect()->route('booking.thankyou', $booking);
     }
 
@@ -113,7 +112,10 @@ class BookingRequestController extends Controller
     {
         $booking->load('unit.accommodationType', 'activities', 'services');
 
-        return view('booking.thankyou', compact('booking'));
+        // Never let a browser or proxy replay this page: its form carries a session-bound CSRF token.
+        return response()
+            ->view('booking.thankyou', compact('booking'))
+            ->header('Cache-Control', 'no-store, no-cache, must-revalidate, private');
     }
 
     public function uploadSlip(Request $request, Booking $booking)
@@ -138,22 +140,9 @@ class BookingRequestController extends Controller
             'payment_uploaded_at' => now(),
         ]);
 
-        $this->notifyAdmins($booking);
+        BookingNotifier::slipUploaded($booking);
 
         return redirect()->route('booking.thankyou', $booking)
             ->with('status', 'อัปโหลดสลิปเรียบร้อยแล้ว เจ้าหน้าที่จะตรวจสอบและยืนยันการจองโดยเร็วที่สุด');
-    }
-
-    private function notifyAdmins(Booking $booking): void
-    {
-        $booking->load('unit.accommodationType');
-
-        try {
-            foreach (User::pluck('email') as $email) {
-                Mail::to($email)->send(new PaymentSlipUploaded($booking));
-            }
-        } catch (\Throwable $e) {
-            Log::warning('Failed to send payment slip notification email: '.$e->getMessage());
-        }
     }
 }

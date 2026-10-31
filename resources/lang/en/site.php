@@ -85,6 +85,7 @@ return [
     'booking' => [
         'title_prefix' => 'Book - ',
         'unavailable' => 'Sorry, this accommodation was just booked for the selected dates.',
+        'page_expired' => 'This page was left open too long. Your details are still filled in — please confirm the booking again.',
         'closed_unit' => 'Sorry, this accommodation is closed on the selected dates. Please choose other dates.',
         'service_closed' => 'These extra services are not available on your stay dates: :names. Please remove them and try again.',
         'service_closed_note' => 'Not available on the selected dates',
@@ -123,6 +124,7 @@ return [
         'slip_replace_note' => 'Uploaded the wrong file? Upload a new one here:',
         'upload_new' => 'Upload New',
         'upload_slip' => 'Upload Slip',
+        'page_expired' => 'This page was left open too long. Please choose the slip file and upload again.',
         'slip_later_note' => 'Not ready yet? Save this page (or copy the link: :url) and come back to upload later.',
         'back_home' => '← Back to home',
     ],

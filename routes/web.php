@@ -71,6 +71,8 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
     Route::delete('banners/{banner}', [BannerController::class, 'destroyImage'])->name('banners.destroy');
 
     Route::middleware('admin.only')->group(function () {
+        Route::get('mail-test', [\App\Http\Controllers\Admin\MailTestController::class, 'index'])->name('mail-test.index');
+        Route::post('mail-test', [\App\Http\Controllers\Admin\MailTestController::class, 'send'])->name('mail-test.send');
         Route::resource('employees', EmployeeController::class)->except(['show']);
         Route::post('employees/{employee}/reset-password', [EmployeeController::class, 'resetPassword'])->name('employees.reset-password');
     });
