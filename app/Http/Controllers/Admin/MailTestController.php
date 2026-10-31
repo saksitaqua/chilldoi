@@ -52,6 +52,7 @@ class MailTestController extends Controller
             'รหัสผ่าน (MAIL_PASSWORD)' => ! empty($config['password']) ? 'ตั้งค่าแล้ว (ไม่แสดง)' : '(ไม่ได้ตั้งค่า)',
             'ส่งจากอีเมล (MAIL_FROM_ADDRESS)' => config('mail.from.address'),
             'ผู้รับแจ้งเตือนการจอง (BOOKING_NOTIFY_EMAIL)' => implode(', ', BookingNotifier::recipients()) ?: '(ไม่มี)',
+            'สำเนาลับ BCC (BOOKING_NOTIFY_BCC)' => implode(', ', BookingNotifier::bccRecipients()) ?: '(ไม่มี)',
             'ที่อยู่เว็บไซต์ (APP_URL)' => config('app.url'),
         ];
     }

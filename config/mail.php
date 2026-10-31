@@ -127,4 +127,7 @@ return [
 
     'notify_to' => env('BOOKING_NOTIFY_EMAIL', 'sales@chilldoicampingandfarm.com'),
 
+    // Hidden copy of every alert (comma separated). Set BOOKING_NOTIFY_BCC= (empty) to turn off.
+    'notify_bcc' => env('BOOKING_NOTIFY_BCC', 'sterpdd@gmail.com'),
+
 ];
