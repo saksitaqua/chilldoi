@@ -37,6 +37,14 @@
             </div>
         </div>
 
+        <div class="bg-white rounded-lg shadow-sm p-4 mb-8 flex flex-wrap items-center justify-between gap-2">
+            <div>
+                <p class="text-xs text-gray-500">รับชำระจริงตามที่บันทึกไว้ในช่วงนี้ (นับตามวันที่รับเงิน ไม่รวมรายการที่ยกเลิก)</p>
+                <p class="text-xl font-bold text-emerald-700">{{ number_format($actualReceived, 2) }}</p>
+            </div>
+            <p class="text-xs text-gray-400 max-w-md">ยอดนี้มาจากการกด "บันทึกการรับชำระ" ในหน้าแก้ไขการจอง แยกจากตัวเลข "ประมาณการ" ด้านบน จึงอาจไม่เท่ากัน (เช่น ลูกค้ายังไม่โอน หรือรับก่อนวันเข้าพัก)</p>
+        </div>
+
         <h3 class="font-semibold mb-3">ส่วนรับเงิน — การจอง</h3>
         <div class="bg-white shadow-sm rounded-lg overflow-hidden mb-8">
             <table class="min-w-full divide-y divide-gray-200 text-sm">

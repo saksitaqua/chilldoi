@@ -14,5 +14,7 @@
                 <a href="{{ route('admin.bookings.index') }}" class="ml-2 text-sm text-gray-500">ยกเลิก</a>
             </div>
         </form>
+
+        @include('admin.bookings._payments')
     </div>
 </x-app-layout>

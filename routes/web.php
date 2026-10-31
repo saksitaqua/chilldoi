@@ -41,6 +41,10 @@ Route::post('/book/thank-you/{booking}/slip', [BookingRequestController::class, 
 
 Route::get('/map', [MapController::class, 'index'])->name('map.index');
 
+Route::get('/receipt/{receipt}', [\App\Http\Controllers\PublicReceiptController::class, 'show'])
+    ->middleware('signed')
+    ->name('receipts.public');
+
 Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
@@ -70,7 +74,15 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
     Route::put('banners', [BannerController::class, 'update'])->name('banners.update');
     Route::delete('banners/{banner}', [BannerController::class, 'destroyImage'])->name('banners.destroy');
 
+    Route::get('receipts', [\App\Http\Controllers\Admin\ReceiptController::class, 'index'])->name('receipts.index');
+    Route::get('receipts/{receipt}', [\App\Http\Controllers\Admin\ReceiptController::class, 'show'])->name('receipts.show');
+
     Route::middleware('admin.only')->group(function () {
+        Route::post('bookings/{booking}/payments', [\App\Http\Controllers\Admin\PaymentController::class, 'store'])->name('payments.store');
+        Route::post('payments/{payment}/void', [\App\Http\Controllers\Admin\PaymentController::class, 'void'])->name('payments.void');
+        Route::post('bookings/{booking}/receipts', [\App\Http\Controllers\Admin\ReceiptController::class, 'issue'])->name('receipts.issue');
+        Route::post('receipts/{receipt}/void', [\App\Http\Controllers\Admin\ReceiptController::class, 'void'])->name('receipts.void');
+
         Route::get('mail-test', [\App\Http\Controllers\Admin\MailTestController::class, 'index'])->name('mail-test.index');
         Route::post('mail-test', [\App\Http\Controllers\Admin\MailTestController::class, 'send'])->name('mail-test.send');
         Route::resource('employees', EmployeeController::class)->except(['show']);

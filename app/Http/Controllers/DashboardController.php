@@ -16,6 +16,7 @@ class DashboardController extends Controller
         $pendingPayments = Booking::with('unit.accommodationType')
             ->where('status', 'pending')
             ->whereNull('payment_slip')
+            ->whereDoesntHave('payments', fn ($q) => $q->whereNull('voided_at'))
             ->orderBy('check_in')
             ->limit(8)
             ->get();
@@ -85,6 +86,7 @@ class DashboardController extends Controller
         $rangeEnd = now()->endOfMonth();
 
         $bookings = Booking::with(['unit.accommodationType', 'activities', 'services'])
+            ->withCount(['payments as active_payments_count' => fn ($q) => $q->whereNull('voided_at')])
             ->where('status', '!=', 'cancelled')
             ->whereBetween('check_in', [$rangeStart->toDateString(), $rangeEnd->toDateString()])
             ->get()
@@ -96,7 +98,7 @@ class DashboardController extends Controller
 
                 $booking->computed_amount = $roomAmount + $activitiesAmount + $servicesAmount;
                 $booking->month_key = $booking->check_in->format('Y-m');
-                $booking->is_paid = ! is_null($booking->payment_slip);
+                $booking->is_paid = ! is_null($booking->payment_slip) || $booking->active_payments_count > 0;
 
                 return $booking;
             });

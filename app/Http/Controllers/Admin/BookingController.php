@@ -18,6 +18,8 @@ class BookingController extends Controller
     public function index(Request $request)
     {
         $bookings = Booking::with('unit.accommodationType')
+            ->withSum(['payments as paid_total' => fn ($q) => $q->whereNull('voided_at')], 'amount')
+            ->withCount(['receipts as active_receipts_count' => fn ($q) => $q->whereNull('voided_at')])
             ->when($request->status, fn ($q) => $q->where('status', $request->status))
             ->orderByDesc('check_in')
             ->paginate(20)
@@ -64,8 +66,9 @@ class BookingController extends Controller
         $services = Service::where('is_active', true)->orderBy('sort_order')->orderBy('name')->get();
         $customers = Customer::orderByDesc('id')->limit(300)->get(['id', 'name', 'phone', 'email']);
         $booking->load('activities', 'services');
+        $pay = app(\App\Services\ReceiptService::class)->summary($booking);
 
-        return view('admin.bookings.edit', compact('booking', 'units', 'activities', 'services', 'customers'));
+        return view('admin.bookings.edit', compact('booking', 'units', 'activities', 'services', 'customers', 'pay'));
     }
 
     public function update(Request $request, Booking $booking)
@@ -97,6 +100,11 @@ class BookingController extends Controller
 
     public function destroy(Booking $booking)
     {
+        if ($booking->payments()->exists() || $booking->receipts()->exists()) {
+            return redirect()->route('admin.bookings.index')
+                ->with('status', 'ลบไม่ได้ เพราะการจองนี้มีการบันทึกรับชำระหรือใบเสร็จแล้ว (ต้องเก็บไว้เป็นหลักฐาน) ถ้าไม่ใช้แล้วให้เปลี่ยนสถานะเป็น "ยกเลิก"');
+        }
+
         $booking->delete();
 
         return redirect()->route('admin.bookings.index')->with('status', 'ลบการจองเรียบร้อยแล้ว');

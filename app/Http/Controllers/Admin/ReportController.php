@@ -117,6 +117,11 @@ class ReportController extends Controller
         $sheet->getStyle("B" . ($row - 2) . ":B{$row}")->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
         $sheet->getStyle("A" . ($row - 2) . ":A{$row}")->getFont()->setBold(true);
 
+        $row += 2;
+        $sheet->setCellValue("A{$row}", 'รับชำระจริงตามที่บันทึกไว้ในช่วงนี้ (วันที่รับเงิน)');
+        $sheet->setCellValue("B{$row}", (float) $data['actualReceived']);
+        $sheet->getStyle("B{$row}")->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
+
         foreach (range('A', 'H') as $col) {
             $sheet->getColumnDimension($col)->setAutoSize(true);
         }
@@ -292,9 +297,13 @@ class ReportController extends Controller
 
         $expenseTotal = $expenses->sum('total_amount');
 
+        $actualReceived = (float) \App\Models\Payment::active()
+            ->whereBetween('paid_at', [$rangeStart->copy()->startOfDay(), $rangeEnd->copy()->endOfDay()])
+            ->sum('amount');
+
         return compact(
             'bookings', 'bookingIncomeTotal', 'manualIncomes', 'manualIncomeTotal',
-            'incomeTotal', 'expenses', 'expenseTotal'
+            'incomeTotal', 'expenses', 'expenseTotal', 'actualReceived'
         );
     }
 }

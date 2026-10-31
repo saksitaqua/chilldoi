@@ -60,7 +60,13 @@
                             <td class="px-4 py-2 text-gray-500">{{ $booking->source === 'online' ? 'ออนไลน์' : 'แอดมิน' }}</td>
                             <td class="px-4 py-2">
                                 @if ($booking->payment_slip)
-                                    <span class="text-emerald-700 text-xs">💳 แนบสลิปแล้ว</span>
+                                    <span class="text-emerald-700 text-xs block">💳 แนบสลิปแล้ว</span>
+                                @endif
+                                @if ((float) $booking->paid_total > 0)
+                                    <span class="text-xs block text-gray-600">รับแล้ว {{ number_format((float) $booking->paid_total, 2) }}</span>
+                                @endif
+                                @if ($booking->active_receipts_count > 0)
+                                    <span class="text-xs block text-emerald-700">🧾 ออกใบเสร็จแล้ว</span>
                                 @endif
                             </td>
                             <td class="px-4 py-2 text-right space-x-2">
