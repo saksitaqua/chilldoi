@@ -48,6 +48,7 @@ class MailTestController extends Controller
             'เซิร์ฟเวอร์ (MAIL_HOST)' => $config['host'] ?? '-',
             'พอร์ต (MAIL_PORT)' => $config['port'] ?? '-',
             'การเข้ารหัส (MAIL_SCHEME)' => $config['scheme'] ?? '(ค่าเริ่มต้น)',
+            'ตรวจใบรับรองเซิร์ฟเวอร์ (MAIL_VERIFY_PEER)' => ($config['verify_peer'] ?? true) ? 'เปิด (ปลอดภัย)' : 'ปิด',
             'ชื่อผู้ใช้ (MAIL_USERNAME)' => ! empty($config['username']) ? $config['username'] : '(ไม่ได้ตั้งค่า)',
             'รหัสผ่าน (MAIL_PASSWORD)' => ! empty($config['password']) ? 'ตั้งค่าแล้ว (ไม่แสดง)' : '(ไม่ได้ตั้งค่า)',
             'ส่งจากอีเมล (MAIL_FROM_ADDRESS)' => config('mail.from.address'),
@@ -68,6 +69,10 @@ class MailTestController extends Controller
 
         if ($mailer === 'smtp' && in_array(config('mail.mailers.smtp.host'), ['127.0.0.1', 'localhost'], true) && (int) config('mail.mailers.smtp.port') === 2525) {
             $warnings[] = 'MAIL_HOST/MAIL_PORT ยังเป็นค่าเริ่มต้น (127.0.0.1:2525) ซึ่งไม่ใช่เซิร์ฟเวอร์เมลจริง';
+        }
+
+        if ($mailer === 'smtp' && ! (config('mail.mailers.smtp.verify_peer') ?? true)) {
+            $warnings[] = 'MAIL_VERIFY_PEER ถูกปิดอยู่ ระบบจะไม่ตรวจว่าเซิร์ฟเวอร์เมลเป็นเครื่องจริงหรือไม่ ใช้ได้เมื่อเมลเซิร์ฟเวอร์อยู่เครื่องเดียวกับเว็บ (เช่น MAIL_HOST=localhost) เท่านั้น ถ้าแก้ชื่อโฮสต์ให้ตรงกับใบรับรองได้ ควรเปิดกลับ';
         }
 
         if (str_contains((string) config('mail.from.address'), 'example.com')) {

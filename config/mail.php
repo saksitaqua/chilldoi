@@ -46,6 +46,9 @@ return [
             'username' => env('MAIL_USERNAME'),
             'password' => env('MAIL_PASSWORD'),
             'timeout' => (int) env('MAIL_TIMEOUT', 10),
+            // Keep true. Only set MAIL_VERIFY_PEER=false for a mail server on this same host whose
+            // certificate name does not match (turns off certificate checking, traffic stays encrypted).
+            'verify_peer' => env('MAIL_VERIFY_PEER', true),
             'local_domain' => env('MAIL_EHLO_DOMAIN', parse_url((string) env('APP_URL', 'http://localhost'), PHP_URL_HOST)),
         ],
 
