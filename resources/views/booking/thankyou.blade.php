@@ -36,6 +36,15 @@
         <div class="text-left mt-6 pt-6 border-t border-gray-200">
             <h2 class="font-semibold mb-3">{{ __('site.thankyou.payment_heading') }}</h2>
 
+            @if ($qrSvg)
+                <div class="bg-white border border-emerald-100 rounded-md p-4 mb-4 text-center">
+                    <p class="font-medium text-emerald-800">{{ __('site.thankyou.qr_heading') }}</p>
+                    <div class="w-56 max-w-full mx-auto my-3">{!! $qrSvg !!}</div>
+                    <p class="text-lg font-bold">{{ __('site.thankyou.qr_amount', ['amount' => number_format($qrAmount, 2)]) }}</p>
+                    <p class="text-xs text-gray-500 mt-1">{{ __('site.thankyou.qr_note') }}</p>
+                </div>
+            @endif
+
             @if (config('services.bank.account_number'))
                 <div class="bg-emerald-50 border border-emerald-100 rounded-md p-4 text-sm mb-4">
                     <p>{{ __('site.thankyou.bank') }}: <strong>{{ config('services.bank.name') }}</strong></p>

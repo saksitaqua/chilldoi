@@ -7,7 +7,10 @@ use App\Models\Booking;
 use App\Models\Customer;
 use App\Models\Service;
 use App\Models\Unit;
+use App\Services\ReceiptService;
 use App\Support\BookingNotifier;
+use App\Support\PromptPay;
+use App\Support\QrCode;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -112,9 +115,19 @@ class BookingRequestController extends Controller
     {
         $booking->load('unit.accommodationType', 'activities', 'services');
 
+        // PromptPay QR carrying the amount still owed, so guests do not have to type it.
+        $qrSvg = null;
+        $qrAmount = null;
+        $balance = app(ReceiptService::class)->summary($booking)['balance'];
+
+        if ($balance > 0 && ($payload = PromptPay::payload((string) config('services.bank.promptpay'), $balance))) {
+            $qrSvg = QrCode::svg($payload);
+            $qrAmount = $balance;
+        }
+
         // Never let a browser or proxy replay this page: its form carries a session-bound CSRF token.
         return response()
-            ->view('booking.thankyou', compact('booking'))
+            ->view('booking.thankyou', compact('booking', 'qrSvg', 'qrAmount'))
             ->header('Cache-Control', 'no-store, no-cache, must-revalidate, private');
     }
 
