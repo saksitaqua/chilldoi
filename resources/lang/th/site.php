@@ -67,9 +67,17 @@ return [
     ],
 
     'map' => [
-        'title' => 'แผนที่ที่พักทั้งหมด',
-        'no_key_warning' => 'ยังไม่ได้ตั้งค่า Google Maps API Key กรุณาเพิ่ม GOOGLE_MAPS_API_KEY ในไฟล์ .env',
-        'no_pins' => 'ยังไม่มีการปักหมุดตำแหน่งที่พัก',
+        'title' => 'แผนที่และการเดินทาง',
+        'view_larger' => 'ดูแผนที่ขนาดใหญ่ขึ้น',
+        'navigate' => 'นำทางด้วย Google Maps',
+        'open_google' => 'เปิดหน้าร้านใน Google Maps',
+        'find_us' => 'ที่ตั้งและติดต่อ',
+        'coordinates' => 'พิกัด',
+        'copy' => 'แตะเพื่อคัดลอก',
+        'copied' => 'คัดลอกแล้ว ✓',
+        'contact_maung' => 'คุณหม่อง',
+        'contact_nui' => 'คุณหนุ่ย',
+        'how_to_get_here' => 'การเดินทาง',
     ],
 
     'unit' => [

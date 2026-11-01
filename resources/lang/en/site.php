@@ -67,9 +67,17 @@ return [
     ],
 
     'map' => [
-        'title' => 'Map of All Accommodations',
-        'no_key_warning' => 'Google Maps API Key is not set yet. Please add GOOGLE_MAPS_API_KEY to the .env file.',
-        'no_pins' => 'No accommodation locations have been pinned yet',
+        'title' => 'Map & Directions',
+        'view_larger' => 'View larger map',
+        'navigate' => 'Navigate with Google Maps',
+        'open_google' => 'Open in Google Maps',
+        'find_us' => 'Location & contact',
+        'coordinates' => 'Coordinates',
+        'copy' => 'Tap to copy',
+        'copied' => 'Copied ✓',
+        'contact_maung' => 'Khun Maung',
+        'contact_nui' => 'Khun Nui',
+        'how_to_get_here' => 'How to get here',
     ],
 
     'unit' => [
