@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Schema;
 
 class SiteVisit extends Model
@@ -50,15 +49,5 @@ class SiteVisit extends Model
             'total' => ['visitors' => (int) $total->visitors, 'views' => (int) $total->views],
             'daily' => $daily,
         ];
-    }
-
-    /** Cheap number for the admin menu badge. */
-    public static function todayVisitors(): ?int
-    {
-        return Cache::remember('site-visits-today-'.now()->toDateString(), 60, function () {
-            return Schema::hasTable('site_visits')
-                ? static::where('visit_date', now()->toDateString())->count()
-                : null;
-        });
     }
 }
