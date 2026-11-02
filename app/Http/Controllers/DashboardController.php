@@ -7,6 +7,7 @@ use App\Models\Booking;
 use App\Models\Expense;
 use App\Models\ExpenseCategory;
 use App\Models\Plan;
+use App\Models\SiteVisit;
 use App\Models\Story;
 
 class DashboardController extends Controller
@@ -67,6 +68,7 @@ class DashboardController extends Controller
             ->values();
 
         $charts = $this->buildChartData();
+        $visits = SiteVisit::stats();
 
         return view('dashboard', compact(
             'pendingPayments',
@@ -75,7 +77,8 @@ class DashboardController extends Controller
             'expiringActivities',
             'upcomingPlans',
             'recurringExpensesDue',
-            'charts'
+            'charts',
+            'visits'
         ));
     }
 

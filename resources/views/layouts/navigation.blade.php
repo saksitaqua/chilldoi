@@ -14,6 +14,9 @@
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex items-center">
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
+                        @if (! is_null($todayVisitors = \App\Models\SiteVisit::todayVisitors()))
+                            <span class="ms-2 text-xs bg-emerald-100 text-emerald-800 rounded-full px-2 py-0.5" title="ผู้เข้าชมเว็บไซต์วันนี้">👁 {{ number_format($todayVisitors) }}</span>
+                        @endif
                     </x-nav-link>
                     <x-nav-link :href="route('admin.calendar.index')" :active="request()->routeIs('admin.calendar.*')">
                         {{ __('ปฏิทิน') }}

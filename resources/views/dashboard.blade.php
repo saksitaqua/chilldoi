@@ -8,6 +8,30 @@
     <div class="py-8" x-data="{ tab: 'notify' }">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
 
+            @if ($visits)
+                @php $peak = max(1, max($visits['daily'])); @endphp
+                <div class="bg-white shadow-sm rounded-lg p-5 mb-6">
+                    <div class="flex items-center justify-between mb-3">
+                        <h3 class="font-semibold text-gray-800">ผู้เข้าชมเว็บไซต์</h3>
+                        <span class="text-xs text-gray-400">นับคนไม่ซ้ำต่อวัน · ไม่เก็บ IP จริง · ไม่นับทีมงานและบอท</span>
+                    </div>
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center">
+                        @foreach ([['วันนี้', $visits['today']], ['7 วันล่าสุด', $visits['week']], ['30 วันล่าสุด', $visits['month']], ['ทั้งหมด', $visits['total']]] as [$label, $row])
+                            <div class="bg-gray-50 rounded-md py-3">
+                                <p class="text-xs text-gray-500">{{ $label }}</p>
+                                <p class="text-2xl font-bold text-emerald-700">{{ number_format($row['visitors']) }}</p>
+                                <p class="text-xs text-gray-400">{{ number_format($row['views']) }} หน้าที่เปิด</p>
+                            </div>
+                        @endforeach
+                    </div>
+                    <div class="flex items-end gap-1 h-16 mt-4" title="ผู้เข้าชมรายวัน 14 วันล่าสุด">
+                        @foreach ($visits['daily'] as $date => $count)
+                            <div class="flex-1 bg-emerald-200 hover:bg-emerald-400 rounded-t" style="height: {{ max(4, round($count / $peak * 100)) }}%" title="{{ \Carbon\Carbon::parse($date)->format('d/m') }}: {{ $count }} คน"></div>
+                        @endforeach
+                    </div>
+                </div>
+            @endif
+
             <div class="flex gap-2 mb-6 border-b border-gray-200">
                 <button @click="tab = 'notify'"
                         :class="tab === 'notify' ? 'border-emerald-700 text-emerald-700' : 'border-transparent text-gray-500 hover:text-gray-700'"
