@@ -18,6 +18,10 @@
                     <option value="confirmed" @selected(request('status') == 'confirmed')>ยืนยันแล้ว</option>
                     <option value="cancelled" @selected(request('status') == 'cancelled')>ยกเลิก</option>
                 </select>
+                @if (request()->boolean('attention'))
+                    <input type="hidden" name="attention" value="1">
+                    <a href="{{ route('admin.bookings.index') }}" class="self-center text-xs bg-red-50 text-red-700 rounded-full px-3 py-1">แสดงเฉพาะที่ต้องดำเนินการ ✕</a>
+                @endif
             </form>
             <a href="{{ route('admin.bookings.create') }}" class="bg-emerald-700 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-emerald-800">+ เพิ่มการจอง</a>
         </div>

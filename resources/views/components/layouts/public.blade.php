@@ -20,6 +20,9 @@
                 <a href="{{ route('map.index') }}" class="hover:text-emerald-700">{{ __('site.nav.map') }}</a>
                 @auth
                     <a href="{{ route('dashboard') }}" class="hover:text-emerald-700">{{ __('site.nav.admin') }}</a>
+                    @if (($attention = \App\Models\Booking::needsAttention()->count()) > 0)
+                        <a href="{{ route('admin.bookings.index', ['attention' => 1]) }}" class="-ml-4 inline-flex items-center justify-center min-w-5 h-5 px-1.5 rounded-full bg-red-600 text-white text-xs font-semibold hover:bg-red-700" title="การจองที่ต้องดำเนินการ">{{ $attention }}</a>
+                    @endif
                 @else
                     <a href="{{ route('login') }}" class="hover:text-emerald-700">{{ __('site.nav.login') }}</a>
                 @endauth

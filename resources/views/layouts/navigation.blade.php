@@ -20,6 +20,7 @@
                     </x-nav-link>
                     @php
                         $bookingActive = request()->routeIs(['admin.bookings.*', 'admin.customers.*', 'admin.receipts.*']);
+                        $attention = \App\Models\Booking::needsAttention()->count();
                         $accommodationActive = request()->routeIs(['admin.types.*', 'admin.units.*', 'admin.services.*']);
                         $postActive = request()->routeIs(['admin.stories.*', 'admin.activities.*', 'admin.story-categories.*']);
                         $generalActive = request()->routeIs(['admin.expenses.*', 'admin.plans.*', 'admin.expense-categories.*', 'admin.measure-units.*']);
@@ -29,6 +30,9 @@
                         <x-slot name="trigger">
                             <button class="inline-flex items-center gap-1 px-1 pt-1 border-b-2 {{ $bookingActive ? 'border-indigo-400 text-gray-900' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300' }} text-sm font-medium leading-5 focus:outline-none transition duration-150 ease-in-out">
                                 {{ __('การจอง') }}
+                                @if ($attention > 0)
+                                    <span class="inline-flex items-center justify-center min-w-5 h-5 px-1.5 rounded-full bg-red-600 text-white text-xs font-semibold" title="การจองที่ต้องดำเนินการ">{{ $attention }}</span>
+                                @endif
                                 <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
                                     <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
                                 </svg>
@@ -36,6 +40,9 @@
                         </x-slot>
                         <x-slot name="content">
                             <x-dropdown-link :href="route('admin.bookings.index')">{{ __('การจอง') }}</x-dropdown-link>
+                            @if ($attention > 0)
+                                <x-dropdown-link :href="route('admin.bookings.index', ['attention' => 1])">{{ __('ต้องดำเนินการ') }} ({{ $attention }})</x-dropdown-link>
+                            @endif
                             <x-dropdown-link :href="route('admin.customers.index')">{{ __('ลูกค้า') }}</x-dropdown-link>
                             <x-dropdown-link :href="route('admin.receipts.index')">{{ __('ใบเสร็จรับเงิน') }}</x-dropdown-link>
                         </x-slot>

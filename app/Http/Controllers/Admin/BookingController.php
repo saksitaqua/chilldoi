@@ -21,6 +21,7 @@ class BookingController extends Controller
             ->withSum(['payments as paid_total' => fn ($q) => $q->whereNull('voided_at')], 'amount')
             ->withCount(['receipts as active_receipts_count' => fn ($q) => $q->whereNull('voided_at')])
             ->when($request->status, fn ($q) => $q->where('status', $request->status))
+            ->when($request->boolean('attention'), fn ($q) => $q->needsAttention())
             ->orderByDesc('check_in')
             ->paginate(20)
             ->withQueryString();

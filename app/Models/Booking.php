@@ -133,6 +133,22 @@ class Booking extends Model
         ];
     }
 
+    /**
+     * Bookings staff still have to act on: waiting for confirmation, or a payment slip was
+     * uploaded but no payment has been recorded yet.
+     */
+    public function scopeNeedsAttention($query)
+    {
+        return $query->where('status', '!=', 'cancelled')
+            ->where(function ($q) {
+                $q->where('status', 'pending')
+                    ->orWhere(function ($q) {
+                        $q->whereNotNull('payment_slip')
+                            ->whereDoesntHave('payments', fn ($p) => $p->whereNull('voided_at'));
+                    });
+            });
+    }
+
     public function scopeOverlapping($query, string $checkIn, string $checkOut)
     {
         return $query->where('check_in', '<', $checkOut)
