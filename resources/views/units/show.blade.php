@@ -74,10 +74,8 @@
         </table>
     </div>
 
-    @if ($unit->lat && $unit->lng)
-        <div class="mt-6">
-            <a href="https://www.google.com/maps?q={{ $unit->lat }},{{ $unit->lng }}" target="_blank" rel="noopener"
-               class="text-sm text-emerald-700 hover:underline">{{ __('site.unit.open_maps') }}</a>
-        </div>
-    @endif
+    <div class="mt-6">
+        <a href="https://www.google.com/maps?q={{ config('location.lat') }},{{ config('location.lng') }}" target="_blank" rel="noopener"
+           class="text-sm text-emerald-700 hover:underline">{{ __('site.unit.open_maps') }}</a>
+    </div>
 </x-layouts.public>
