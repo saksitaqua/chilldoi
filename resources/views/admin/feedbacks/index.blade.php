@@ -19,6 +19,17 @@
             </div>
         </div>
 
+        @if ($tagCounts)
+            <div class="bg-white shadow-sm rounded-lg p-4 mb-4">
+                <div class="text-xs text-gray-500 mb-2">ด้านที่ลูกค้าอยากให้ปรับปรุง (เรียงตามที่ถูกเลือกบ่อย)</div>
+                <div class="flex flex-wrap gap-2 text-sm">
+                    @foreach ($tagCounts as $tag => $count)
+                        <span class="px-3 py-1 rounded-full bg-amber-50 text-amber-800 border border-amber-200">{{ \App\Models\Feedback::TAGS[$tag] }} <b>{{ $count }}</b></span>
+                    @endforeach
+                </div>
+            </div>
+        @endif
+
         <form method="GET" class="mb-4 flex flex-wrap gap-2 text-sm items-center">
             <select name="rating" onchange="this.form.submit()" class="border-gray-300 rounded-md">
                 <option value="">ทุกคะแนน</option>
@@ -48,7 +59,36 @@
                         <div class="text-xs text-gray-400">{{ $feedback->created_at->format('d/m/Y H:i') }}</div>
                     </div>
 
-                    <p class="mt-2 text-sm text-gray-800 whitespace-pre-line">{{ $feedback->comment ?: '(ไม่ได้เขียนความเห็น)' }}</p>
+                    @php
+                        $answers = [
+                            'เหตุผลของคะแนน' => $feedback->comment,
+                            'ชอบ/ประทับใจที่สุด' => $feedback->best,
+                            'อยากให้ปรับปรุงด้านพื้นที่และสิ่งอำนวยความสะดวก' => $feedback->facility,
+                            'การต้อนรับและการบริการ' => $feedback->service,
+                            'อยากพบเพิ่มเมื่อมาครั้งหน้า' => $feedback->future,
+                        ];
+                        $tags = collect($feedback->facility_tags ?? [])->map(fn ($t) => \App\Models\Feedback::TAGS[$t] ?? null)->filter();
+                    @endphp
+
+                    @if ($tags->isNotEmpty())
+                        <div class="mt-2 flex flex-wrap gap-1.5">
+                            @foreach ($tags as $label)
+                                <span class="text-xs px-2 py-0.5 rounded-full bg-amber-50 text-amber-800 border border-amber-200">{{ $label }}</span>
+                            @endforeach
+                        </div>
+                    @endif
+
+                    <dl class="mt-2 space-y-2 text-sm">
+                        @foreach (array_filter($answers) as $question => $answer)
+                            <div>
+                                <dt class="text-xs text-gray-500">{{ $question }}</dt>
+                                <dd class="text-gray-800 whitespace-pre-line">{{ $answer }}</dd>
+                            </div>
+                        @endforeach
+                        @if (! array_filter($answers) && $tags->isEmpty())
+                            <p class="text-gray-400">(ให้คะแนนอย่างเดียว ไม่ได้เขียนความเห็น)</p>
+                        @endif
+                    </dl>
 
                     <div class="mt-3 flex flex-wrap items-center justify-between gap-2 text-xs text-gray-500">
                         <div>

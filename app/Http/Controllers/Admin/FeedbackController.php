@@ -22,7 +22,24 @@ class FeedbackController extends Controller
             'average' => Feedback::avg('rating'),
             'total' => Feedback::count(),
             'unread' => Feedback::unread()->count(),
+            'tagCounts' => $this->tagCounts(),
         ]);
+    }
+
+    /** How often each quick-pick topic was chosen, most mentioned first. */
+    private function tagCounts(): array
+    {
+        $counts = [];
+        foreach (Feedback::whereNotNull('facility_tags')->pluck('facility_tags') as $tags) {
+            foreach ((array) $tags as $tag) {
+                if (isset(Feedback::TAGS[$tag])) {
+                    $counts[$tag] = ($counts[$tag] ?? 0) + 1;
+                }
+            }
+        }
+        arsort($counts);
+
+        return $counts;
     }
 
     public function read(Feedback $feedback)

@@ -9,17 +9,33 @@ class Feedback extends Model
 {
     protected $table = 'feedbacks';
 
+    /** Quick-pick topics for the "what should we improve" question. */
+    public const TAGS = [
+        'tent' => 'ลานกางเต็นท์',
+        'toilet' => 'ห้องน้ำ',
+        'clean' => 'ความสะอาด',
+        'light' => 'แสงสว่าง',
+        'seating' => 'พื้นที่นั่งพัก',
+        'other' => 'อื่น ๆ',
+    ];
+
     protected $fillable = [
         'booking_id',
         'receipt_id',
         'rating',
         'name',
         'comment',
+        'best',
+        'facility_tags',
+        'facility',
+        'service',
+        'future',
         'read_at',
     ];
 
     protected $casts = [
         'rating' => 'integer',
+        'facility_tags' => 'array',
         'read_at' => 'datetime',
     ];
 

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Feedback;
 use App\Models\Receipt;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class FeedbackController extends Controller
 {
@@ -35,6 +36,12 @@ class FeedbackController extends Controller
             'rating' => 'required|integer|between:1,5',
             'name' => 'nullable|string|max:100',
             'comment' => 'nullable|string|max:2000',
+            'best' => 'nullable|string|max:2000',
+            'facility_tags' => 'nullable|array',
+            'facility_tags.*' => ['string', Rule::in(array_keys(Feedback::TAGS))],
+            'facility' => 'nullable|string|max:2000',
+            'service' => 'nullable|string|max:2000',
+            'future' => 'nullable|string|max:2000',
         ]);
 
         Feedback::create([
@@ -43,6 +50,11 @@ class FeedbackController extends Controller
             'rating' => $data['rating'],
             'name' => $data['name'] ?? null,
             'comment' => $data['comment'] ?? null,
+            'best' => $data['best'] ?? null,
+            'facility_tags' => ! empty($data['facility_tags']) ? array_values(array_unique($data['facility_tags'])) : null,
+            'facility' => $data['facility'] ?? null,
+            'service' => $data['service'] ?? null,
+            'future' => $data['future'] ?? null,
         ]);
 
         return redirect()->route('feedback.create', [$receipt, $token])->with('submitted', true);
