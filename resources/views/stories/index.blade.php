@@ -188,7 +188,7 @@
             }
         </style>
 
-        @if ($accommodationTypes->isNotEmpty())
+        @if ($units->isNotEmpty())
             <div class="cd-section">
                 <div class="cd-section-head">
                     <div>
@@ -198,21 +198,21 @@
                     <a class="cd-more" href="{{ route('availability.index') }}">{{ __('site.nav.availability') }} →</a>
                 </div>
                 <div class="cd-stays">
-                    @foreach ($accommodationTypes as $type)
+                    @foreach ($units as $unit)
                         <div class="cd-stay-card">
                             <div class="cd-stay-media">
-                                @if ($type->cover_image)
-                                    <img src="{{ $type->cover_image }}" alt="{{ $type->display_name }}" style="{{ $type->cover_focal }}">
+                                @if ($unit->cover_image)
+                                    <img src="{{ $unit->cover_image }}" alt="{{ $unit->name }}" style="{{ $unit->cover_focal }}">
                                 @else
                                     <div class="cd-stay-empty">{{ __('site.home.no_image') }}</div>
                                 @endif
                             </div>
                             <div class="cd-stay-body">
-                                <h3>{{ $type->display_name }}</h3>
-                                <p class="cd-stay-meta">{{ __('site.home.stays_capacity', ['count' => $type->max_guests]) }}</p>
+                                <h3>{{ $unit->name }}</h3>
+                                <p class="cd-stay-meta">{{ __('site.home.stays_capacity', ['count' => $unit->accommodationType->max_guests]) }}</p>
                                 <div class="cd-stay-foot">
-                                    <div class="cd-stay-price">฿{{ number_format($type->base_price) }} <span>{{ __('site.home.stays_per_night') }}</span></div>
-                                    <a class="cd-stay-link" href="{{ route('availability.index') }}">{{ __('site.home.stays_view') }}</a>
+                                    <div class="cd-stay-price">฿{{ number_format($unit->accommodationType->base_price) }} <span>{{ __('site.home.stays_per_night') }}</span></div>
+                                    <a class="cd-stay-link" href="{{ route('units.show', $unit) }}">{{ __('site.home.stays_view') }}</a>
                                 </div>
                             </div>
                         </div>

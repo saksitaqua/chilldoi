@@ -7,6 +7,7 @@ use App\Models\AccommodationType;
 use App\Models\Banner;
 use App\Models\Service;
 use App\Models\Story;
+use App\Models\Unit;
 use Illuminate\Http\Request;
 
 class StoryFeedController extends Controller
@@ -44,18 +45,21 @@ class StoryFeedController extends Controller
             ];
         })->filter(fn ($group) => $group['stories']->isNotEmpty());
 
-        $accommodationTypes = AccommodationType::where('is_active', true)
-            ->with(['units' => fn ($q) => $q->where('is_active', true)->with('visibleImages')])
+        $accommodationTypes = AccommodationType::where('is_active', true)->get();
+
+        $units = Unit::where('is_active', true)
+            ->whereHas('accommodationType', fn ($q) => $q->where('is_active', true))
+            ->with(['accommodationType', 'visibleImages'])
+            ->orderBy('accommodation_type_id')
+            ->orderBy('name')
             ->get()
-            ->map(function (AccommodationType $type) {
-                $cover = $type->units
-                    ->flatMap(fn ($unit) => $unit->visibleImages)
-                    ->first();
+            ->map(function (Unit $unit) {
+                $cover = $unit->visibleImages->first();
 
-                $type->cover_image = $cover?->url;
-                $type->cover_focal = $cover?->focal_style;
+                $unit->cover_image = $cover?->url;
+                $unit->cover_focal = $cover?->focal_style;
 
-                return $type;
+                return $unit;
             });
 
         $activities = Activity::where('is_active', true)->orderBy('name')->limit(4)->get();
@@ -67,6 +71,7 @@ class StoryFeedController extends Controller
             'stories' => null,
             'filteredCategory' => null,
             'accommodationTypes' => $accommodationTypes,
+            'units' => $units,
             'activities' => $activities,
             'services' => $services,
         ]);
