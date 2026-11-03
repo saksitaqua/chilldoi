@@ -69,6 +69,8 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
     Route::get('reports/summary', [ReportController::class, 'summary'])->name('reports.summary');
     Route::get('reports/summary/export', [ReportController::class, 'export'])->name('reports.summary.export');
     Route::get('calendar', [CalendarController::class, 'index'])->name('calendar.index');
+    Route::get('guide/flow', [\App\Http\Controllers\Admin\GuideController::class, 'flow'])->name('guide.flow');
+    Route::get('guide/manual', [\App\Http\Controllers\Admin\GuideController::class, 'manual'])->name('guide.manual');
     Route::get('banners', [BannerController::class, 'index'])->name('banners.index');
     Route::post('banners', [BannerController::class, 'store'])->name('banners.store');
     Route::put('banners', [BannerController::class, 'update'])->name('banners.update');
