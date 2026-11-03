@@ -45,6 +45,11 @@ Route::get('/receipt/{receipt}', [\App\Http\Controllers\PublicReceiptController:
     ->middleware('signed')
     ->name('receipts.public');
 
+Route::get('/f/{receipt}/{token}', [\App\Http\Controllers\FeedbackController::class, 'create'])->name('feedback.create');
+Route::post('/f/{receipt}/{token}', [\App\Http\Controllers\FeedbackController::class, 'store'])
+    ->middleware('throttle:10,1')
+    ->name('feedback.store');
+
 Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
@@ -69,6 +74,8 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
     Route::get('reports/summary', [ReportController::class, 'summary'])->name('reports.summary');
     Route::get('reports/summary/export', [ReportController::class, 'export'])->name('reports.summary.export');
     Route::get('calendar', [CalendarController::class, 'index'])->name('calendar.index');
+    Route::get('feedbacks', [\App\Http\Controllers\Admin\FeedbackController::class, 'index'])->name('feedbacks.index');
+    Route::post('feedbacks/{feedback}/read', [\App\Http\Controllers\Admin\FeedbackController::class, 'read'])->name('feedbacks.read');
     Route::get('guide/flow', [\App\Http\Controllers\Admin\GuideController::class, 'flow'])->name('guide.flow');
     Route::get('guide/manual', [\App\Http\Controllers\Admin\GuideController::class, 'manual'])->name('guide.manual');
     Route::get('banners', [BannerController::class, 'index'])->name('banners.index');

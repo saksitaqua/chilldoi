@@ -67,6 +67,10 @@
         .sign { margin-top: 36px; display: flex; justify-content: flex-end; }
         .sign .col { width: 62mm; text-align: center; }
         .sign .line { border-bottom: 1px solid #1b2421; height: 34px; }
+        .fb { margin-top: 18px; display: flex; align-items: center; justify-content: center; gap: 14px; }
+        .fb svg { width: 26mm; height: 26mm; flex: none; }
+        .fb .t { font-size: 12.5px; }
+        .fb .t b { font-size: 14px; }
         .foot { margin-top: 18px; text-align: center; color: #5b6963; font-size: 12px; }
         .stamp { position: absolute; left: 50%; top: 46%; transform: translate(-50%, -50%) rotate(-24deg); font-size: 76px; font-weight: 700; color: rgba(185, 28, 28, .22); border: 8px solid rgba(185, 28, 28, .22); padding: 0 28px; border-radius: 12px; pointer-events: none; white-space: nowrap; }
         .voidbox { margin-top: 12px; border: 1px solid #fecaca; background: #fef2f2; color: #991b1b; border-radius: 4px; padding: 8px 10px; }
@@ -230,6 +234,22 @@
                 <div class="en">วันที่ / Date: {{ ThaiDate::short($receipt->issued_at) }}</div>
             </div>
         </div>
+
+        @unless ($voided)
+            @php
+                try { $feedbackQr = \App\Support\QrCode::svg($receipt->feedbackUrl(), 2); } catch (\Throwable $e) { $feedbackQr = null; }
+            @endphp
+            @if ($feedbackQr)
+                <div class="fb">
+                    {!! $feedbackQr !!}
+                    <div class="t">
+                        <b>สแกนเพื่อแสดงความคิดเห็น</b><br>
+                        ช่วยบอกเราว่าการเข้าพักเป็นอย่างไร<br>
+                        <span class="en">Scan to leave your feedback</span>
+                    </div>
+                </div>
+            @endif
+        @endunless
 
         <div class="foot">ขอบคุณที่ใช้บริการ / Thank you for staying with us</div>
     </div>

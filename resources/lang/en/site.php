@@ -140,6 +140,19 @@ return [
         'back_home' => '← Back to home',
     ],
 
+    'feedback' => [
+        'title' => 'Share your feedback',
+        'intro' => 'Thank you for staying with us. Tell us how it went.',
+        'rating' => 'How was your stay?',
+        'rating_required' => 'Please choose a rating',
+        'comment' => 'Comments / suggestions',
+        'comment_hint' => 'What you liked, or what we could improve',
+        'name' => 'Name (optional)',
+        'submit' => 'Send feedback',
+        'thanks_title' => 'Thank you for your feedback',
+        'thanks_body' => 'We have received your feedback and will use it to improve.',
+    ],
+
     'story' => [
         'back' => '← Back to all stories',
     ],

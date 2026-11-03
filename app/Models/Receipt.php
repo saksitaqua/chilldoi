@@ -60,6 +60,19 @@ class Receipt extends Model
     }
 
     /**
+     * Short, unguessable token for the feedback page printed as a QR code on the receipt.
+     */
+    public function feedbackToken(): string
+    {
+        return substr(hash_hmac('sha256', 'feedback:'.$this->id, (string) config('app.key')), 0, 12);
+    }
+
+    public function feedbackUrl(): string
+    {
+        return route('feedback.create', ['receipt' => $this->id, 'token' => $this->feedbackToken()]);
+    }
+
+    /**
      * A link that works without logging in, protected by Laravel's URL signature, so staff can send it to the customer.
      */
     public function customerUrl(): string

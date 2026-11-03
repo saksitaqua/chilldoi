@@ -19,7 +19,7 @@
                         {{ __('ปฏิทิน') }}
                     </x-nav-link>
                     @php
-                        $bookingActive = request()->routeIs(['admin.bookings.*', 'admin.customers.*', 'admin.receipts.*']);
+                        $bookingActive = request()->routeIs(['admin.bookings.*', 'admin.customers.*', 'admin.receipts.*', 'admin.feedbacks.*']);
                         $attention = \App\Models\Booking::needsAttention()->count();
                         $accommodationActive = request()->routeIs(['admin.types.*', 'admin.units.*', 'admin.services.*']);
                         $postActive = request()->routeIs(['admin.stories.*', 'admin.activities.*', 'admin.story-categories.*']);
@@ -45,6 +45,7 @@
                             @endif
                             <x-dropdown-link :href="route('admin.customers.index')">{{ __('ลูกค้า') }}</x-dropdown-link>
                             <x-dropdown-link :href="route('admin.receipts.index')">{{ __('ใบเสร็จรับเงิน') }}</x-dropdown-link>
+                            <x-dropdown-link :href="route('admin.feedbacks.index')">{{ __('ข้อเสนอแนะ') }}</x-dropdown-link>
                         </x-slot>
                     </x-dropdown>
 
@@ -185,6 +186,9 @@
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('admin.receipts.index')" :active="request()->routeIs('admin.receipts.*')">
                 {{ __('ใบเสร็จรับเงิน') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('admin.feedbacks.index')" :active="request()->routeIs('admin.feedbacks.*')">
+                {{ __('ข้อเสนอแนะ') }}
             </x-responsive-nav-link>
 
             <div class="px-4 pt-3 pb-1 text-xs font-semibold text-gray-400 uppercase">{{ __('ข้อมูลที่พัก/บริการ') }}</div>
