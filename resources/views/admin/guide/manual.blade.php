@@ -1,6 +1,6 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">คู่มือการใช้งาน</h2>
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight">User Manual</h2>
     </x-slot>
 
     @php
@@ -54,7 +54,7 @@
                 @foreach ($sections as [$id, $title])
                     <a href="#{{ $id }}" class="px-3 py-1 rounded-full bg-emerald-50 text-emerald-800 hover:bg-emerald-100">{{ $title }}</a>
                 @endforeach
-                <a href="{{ route('admin.guide.flow') }}" class="px-3 py-1 rounded-full bg-gray-100 text-gray-700 hover:bg-gray-200">ดู Flow การทำงาน →</a>
+                <a href="{{ route('admin.guide.flow') }}" class="px-3 py-1 rounded-full bg-gray-100 text-gray-700 hover:bg-gray-200">ดู Workflow →</a>
             </div>
         </div>
 

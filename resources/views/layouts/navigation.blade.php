@@ -130,10 +130,10 @@
 
                     <x-slot name="content">
                         <x-dropdown-link :href="route('admin.guide.flow')">
-                            {{ __('Flow การทำงาน') }}
+                            {{ __('Workflow') }}
                         </x-dropdown-link>
                         <x-dropdown-link :href="route('admin.guide.manual')">
-                            {{ __('คู่มือการใช้งาน') }}
+                            {{ __('User Manual') }}
                         </x-dropdown-link>
 
                         <div class="border-t border-gray-100"></div>
@@ -245,10 +245,10 @@
 
             <div class="px-4 pt-3 pb-1 text-xs font-semibold text-gray-400 uppercase">{{ __('คู่มือ') }}</div>
             <x-responsive-nav-link :href="route('admin.guide.flow')" :active="request()->routeIs('admin.guide.flow')">
-                {{ __('Flow การทำงาน') }}
+                {{ __('Workflow') }}
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('admin.guide.manual')" :active="request()->routeIs('admin.guide.manual')">
-                {{ __('คู่มือการใช้งาน') }}
+                {{ __('User Manual') }}
             </x-responsive-nav-link>
         </div>
 

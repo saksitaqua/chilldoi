@@ -1,6 +1,6 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">Flow การทำงาน</h2>
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight">Workflow</h2>
     </x-slot>
 
     @php
@@ -83,6 +83,6 @@
             </dl>
         </div>
 
-        <p class="text-sm text-gray-500">รายละเอียดการใช้แต่ละเมนู ดูที่ <a href="{{ route('admin.guide.manual') }}" class="text-emerald-700 hover:underline">คู่มือการใช้งาน →</a></p>
+        <p class="text-sm text-gray-500">รายละเอียดการใช้แต่ละเมนู ดูที่ <a href="{{ route('admin.guide.manual') }}" class="text-emerald-700 hover:underline">User Manual →</a></p>
     </div>
 </x-app-layout>
