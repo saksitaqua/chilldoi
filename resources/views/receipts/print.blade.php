@@ -92,6 +92,13 @@
 
         @if ($isAdminView && ! $voided)
             <button type="button" class="btn" data-copy="{{ $receipt->customerUrl() }}">คัดลอกลิงก์สำหรับส่งให้ลูกค้า</button>
+            @if ($canManage)
+                <form method="POST" action="{{ route('admin.receipts.email', $receipt) }}" style="margin:0;"
+                      onsubmit="return confirm('ส่งอีเมลใบเสร็จนี้ให้ลูกค้า{{ $receipt->customer_email ? ' ที่ '.$receipt->customer_email : '' }} ?');">
+                    @csrf
+                    <button type="submit" class="btn">ส่งใบเสร็จทางอีเมล</button>
+                </form>
+            @endif
         @endif
 
         @if ($canManage && ! $voided)

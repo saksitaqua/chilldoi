@@ -3,6 +3,7 @@
 namespace App\Mail;
 
 use App\Models\Booking;
+use App\Models\Receipt;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Address;
@@ -19,7 +20,7 @@ class BookingConfirmed extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public function __construct(public Booking $booking)
+    public function __construct(public Booking $booking, public ?Receipt $receipt = null)
     {
         //
     }
@@ -31,7 +32,9 @@ class BookingConfirmed extends Mailable
 
         return new Envelope(
             replyTo: $shopEmail ? [new Address($shopEmail, config('receipt.seller.trade_name'))] : [],
-            subject: "ยืนยันการจอง Chill Doi Camping & Farm - {$booking->unit->name} {$booking->check_in->format('d/m/Y')}",
+            subject: $this->receipt
+                ? ($booking->status === 'confirmed' ? 'ยืนยันการจองและ' : '')."ใบเสร็จรับเงิน {$this->receipt->receipt_no} - Chill Doi Camping & Farm"
+                : "ยืนยันการจอง Chill Doi Camping & Farm - {$booking->unit->name} {$booking->check_in->format('d/m/Y')}",
         );
     }
 

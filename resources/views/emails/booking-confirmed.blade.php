@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html>
 <body style="font-family: sans-serif; color: #1b2421; line-height: 1.6;">
-    <h2 style="margin-bottom: 4px;">ยืนยันการจองเรียบร้อยแล้ว</h2>
+    <h2 style="margin-bottom: 4px;">{{ $booking->status === 'confirmed' ? 'ยืนยันการจองเรียบร้อยแล้ว' : 'ใบเสร็จรับเงินการจองของคุณ' }}</h2>
     <p style="margin-top: 0; color: #666;">Your booking is confirmed</p>
 
     <p>เรียนคุณ <strong>{{ $booking->guest_name }}</strong></p>
     <p>
         ขอบคุณที่เลือกพักกับ <strong>{{ $seller['trade_name'] }}</strong>
-        ทางเราขอยืนยันการจองของคุณตามรายละเอียดด้านล่างนี้
+        {{ $booking->status === 'confirmed' ? 'ทางเราขอยืนยันการจองของคุณตามรายละเอียดด้านล่างนี้' : 'รายละเอียดการจองของคุณมีดังนี้' }}
     </p>
 
     <table style="border-collapse: collapse; margin: 16px 0;">
@@ -27,6 +27,18 @@
 
     @if ($booking->payment_slip)
         <p>ทางเราได้รับสลิปการชำระเงินของคุณแล้ว (แนบมาในอีเมลนี้เพื่อเป็นหลักฐาน)</p>
+    @endif
+
+    @if ($receipt)
+        <p>
+            ใบเสร็จรับเงินเลขที่ <strong>{{ $receipt->receipt_no }}</strong>
+            ยอดรับชำระ <strong>{{ number_format((float) $receipt->total_amount, 2) }} บาท</strong>
+        </p>
+        <p>
+            <a href="{{ $receipt->customerUrl() }}" style="background: #1b2421; color: #fff; padding: 10px 18px; border-radius: 6px; text-decoration: none;">
+                เปิดดู / พิมพ์ใบเสร็จรับเงิน
+            </a>
+        </p>
     @endif
 
     <p>

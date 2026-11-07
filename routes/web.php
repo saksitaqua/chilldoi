@@ -90,6 +90,8 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
     Route::middleware('admin.only')->group(function () {
         Route::post('bookings/{booking}/payments', [\App\Http\Controllers\Admin\PaymentController::class, 'store'])->name('payments.store');
         Route::post('payments/{payment}/void', [\App\Http\Controllers\Admin\PaymentController::class, 'void'])->name('payments.void');
+        Route::post('bookings/{booking}/quick-confirm', \App\Http\Controllers\Admin\QuickConfirmController::class)->name('bookings.quick-confirm');
+        Route::post('receipts/{receipt}/email', [\App\Http\Controllers\Admin\ReceiptController::class, 'email'])->name('receipts.email');
         Route::post('bookings/{booking}/receipts', [\App\Http\Controllers\Admin\ReceiptController::class, 'issue'])->name('receipts.issue');
         Route::post('receipts/{receipt}/void', [\App\Http\Controllers\Admin\ReceiptController::class, 'void'])->name('receipts.void');
 

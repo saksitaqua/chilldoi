@@ -62,7 +62,7 @@ class BookingNotifier
      * Returns 'sent', 'no_email' (customer gave no valid address, staff should phone instead) or 'failed'.
      * Never throws: a mail problem must not stop staff from confirming the booking.
      */
-    public static function bookingConfirmed(Booking $booking): string
+    public static function bookingConfirmed(Booking $booking, ?\App\Models\Receipt $receipt = null): string
     {
         $email = trim((string) $booking->guest_email);
 
@@ -71,7 +71,7 @@ class BookingNotifier
         }
 
         $booking->loadMissing('unit.accommodationType', 'activities', 'services');
-        $mailable = new BookingConfirmed($booking);
+        $mailable = new BookingConfirmed($booking, $receipt);
 
         try {
             Mail::to($email)->send(clone $mailable);

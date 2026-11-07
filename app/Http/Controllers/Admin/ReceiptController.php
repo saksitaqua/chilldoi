@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Booking;
 use App\Models\Receipt;
 use App\Services\ReceiptService;
+use App\Support\BookingNotifier;
 use Illuminate\Http\Request;
 
 class ReceiptController extends Controller
@@ -51,6 +52,21 @@ class ReceiptController extends Controller
 
         return redirect()->route('admin.receipts.show', $receipt)
             ->with('status', "ออกใบเสร็จเลขที่ {$receipt->receipt_no} เรียบร้อยแล้ว");
+    }
+
+    public function email(Receipt $receipt)
+    {
+        if ($receipt->isVoided()) {
+            return redirect()->route('admin.receipts.show', $receipt)->with('error', 'ใบเสร็จนี้ถูกยกเลิกแล้ว ส่งให้ลูกค้าไม่ได้');
+        }
+
+        $booking = $receipt->booking;
+
+        return match (BookingNotifier::bookingConfirmed($booking, $receipt)) {
+            'sent' => redirect()->route('admin.receipts.show', $receipt)->with('status', "ส่งอีเมลใบเสร็จถึงลูกค้าที่ {$booking->guest_email} แล้ว"),
+            'no_email' => redirect()->route('admin.receipts.show', $receipt)->with('error', 'ลูกค้าไม่ได้ระบุอีเมล ใช้ปุ่ม "คัดลอกลิงก์สำหรับส่งให้ลูกค้า" แล้วส่งทางช่องทางอื่นแทน'),
+            default => redirect()->route('admin.receipts.show', $receipt)->with('error', 'ส่งอีเมลไม่สำเร็จ ลองใหม่อีกครั้ง หรือใช้ปุ่ม "คัดลอกลิงก์สำหรับส่งให้ลูกค้า"'),
+        };
     }
 
     public function void(Request $request, Receipt $receipt, ReceiptService $service)
