@@ -2,6 +2,7 @@
 
 namespace App\Support;
 
+use App\Mail\BookingConfirmed;
 use App\Mail\NewBookingReceived;
 use App\Mail\PaymentSlipUploaded;
 use App\Models\Booking;
@@ -54,6 +55,37 @@ class BookingNotifier
         $to = self::recipients(includeStaff: true);
 
         static::send($to, self::bccRecipients($to), new PaymentSlipUploaded($booking), 'payment slip');
+    }
+
+    /**
+     * Confirmation email to the customer, plus a copy to the shop addresses so staff keep a record.
+     * Returns 'sent', 'no_email' (customer gave no valid address, staff should phone instead) or 'failed'.
+     * Never throws: a mail problem must not stop staff from confirming the booking.
+     */
+    public static function bookingConfirmed(Booking $booking): string
+    {
+        $email = trim((string) $booking->guest_email);
+
+        if ($email === '' || ! filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            return 'no_email';
+        }
+
+        $booking->loadMissing('unit.accommodationType', 'activities', 'services');
+        $mailable = new BookingConfirmed($booking);
+
+        try {
+            Mail::to($email)->send(clone $mailable);
+        } catch (\Throwable $e) {
+            Log::warning("Failed to send booking confirmation to {$email}: ".$e->getMessage());
+
+            return 'failed';
+        }
+
+        $to = self::recipients();
+
+        static::send($to, self::bccRecipients($to), clone $mailable, 'booking confirmation copy');
+
+        return 'sent';
     }
 
     private static function clean(array $addresses): array

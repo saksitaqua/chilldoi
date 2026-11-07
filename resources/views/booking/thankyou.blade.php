@@ -1,5 +1,17 @@
 <x-layouts.public :title="__('site.thankyou.title')">
     <div class="max-w-lg mx-auto bg-white rounded-lg shadow-sm p-8 text-center">
+        @if (session('slip_done'))
+            <div class="mb-6 rounded-lg bg-emerald-50 border border-emerald-300 text-emerald-900 px-5 py-4 text-left">
+                <p class="text-lg font-bold">✓ {{ __('site.thankyou.slip_done_title') }}</p>
+                <p class="text-sm mt-1">{{ __('site.thankyou.slip_done_body') }}</p>
+                <p class="text-sm mt-2 font-medium">
+                    {{ $booking->guest_email
+                        ? __('site.thankyou.slip_done_next', ['email' => $booking->guest_email, 'phone' => $booking->guest_phone])
+                        : __('site.thankyou.slip_done_next_phone', ['phone' => $booking->guest_phone]) }}
+                </p>
+            </div>
+        @endif
+
         @if (session('status'))
             <div class="mb-4 rounded-md bg-emerald-50 border border-emerald-200 text-emerald-800 px-4 py-3 text-sm text-left">
                 {{ session('status') }}

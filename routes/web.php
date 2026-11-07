@@ -63,6 +63,7 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
     Route::resource('units', UnitController::class);
     Route::resource('activities', ActivityController::class);
     Route::resource('services', ServiceController::class);
+    Route::post('bookings/{booking}/resend-confirmation', [BookingController::class, 'resendConfirmation'])->name('bookings.resend-confirmation');
     Route::resource('bookings', BookingController::class);
     Route::resource('customers', CustomerController::class)->only(['index', 'show']);
     Route::resource('stories', AdminStoryController::class);

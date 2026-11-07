@@ -8,6 +8,7 @@ use App\Models\Booking;
 use App\Models\Customer;
 use App\Models\Service;
 use App\Models\Unit;
+use App\Support\BookingNotifier;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -92,11 +93,37 @@ class BookingController extends Controller
         $serviceIds = $data['services'] ?? [];
         unset($data['activities'], $data['services']);
 
+        $wasConfirmed = $booking->status === 'confirmed';
+
         $booking->update($data);
         $booking->activities()->sync($activityIds);
         $booking->services()->sync(array_fill_keys($serviceIds, ['quantity' => 1]));
 
-        return redirect()->route('admin.bookings.index')->with('status', 'บันทึกการแก้ไขเรียบร้อยแล้ว');
+        $message = 'บันทึกการแก้ไขเรียบร้อยแล้ว';
+
+        if ($booking->status === 'confirmed' && ! $wasConfirmed) {
+            $message .= ' · '.$this->confirmationMessage($booking, BookingNotifier::bookingConfirmed($booking));
+        }
+
+        return redirect()->route('admin.bookings.index')->with('status', $message);
+    }
+
+    public function resendConfirmation(Booking $booking)
+    {
+        if ($booking->status !== 'confirmed') {
+            return back()->with('status', 'ส่งอีเมลยืนยันได้เฉพาะการจองที่มีสถานะ "ยืนยันแล้ว"');
+        }
+
+        return back()->with('status', $this->confirmationMessage($booking, BookingNotifier::bookingConfirmed($booking)));
+    }
+
+    private function confirmationMessage(Booking $booking, string $result): string
+    {
+        return match ($result) {
+            'sent' => "ส่งอีเมลยืนยันการจองถึงลูกค้าที่ {$booking->guest_email} แล้ว",
+            'no_email' => 'ลูกค้าไม่ได้ระบุอีเมล กรุณาโทรยืนยันกับลูกค้าเอง'.($booking->guest_phone ? " ({$booking->guest_phone})" : ''),
+            default => 'ส่งอีเมลยืนยันไม่สำเร็จ กรุณาโทรแจ้งลูกค้า'.($booking->guest_phone ? " ({$booking->guest_phone})" : '').' หรือกด "ส่งอีเมลยืนยันอีกครั้ง" ในหน้าแก้ไขการจอง',
+        };
     }
 
     public function destroy(Booking $booking)

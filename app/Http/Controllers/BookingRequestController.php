@@ -155,7 +155,6 @@ class BookingRequestController extends Controller
 
         BookingNotifier::slipUploaded($booking);
 
-        return redirect()->route('booking.thankyou', $booking)
-            ->with('status', 'อัปโหลดสลิปเรียบร้อยแล้ว เจ้าหน้าที่จะตรวจสอบและยืนยันการจองโดยเร็วที่สุด');
+        return redirect()->route('booking.thankyou', $booking)->with('slip_done', true);
     }
 }
