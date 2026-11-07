@@ -83,7 +83,7 @@ class BookingNotifier
 
         $to = self::recipients();
 
-        static::send($to, self::bccRecipients($to), clone $mailable, 'booking confirmation copy');
+        static::send($to, self::bccRecipients($to), new BookingConfirmed($booking, $receipt, true), 'booking confirmation copy');
 
         return 'sent';
     }

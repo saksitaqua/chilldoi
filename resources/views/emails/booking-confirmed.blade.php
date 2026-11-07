@@ -1,8 +1,13 @@
 <!DOCTYPE html>
 <html>
 <body style="font-family: sans-serif; color: #1b2421; line-height: 1.6;">
+    @if ($isCopy)
+        <h2 style="margin-bottom: 4px; color: #dc2626;">สำเนา ยืนยันการจองเรียบร้อยแล้ว</h2>
+        <p style="margin-top: 0; color: #dc2626;">สำเนาสำหรับร้าน (ส่งถึงลูกค้าที่ {{ $booking->guest_email }} แล้ว)</p>
+    @else
     <h2 style="margin-bottom: 4px;">{{ $booking->status === 'confirmed' ? 'ยืนยันการจองเรียบร้อยแล้ว' : 'ใบเสร็จรับเงินการจองของคุณ' }}</h2>
     <p style="margin-top: 0; color: #666;">Your booking is confirmed</p>
+    @endif
 
     <p>เรียนคุณ <strong>{{ $booking->guest_name }}</strong></p>
     <p>

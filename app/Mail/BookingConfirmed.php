@@ -20,7 +20,7 @@ class BookingConfirmed extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public function __construct(public Booking $booking, public ?Receipt $receipt = null)
+    public function __construct(public Booking $booking, public ?Receipt $receipt = null, public bool $isCopy = false)
     {
         //
     }
@@ -32,9 +32,9 @@ class BookingConfirmed extends Mailable
 
         return new Envelope(
             replyTo: $shopEmail ? [new Address($shopEmail, config('receipt.seller.trade_name'))] : [],
-            subject: $this->receipt
+            subject: ($this->isCopy ? '[สำเนา] ' : '').($this->receipt
                 ? ($booking->status === 'confirmed' ? 'ยืนยันการจองและ' : '')."ใบเสร็จรับเงิน {$this->receipt->receipt_no} - Chill Doi Camping & Farm"
-                : "ยืนยันการจอง Chill Doi Camping & Farm - {$booking->unit->name} {$booking->check_in->format('d/m/Y')}",
+                : "ยืนยันการจอง Chill Doi Camping & Farm - {$booking->unit->name} {$booking->check_in->format('d/m/Y')}"),
         );
     }
 
