@@ -79,6 +79,8 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
     Route::post('feedbacks/{feedback}/read', [\App\Http\Controllers\Admin\FeedbackController::class, 'read'])->name('feedbacks.read');
     Route::get('guide/flow', [\App\Http\Controllers\Admin\GuideController::class, 'flow'])->name('guide.flow');
     Route::get('guide/manual', [\App\Http\Controllers\Admin\GuideController::class, 'manual'])->name('guide.manual');
+    Route::get('qr', [\App\Http\Controllers\Admin\SiteQrController::class, 'index'])->name('qr.index');
+    Route::get('qr/download', [\App\Http\Controllers\Admin\SiteQrController::class, 'download'])->name('qr.download');
     Route::get('banners', [BannerController::class, 'index'])->name('banners.index');
     Route::post('banners', [BannerController::class, 'store'])->name('banners.store');
     Route::put('banners', [BannerController::class, 'update'])->name('banners.update');

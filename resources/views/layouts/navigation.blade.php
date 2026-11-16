@@ -135,6 +135,9 @@
                         <x-dropdown-link :href="route('admin.guide.manual')">
                             {{ __('User Manual') }}
                         </x-dropdown-link>
+                        <x-dropdown-link :href="route('admin.qr.index')">
+                            {{ __('QR เข้าเว็บไซต์') }}
+                        </x-dropdown-link>
 
                         <div class="border-t border-gray-100"></div>
 
@@ -249,6 +252,9 @@
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('admin.guide.manual')" :active="request()->routeIs('admin.guide.manual')">
                 {{ __('User Manual') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('admin.qr.index')" :active="request()->routeIs('admin.qr.*')">
+                {{ __('QR เข้าเว็บไซต์') }}
             </x-responsive-nav-link>
         </div>
 
